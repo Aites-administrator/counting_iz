@@ -1,0 +1,33 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+WorkOrderMaster
+</name>
+</assembly>
+<members>
+<member name="T:WorkOrderMaster.My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:WorkOrderMaster.My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:WorkOrderMaster.My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="M:WorkOrderMaster.Form_WorkOrderDetail.CheckValue(System.Boolean)">
+ <summary>
+ 入力チェック処理
+ </summary>
+ <param name="isUpdate">更新モードかどうか。True = 更新時, False = 新規登録時</param>
+ <returns>エラーがあれば False</returns>
+</member>
+</members>
+</doc>

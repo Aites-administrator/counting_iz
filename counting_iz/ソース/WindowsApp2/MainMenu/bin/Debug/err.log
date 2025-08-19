@@ -1,0 +1,14 @@
+2023/02/15 16:34:54:System.Exception: 入力された数値は日付形式に変換できません[原因不明]
+   場所 Common.clsFunction.NumTxt2Date(String prmTargetText) 場所 C:\Users\1233\Desktop\remote-repo\KANSAI_ISHIDA_SANPAI\ソース\WindowsApp2\Common\clsFunction.vb:行 140
+2023/02/15 16:35:32:System.Exception: 入力された数値は日付形式に変換できません[原因不明]
+   場所 Common.clsFunction.NumTxt2Date(String prmTargetText) 場所 C:\Users\1233\Desktop\remote-repo\KANSAI_ISHIDA_SANPAI\ソース\WindowsApp2\Common\clsFunction.vb:行 140
+2023/02/15 16:35:57:System.Exception: 入力された数値は日付形式に変換できません[原因不明]
+   場所 Common.clsFunction.NumTxt2Date(String prmTargetText) 場所 C:\Users\1233\Desktop\remote-repo\KANSAI_ISHIDA_SANPAI\ソース\WindowsApp2\Common\clsFunction.vb:行 140
+2023/02/15 16:36:48:System.Exception: 数字5桁は日付形式に変換できません
+   場所 Common.clsFunction.NumTxt2Date(String prmTargetText) 場所 C:\Users\1233\Desktop\remote-repo\KANSAI_ISHIDA_SANPAI\ソース\WindowsApp2\Common\clsFunction.vb:行 124
+2023/02/15 16:38:18:System.Exception: 入力された数値は日付形式に変換できません[原因不明]
+   場所 Common.clsFunction.NumTxt2Date(String prmTargetText) 場所 C:\Users\1233\Desktop\remote-repo\KANSAI_ISHIDA_SANPAI\ソース\WindowsApp2\Common\clsFunction.vb:行 140
+2023/02/15 16:39:00:System.Exception: 入力された数値は日付形式に変換できません[原因不明]
+   場所 Common.clsFunction.NumTxt2Date(String prmTargetText) 場所 C:\Users\1233\Desktop\remote-repo\KANSAI_ISHIDA_SANPAI\ソース\WindowsApp2\Common\clsFunction.vb:行 140
+2023/02/15 16:40:14:System.Exception: 入力された数値は日付形式に変換できません[原因不明]
+   場所 Common.clsFunction.NumTxt2Date(String prmTargetText) 場所 C:\Users\1233\Desktop\remote-repo\KANSAI_ISHIDA_SANPAI\ソース\WindowsApp2\Common\clsFunction.vb:行 140

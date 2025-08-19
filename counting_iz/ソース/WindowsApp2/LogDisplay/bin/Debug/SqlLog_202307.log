@@ -1,0 +1,4 @@
+【Date】2023/07/24 10:32:29【PC】NN2205001【Exe】LogDisplay.exe【Source】Form_LogDisplay【Method】GetSelectScaleMaster【Sql】 SELECT     UNIT_NUMBER FROM     MST_SCALE WHERE     DELETE_FLG = 0 ORDER BY       UNIT_NUMBER
+【Date】2023/07/24 10:32:29【PC】NN2205001【Exe】LogDisplay.exe【Source】Form_LogDisplay【Method】GetAllSelectSql【Sql】 SELECT     PROCESS_DATE,     MACHINE_NO,     PROCESS_TIME,     FILE_NAME,     NOTE FROM     TRN_LOG ORDER BY       PROCESS_DATE DESC, PROCESS_TIME DESC, MACHINE_NO 
+【Date】2023/07/27 16:23:38【PC】NN2205001【Exe】LogDisplay.exe【Source】Form_LogDisplay【Method】GetSelectScaleMaster【Sql】 SELECT     UNIT_NUMBER FROM     MST_SCALE WHERE     DELETE_FLG = 0 ORDER BY       UNIT_NUMBER
+【Date】2023/07/27 16:23:38【PC】NN2205001【Exe】LogDisplay.exe【Source】Form_LogDisplay【Method】GetAllSelectSql【Sql】 SELECT     PROCESS_DATE,     MACHINE_NO,     PROCESS_TIME,     FILE_NAME,     NOTE FROM     TRN_LOG ORDER BY       PROCESS_DATE DESC, PROCESS_TIME DESC, MACHINE_NO 

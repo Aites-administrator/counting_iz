@@ -1,0 +1,1 @@
+【Date】2023/07/28 16:39:31【PC】NN2205001【Exe】AreaMaster.exe【Source】Form_AreaList【Method】GetAllSelectSql【Sql】 SELECT     AREA_CODE,     AREA_NAME,     DELETE_FLG,     CASE         WHEN MEMO <> '' THEN '〇'         ELSE '×'     END AS MEMO,     MEMO  FROM     MST_AREA ORDER BY     AREA_CODE

@@ -1,0 +1,93 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+Common
+</name>
+</assembly>
+<members>
+<member name="T:Common.My.Resources.Resources">
+<summary>
+  ローカライズされた文字列などを検索するための、厳密に型指定されたリソース クラスです。
+</summary>
+</member>
+<member name="P:Common.My.Resources.Resources.ResourceManager">
+<summary>
+  このクラスで使用されているキャッシュされた ResourceManager インスタンスを返します。
+</summary>
+</member>
+<member name="P:Common.My.Resources.Resources.Culture">
+<summary>
+  厳密に型指定されたこのリソース クラスを使用して、すべての検索リソースに対し、
+  現在のスレッドの CurrentUICulture プロパティをオーバーライドします。
+</summary>
+</member>
+<member name="F:Common.ClsComDatabase.typProvider.sqlServer">
+ <summary>
+ SQL-Server
+ </summary>
+</member>
+<member name="F:Common.ClsComDatabase.typProvider.Mdb">
+ <summary>
+ Access(MDB)
+ </summary>
+</member>
+<member name="F:Common.ClsComDatabase.typProvider.Accdb">
+ <summary>
+ Access(Accdb)
+ </summary>
+</member>
+<member name="P:Common.ClsComDatabase.QueryTimeOut">
+ <summary>
+ クエリータイムアウト時間
+ </summary>
+ <returns></returns>
+</member>
+<member name="M:Common.ClsComDatabase.Execute(System.String)">
+ <summary>
+ 更新系クエリー実行
+ </summary>
+ <param name="sql">実行するSQL文</param>
+ <returns></returns>
+</member>
+<member name="M:Common.ClsFunction.DateTxt2DateTxt(System.String)">
+ <summary>
+ スラッシュを含む文字列を日付形式の文字列に変換する
+ </summary>
+ <param name="prmTargetText">変換対象の文字列</param>
+ <returns>yyyy/MM/dd 形式に変換された文字列</returns>
+</member>
+<member name="M:Common.ClsFunction.NumTxt2Date(System.String)">
+ <summary>
+ 数値文字列を日付文字列に変換する
+ </summary>
+ <param name="prmTargetText">変換対象の文字列</param>
+ <returns>yyyy/MM/dd 形式に変換された文字列</returns>
+</member>
+<member name="M:Common.ClsFunction.GetIniString(System.String,System.String,System.String)">
+ <summary>
+ iniファイルから取得する
+ </summary>
+ <param name="lpAppName"></param>
+ <param name="lpKeyName"></param>
+ <param name="strPath"></param>
+ <returns></returns>
+</member>
+<member name="M:Common.ClsFunction.PutIniString(System.String,System.String,System.String,System.String)">
+ <summary>
+ iniファイルに書き込む
+ </summary>
+ <param name="lpAppName"></param>
+ <param name="lpKeyName"></param>
+ <param name="lpValue"></param>
+ <param name="strPath"></param>
+ <returns></returns>
+</member>
+<member name="M:Common.ClsFunction.WriteExecuteLog(System.String,System.String,System.String)">
+ <summary>
+ SQL実行ログ保存
+ </summary>
+ <param name="prmSql">SQL文</param>
+</member>
+</members>
+</doc>
