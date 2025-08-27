@@ -36,3 +36,14 @@ D:\remote-repo\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.vbpro
 D:\remote-repo\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.exe
 D:\remote-repo\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.xml
 D:\remote-repo\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.pdb
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.vbproj.AssemblyReference.cache
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.vbproj.ResolveComReference.cache
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.Form_ResultDetail.resources
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.Resources.resources
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.Form_ResultList.resources
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.vbproj.GenerateResource.cache
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.vbproj.CoreCompileInputs.cache
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.vbproj.CopyComplete
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.exe
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.xml
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\Results\obj\Debug\Results.pdb

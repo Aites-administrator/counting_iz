@@ -413,6 +413,7 @@ Partial Class Form_ResultDetail
         Me.classificationTextValue.Name = "classificationTextValue"
         Me.classificationTextValue.Size = New System.Drawing.Size(171, 33)
         Me.classificationTextValue.TabIndex = 9
+        Me.classificationTextValue.Visible = False
         '
         'Label7
         '
@@ -423,6 +424,7 @@ Partial Class Form_ResultDetail
         Me.Label7.Size = New System.Drawing.Size(57, 30)
         Me.Label7.TabIndex = 8
         Me.Label7.Text = "区分"
+        Me.Label7.Visible = False
         '
         'lot1TextValue
         '

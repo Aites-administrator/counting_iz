@@ -344,7 +344,7 @@ Public Class Form_ResultDetail
       Case 2
         additionDateText.Enabled = False
         additionTimeText.Enabled = False
-        'terminalComboBox.Enabled = False
+        terminalComboBox.Enabled = False
         'callCodeComboBox.Enabled = False
 
         additionDateText.Text = additionDateTxTValue
