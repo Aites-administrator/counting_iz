@@ -176,6 +176,7 @@ Public Class Form_RealtimeConfirmation
           CreateManufacturerMasterCSV(ScaleNumber, UsbPath)
           CreatePackingMasterCSV(ScaleNumber, UsbPath)
           CreateStaffMasterCSV(ScaleNumber, UsbPath)
+          CreateWorkOrderMasterCSV(ScaleNumber, UsbPath)
           CreateFree1MasterCSV(ScaleNumber, UsbPath)
           CreateFree2MasterCSV(ScaleNumber, UsbPath)
           CreateFree3MasterCSV(ScaleNumber, UsbPath)
@@ -186,6 +187,7 @@ Public Class Form_RealtimeConfirmation
           CreateManufacturerMasterCSV(ScaleNumber, UsbPath)
           CreatePackingMasterCSV(ScaleNumber, UsbPath)
           CreateStaffMasterCSV(ScaleNumber, UsbPath)
+          CreateWorkOrderMasterCSV(ScaleNumber, UsbPath)
         End If
       Next
 
@@ -432,6 +434,13 @@ Public Class Form_RealtimeConfirmation
     CreateCsv(PathName, TableName, DefText, ScaleNumber, UsbPath)
   End Sub
 
+  Private Sub CreateWorkOrderMasterCSV(ScaleNumber As String, UsbPath As String)
+    PathName = "40INST"
+    TableName = "MST_WorkOrder"
+    DefText = "作業指示№:40400,明細№:40401,作業指示名称:40402,明細小計(する/しない):40403,商品№:40404,指示数:40405"
+    CreateCsv(PathName, TableName, DefText, ScaleNumber, UsbPath)
+  End Sub
+
   Private Sub CreateFree1MasterCSV(ScaleNumber As String, UsbPath As String)
     PathName = "40FRE1"
     TableName = "MST_Free1"
@@ -495,6 +504,8 @@ Public Class Form_RealtimeConfirmation
         sql = GetMSTPackingSelectSql()
       Case "MST_Staff"
         sql = GetStaffMasterSelectSql()
+      Case "MST_WorkOrder"
+        sql = GetMSTWorkOrderSelectSql()
       Case "MST_Free1"
         sql = GetMST_Free1MasterSelectSql()
       Case "MST_Free2"
@@ -520,6 +531,8 @@ Public Class Form_RealtimeConfirmation
               MessageBox.Show("風袋マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Case "MST_Staff"
               MessageBox.Show("担当者マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Case "MST_WorkOrder"
+              MessageBox.Show("作業指示マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Case "MST_Free1"
               MessageBox.Show("フリー1マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Case "MST_Free2"
@@ -627,6 +640,20 @@ Public Class Form_RealtimeConfirmation
     sql &= " FROM"
     sql &= "     MST_Staff"
     Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
+    Return sql
+  End Function
+  Private Function GetMSTWorkOrderSelectSql() As String
+    Dim sql As String = String.Empty
+    sql &= " SELECT"
+    sql &= "     WorkOrderID As [作業指示№],"
+    sql &= "     DetailID As [明細№],"
+    sql &= "     WorkOrderName As [作業指示名称],"
+    sql &= "     IsDetailSubtotal As [明細小計(する/しない)],"
+    sql &= "     ProductID As [商品№],"
+    sql &= "     OrderQuantity As [指示数]"
+    sql &= " FROM"
+    sql &= "     dbo.MST_WorkOrder"
+    Call WriteExecuteLog("Module_Upload", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
   End Function
   Private Function GetMSTPackingSelectSql() As String

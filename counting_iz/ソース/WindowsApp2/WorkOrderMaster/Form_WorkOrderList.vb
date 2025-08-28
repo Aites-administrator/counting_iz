@@ -67,7 +67,249 @@ Public Class Form_WorkOrderList
     End If
 
     CustomizeDataGridViewHeader() ' ヘッダーのデザイン変更()
+
+    WorkOrderDetail.AllowDrop = True
+    AddHandler WorkOrderDetail.DragDrop, AddressOf WorkOrderDetail_DragDrop
+    AddHandler WorkOrderDetail.DragEnter, AddressOf WorkOrderDetail_DragEnter
+
   End Sub
+
+  Private Sub WorkOrderDetail_DragEnter(sender As Object, e As DragEventArgs)
+    If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+      e.Effect = DragDropEffects.Copy
+    End If
+  End Sub
+
+  Private Sub WorkOrderDetail_DragDrop(sender As Object, e As DragEventArgs)
+    If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+      Dim beforeRowCount As Integer = WorkOrderDetail.Rows.Count
+      Dim files As String() = CType(e.Data.GetData(DataFormats.FileDrop), String())
+      Dim excelPath As String = files(0)
+
+      LoadExcelToWorkOrderDetail(excelPath, beforeRowCount)
+    End If
+  End Sub
+
+
+
+  Private Sub LoadExcelToWorkOrderDetail(filePath As String, beforeRowCount As Integer)
+    Dim connStr As String = "Provider=Microsoft.ACE.OLEDB.12.0;" &
+                            $"Data Source={filePath};Extended Properties='Excel 12.0 Xml;HDR=YES;IMEX=1;'"
+
+    Dim dt As New DataTable()
+
+    ' Excel → DataTable読み込み
+    Using conn As New OleDb.OleDbConnection(connStr)
+      conn.Open()
+      Dim cmd As New OleDb.OleDbCommand("SELECT * FROM [作業指示マスタ$A2:G1000]", conn)
+      Dim adapter As New OleDb.OleDbDataAdapter(cmd)
+      adapter.Fill(dt)
+    End Using
+
+    ' データが有効か判定
+    Dim validRows = dt.AsEnumerable().Where(Function(row) Not row.ItemArray.All(Function(item) String.IsNullOrWhiteSpace(item?.ToString()))).ToList()
+    If validRows.Count = 0 Then
+      MessageBox.Show("有効なデータが読み込まれませんでした。", "情報", MessageBoxButtons.OK, MessageBoxIcon.Information)
+      Exit Sub
+    End If
+
+    ' メッセージ表示
+    Dim message As String
+    If beforeRowCount > 0 Then
+      message = "既存の作業指示マスタを削除して新しく登録します。よろしいですか？"
+    Else
+      message = "作業指示マスタを新しく登録します。よろしいですか？"
+    End If
+
+    Dim result = MessageBox.Show(message, "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+    If result <> DialogResult.Yes Then Exit Sub
+
+    ' ユーザーが「はい」を押したら、反映・登録
+    WorkOrderDetail.Rows.Clear()
+    Dim nowStr As String = Now.ToString("yyyy-MM-dd HH:mm:ss")
+    For Each row In validRows
+      WorkOrderDetail.Rows.Add(
+            row(0),
+            row(1),
+            row(2),
+            If(row(3)?.ToString().ToLower() = "true", "する", "しない"),
+            row(4),
+            row(5),
+            row(6),
+            nowStr,
+            nowStr
+        )
+    Next
+
+    InsertWorkOrderDetailToDatabase()
+  End Sub
+
+
+
+
+
+
+  Private Function GetInsertSql(ByVal row As DataGridViewRow) As String
+    Dim sql As String = String.Empty
+
+    Dim workOrderID As Integer = CInt(row.Cells(0).Value)
+    Dim detailID As Integer = CInt(row.Cells(1).Value)
+    Dim workOrderName As String = row.Cells(2).Value.ToString()
+    Dim isSubtotalBit As Integer = If(row.Cells(3).Value.ToString() = "する", 1, 0)
+    Dim productID As Integer = CInt(row.Cells(4).Value)
+    Dim orderQty As Integer = CInt(row.Cells(6).Value)
+    Dim tmpDate As DateTime = CDate(ComGetProcTime())
+
+    sql &= "INSERT INTO MST_WorkOrder ("
+    sql &= "WorkOrderID, DetailID, WorkOrderName, IsDetailSubtotal, ProductID, OrderQuantity, CreateDate, UpdateDate"
+    sql &= ") VALUES ("
+    sql &= workOrderID & ", "
+    sql &= detailID & ", "
+    sql &= "'" & workOrderName & "', "
+    sql &= isSubtotalBit & ", "
+    sql &= productID & ", "
+    sql &= orderQty & ", "
+    sql &= "'" & tmpDate & "', "
+    sql &= "'" & tmpDate & "'"
+    sql &= ")"
+
+    Return sql
+  End Function
+
+  Private Sub InsertWorkOrderDetailToDatabase()
+    With tmpDb
+      Try
+        .Execute("DELETE FROM MST_WorkOrder")
+
+        Dim insertedCount As Integer = 0
+        Dim existingKeys As New HashSet(Of String)
+        Dim errorLogs As New List(Of String)
+
+        For Each row As DataGridViewRow In WorkOrderDetail.Rows
+          If row.IsNewRow Then Continue For
+
+          Dim errorMessage As String = ""
+          If Not CheckRowValid(row, row.Index, existingKeys, errorMessage) Then
+            errorLogs.Add(errorMessage)
+            Continue For
+          End If
+
+          Try
+            Dim sql As String = GetInsertSql(row)
+            If .Execute(sql) = 1 Then
+              insertedCount += 1
+            Else
+              errorLogs.Add($"[{row.Index + 1}] 行目: 登録に失敗しました。")
+            End If
+          Catch ex As Exception
+            errorLogs.Add($"[{row.Index + 1}] 行目: 例外エラー - {ex.Message}")
+          End Try
+        Next
+
+        .TrnCommit()
+
+        ' 完了メッセージ
+        Dim msg As String = $"{insertedCount} 件のデータを登録しました。"
+        Dim logPath As String = System.IO.Path.Combine(Application.StartupPath, "ImportError.log")
+
+        If errorLogs.Count > 0 Then
+          msg &= vbCrLf & $"エラー {errorLogs.Count} 件。詳細はログをご確認ください。"
+          WriteImportErrorLog(errorLogs)
+
+          ' エラーありの場合のみ警告 + ログを開く
+          If MessageBox.Show(msg, "完了", MessageBoxButtons.OK, MessageBoxIcon.Warning) = DialogResult.OK Then
+            Try
+              If System.IO.File.Exists(logPath) Then
+                Process.Start("notepad.exe", logPath)
+              End If
+            Catch ex As Exception
+              ' ログが開けなかった場合の処理（任意）
+            End Try
+          End If
+        Else
+          ' エラーなしのときだけ情報表示
+          MessageBox.Show(msg, "完了", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End If
+
+
+        ' 一覧更新
+        SelectWorkOrderMaster()
+
+      Catch ex As Exception
+        Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
+        MessageBox.Show("登録中に重大なエラーが発生しました：" & ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+      End Try
+    End With
+  End Sub
+
+  Private Function CheckRowValid(row As DataGridViewRow, rowIndex As Integer, existingKeys As HashSet(Of String), ByRef errorMessage As String) As Boolean
+    errorMessage = ""
+    Dim workOrderIDText = row.Cells(0).Value?.ToString()
+    Dim detailIDText = row.Cells(1).Value?.ToString()
+    Dim workOrderName = row.Cells(2).Value?.ToString()
+    Dim subtotalText = row.Cells(3).Value?.ToString()
+    Dim productIDText = row.Cells(4).Value?.ToString()
+    Dim orderQtyText = row.Cells(6).Value?.ToString()
+
+    ' 必須チェック
+    If String.IsNullOrWhiteSpace(workOrderIDText) Then
+      errorMessage = $"[{rowIndex + 1}] 行目: 作業指示Noが空です。"
+      Return False
+    End If
+
+    If workOrderIDText = "0" Then
+      errorMessage = $"[{rowIndex + 1}] 行目: 作業指示Noに0は使用できません。"
+      Return False
+    End If
+
+    If String.IsNullOrWhiteSpace(detailIDText) Then
+      errorMessage = $"[{rowIndex + 1}] 行目: 明細Noが空です。"
+      Return False
+    End If
+
+    If String.IsNullOrWhiteSpace(workOrderName) Then
+      errorMessage = $"[{rowIndex + 1}] 行目: 作業指示名称が空です。"
+      Return False
+    End If
+
+    If String.IsNullOrWhiteSpace(productIDText) Then
+      errorMessage = $"[{rowIndex + 1}] 行目: 商品№が空です。"
+      Return False
+    End If
+
+    If String.IsNullOrWhiteSpace(orderQtyText) Then
+      errorMessage = $"[{rowIndex + 1}] 行目: 指示数が空です。"
+      Return False
+    End If
+
+    Dim dummyQty As Integer
+    If Not Integer.TryParse(orderQtyText, dummyQty) Then
+      errorMessage = $"[{rowIndex + 1}] 行目: 指示数は数値で入力してください。"
+      Return False
+    End If
+
+    ' 重複チェック
+    Dim key As String = $"{workOrderIDText}_{detailIDText}"
+    If existingKeys.Contains(key) Then
+      errorMessage = $"[{rowIndex + 1}] 行目: 作業指示Noと明細Noの組み合わせが重複しています。"
+      Return False
+    End If
+
+    existingKeys.Add(key)
+    Return True
+  End Function
+
+  Private Sub WriteImportErrorLog(errors As List(Of String))
+    Dim logPath As String = System.IO.Path.Combine(Application.StartupPath, "ImportError.log")
+    Using sw As New System.IO.StreamWriter(logPath, True, System.Text.Encoding.UTF8)
+      sw.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Excel取込エラー")
+      For Each errLine In errors
+        sw.WriteLine(errLine)
+      Next
+      sw.WriteLine(New String("-"c, 50))
+    End Using
+  End Sub
+
   ' DataGridView のヘッダーのデザインを変更
   Private Sub CustomizeDataGridViewHeader()
     With WorkOrderDetail
@@ -120,7 +362,8 @@ Public Class Form_WorkOrderList
       With tmpDb
         SqlServer.GetResult(tmpDt, sql)
         If tmpDt.Rows.Count = 0 Then
-          MessageBox.Show("作業指示マスタにデータが登録されていません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+          WorkOrderDetail.Rows.Clear()
+          'MessageBox.Show("作業指示マスタにデータが登録されていません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Else
           WriteDetail(tmpDt, WorkOrderDetail)
         End If
@@ -259,8 +502,7 @@ Public Class Form_WorkOrderList
 
         confirmation = MessageBox.Show(msg1, "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
         If confirmation = DialogResult.Yes Then
-          ' SQL実行結果が1件か？
-          If .Execute(sql) = 1 Then
+          If .Execute(sql) > 0 Then
             ' 更新成功
             .TrnCommit()
             MessageBox.Show(msg2, "完了", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -306,9 +548,13 @@ Public Class Form_WorkOrderList
     End Try
   End Sub
   Private Sub ExportPickingList()
-    Dim xlApp As New Excel.Application
-    Dim xlBook As Excel.Workbook = xlApp.Workbooks.Add()
-    Dim xlSheet As Excel.Worksheet = CType(xlBook.Sheets(1), Excel.Worksheet)
+    'Dim xlApp As New Excel.Application
+    'Dim xlBook As Excel.Workbook = xlApp.Workbooks.Add()
+    'Dim xlSheet As Excel.Worksheet = CType(xlBook.Sheets(1), Excel.Worksheet)
+
+    Dim xlApp As Object = CreateObject("Excel.Application")
+    Dim xlBook As Object = xlApp.Workbooks.Add()
+    Dim xlSheet As Object = xlBook.Sheets(1)
 
     ' 出力時間（G2: ラベル、H2: 日時）
     xlSheet.Range("G2").Value = "出力時間"

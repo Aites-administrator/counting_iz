@@ -69,6 +69,8 @@ Module Module_Upload
     CreateStaffMasterCSV()
     '「風袋マスタ」のCSVデータ作成
     CreatePackingMasterCSV()
+    '「作業指示マスタ」のCSVデータ作成
+    CreateWorkOrderMasterCSV()
 
     If isFreeMaster Then
       ' 「フリー1マスタ」CSV作成
@@ -97,7 +99,7 @@ Module Module_Upload
       AnsErrorJudFlg = False
 
       'ファイル毎（DEF、CSV）にループ
-      For k As Integer = 0 To If(isFreeMaster, 15, 5)
+      For k As Integer = 0 To If(isFreeMaster, 19, 9)
         Select Case k
           Case 0
             UploadPath = FtpUploadPath & "40MAS1" & FileNameDigits & UnitNumberArray(j) & ".DEF"
@@ -131,60 +133,82 @@ Module Module_Upload
             UploadFtp(UploadPath, URL, UnitNumberArray(j))
             System.Threading.Thread.Sleep(1000)
 
+          Case 6
+            UploadPath = FtpUploadPath & "40OPTR" & FileNameDigits & UnitNumberArray(j) & ".DEF"
+            URL = "ftp://" & IpAddressArray(j) & "/" & "40OPTR" & FileNameDigits & UnitNumberArray(j) & ".DEF"
+            UploadFtp(UploadPath, URL, UnitNumberArray(j))
+            System.Threading.Thread.Sleep(1000)
+          Case 7
+            UploadPath = FtpUploadPath & "40OPTR" & FileNameDigits & UnitNumberArray(j) & ".CSV"
+            URL = "ftp://" & IpAddressArray(j) & "/" & "40OPTR" & FileNameDigits & UnitNumberArray(j) & ".CSV"
+            UploadFtp(UploadPath, URL, UnitNumberArray(j))
+            System.Threading.Thread.Sleep(1000)
+
+
+          Case 8
+            UploadPath = FtpUploadPath & "40INST" & FileNameDigits & UnitNumberArray(j) & ".DEF"
+            URL = "ftp://" & IpAddressArray(j) & "/" & "40INST" & FileNameDigits & UnitNumberArray(j) & ".DEF"
+            UploadFtp(UploadPath, URL, UnitNumberArray(j))
+            System.Threading.Thread.Sleep(1000)
+          Case 9
+            UploadPath = FtpUploadPath & "40INST" & FileNameDigits & UnitNumberArray(j) & ".CSV"
+            URL = "ftp://" & IpAddressArray(j) & "/" & "40INST" & FileNameDigits & UnitNumberArray(j) & ".CSV"
+            UploadFtp(UploadPath, URL, UnitNumberArray(j))
+            System.Threading.Thread.Sleep(1000)
+
+
+
         ' ここからフリー系は isFreeMaster = True の場合だけ実行
-          Case 6 To 15
+          Case 10 To 19
             If isFreeMaster Then
               Select Case k
-                Case 6
+                Case 10
                   UploadPath = FtpUploadPath & "40FRE1" & FileNameDigits & UnitNumberArray(j) & ".DEF"
                   URL = "ftp://" & IpAddressArray(j) & "/" & "40FRE1" & FileNameDigits & UnitNumberArray(j) & ".DEF"
                   UploadFtp(UploadPath, URL, UnitNumberArray(j))
                   System.Threading.Thread.Sleep(1000)
-                Case 7
+                Case 11
                   UploadPath = FtpUploadPath & "40FRE1" & FileNameDigits & UnitNumberArray(j) & ".CSV"
                   URL = "ftp://" & IpAddressArray(j) & "/" & "40FRE1" & FileNameDigits & UnitNumberArray(j) & ".CSV"
                   UploadFtp(UploadPath, URL, UnitNumberArray(j))
                   System.Threading.Thread.Sleep(1000)
 
-                Case 8
+                Case 12
                   UploadPath = FtpUploadPath & "40FRE2" & FileNameDigits & UnitNumberArray(j) & ".DEF"
                   URL = "ftp://" & IpAddressArray(j) & "/" & "40FRE2" & FileNameDigits & UnitNumberArray(j) & ".DEF"
                   UploadFtp(UploadPath, URL, UnitNumberArray(j))
                   System.Threading.Thread.Sleep(1000)
-                Case 9
+                Case 13
                   UploadPath = FtpUploadPath & "40FRE2" & FileNameDigits & UnitNumberArray(j) & ".CSV"
                   URL = "ftp://" & IpAddressArray(j) & "/" & "40FRE2" & FileNameDigits & UnitNumberArray(j) & ".CSV"
                   UploadFtp(UploadPath, URL, UnitNumberArray(j))
                   System.Threading.Thread.Sleep(1000)
-
-                Case 10
+                Case 14
                   UploadPath = FtpUploadPath & "40FRE3" & FileNameDigits & UnitNumberArray(j) & ".DEF"
                   URL = "ftp://" & IpAddressArray(j) & "/" & "40FRE3" & FileNameDigits & UnitNumberArray(j) & ".DEF"
                   UploadFtp(UploadPath, URL, UnitNumberArray(j))
                   System.Threading.Thread.Sleep(1000)
-                Case 11
+                Case 15
                   UploadPath = FtpUploadPath & "40FRE3" & FileNameDigits & UnitNumberArray(j) & ".CSV"
                   URL = "ftp://" & IpAddressArray(j) & "/" & "40FRE3" & FileNameDigits & UnitNumberArray(j) & ".CSV"
                   UploadFtp(UploadPath, URL, UnitNumberArray(j))
                   System.Threading.Thread.Sleep(1000)
-
-                Case 12
+                Case 16
                   UploadPath = FtpUploadPath & "40FRE4" & FileNameDigits & UnitNumberArray(j) & ".DEF"
                   URL = "ftp://" & IpAddressArray(j) & "/" & "40FRE4" & FileNameDigits & UnitNumberArray(j) & ".DEF"
                   UploadFtp(UploadPath, URL, UnitNumberArray(j))
                   System.Threading.Thread.Sleep(1000)
-                Case 13
+                Case 17
                   UploadPath = FtpUploadPath & "40FRE4" & FileNameDigits & UnitNumberArray(j) & ".CSV"
                   URL = "ftp://" & IpAddressArray(j) & "/" & "40FRE4" & FileNameDigits & UnitNumberArray(j) & ".CSV"
                   UploadFtp(UploadPath, URL, UnitNumberArray(j))
                   System.Threading.Thread.Sleep(1000)
-
-                Case 14
+                Case 18
                   UploadPath = FtpUploadPath & "40FRE5" & FileNameDigits & UnitNumberArray(j) & ".DEF"
                   URL = "ftp://" & IpAddressArray(j) & "/" & "40FRE5" & FileNameDigits & UnitNumberArray(j) & ".DEF"
                   UploadFtp(UploadPath, URL, UnitNumberArray(j))
                   System.Threading.Thread.Sleep(1000)
-                Case 15
+                Case 19
                   UploadPath = FtpUploadPath & "40FRE5" & FileNameDigits & UnitNumberArray(j) & ".CSV"
                   URL = "ftp://" & IpAddressArray(j) & "/" & "40FRE5" & FileNameDigits & UnitNumberArray(j) & ".CSV"
                   UploadFtp(UploadPath, URL, UnitNumberArray(j))
@@ -396,13 +420,19 @@ Module Module_Upload
   Private Sub CreateStaffMasterCSV()
     PathName = "40OPTR"
     TableName = "MST_Staff"
-    DefText = "担当者№:40361,担当者名:40362"
+    DefText = "担当者№:40361,担当者名称:40362"
     CreateCsv(PathName, TableName, DefText)
   End Sub
   Private Sub CreatePackingMasterCSV()
     PathName = "40TARE"
     TableName = "MST_Packing"
     DefText = "風袋№:40371,風袋重量:40372,風袋重量単位:40373,風袋名称:40374"
+    CreateCsv(PathName, TableName, DefText)
+  End Sub
+  Private Sub CreateWorkOrderMasterCSV()
+    PathName = "40INST"
+    TableName = "MST_WorkOrder"
+    DefText = "作業指示№:40400,明細№:40401,作業指示名称:40402,明細小計(する/しない):40403,商品№:40404,指示数:40405"
     CreateCsv(PathName, TableName, DefText)
   End Sub
 
@@ -484,6 +514,9 @@ Module Module_Upload
           Case "MST_Packing"
             InsertTRNLOG(UnitNumberArray(j), "", "", "風袋DEFファイル作成")
             sql = GetMSTPackingSelectSql()
+          Case "MST_WorkOrder"
+            InsertTRNLOG(UnitNumberArray(j), "", "", "作業指示DEFファイル作成")
+            sql = GetMSTWorkOrderSelectSql()
           Case "MST_Free1"
             InsertTRNLOG(UnitNumberArray(j), "", "", "フリー１DEFファイル作成")
             sql = GetMST_Free1MasterSelectSql()
@@ -518,6 +551,9 @@ Module Module_Upload
           Case "MST_Packing"
             InsertTRNLOG(UnitNumberArray(j), "", "", "風袋DEFファイル作成失敗")
             sql = GetMSTPackingSelectSql()
+          Case "MST_WorkOrder"
+            InsertTRNLOG(UnitNumberArray(j), "", "", "作業指示DEFファイル作成失敗")
+            sql = GetMSTWorkOrderSelectSql()
           Case "MST_Free1"
             InsertTRNLOG(UnitNumberArray(j), "", "", "フリー１DEFファイル作成失敗")
             sql = GetMST_Free1MasterSelectSql()
@@ -549,6 +585,8 @@ Module Module_Upload
                 InsertTRNLOG(UnitNumberArray(j), "", "", "担当者マスタ照会失敗")
               Case "MST_Packing"
                 InsertTRNLOG(UnitNumberArray(j), "", "", "風袋マスタ照会失敗")
+              Case "MST_WorkOrder"
+                InsertTRNLOG(UnitNumberArray(j), "", "", "作業指示マスタ照会失敗")
             End Select
           Else
             Dim colCount As Integer = OutputDt.Columns.Count
@@ -604,7 +642,9 @@ Module Module_Upload
                 Case "MST_Packing"
                   InsertTRNLOG(UnitNumberArray(j), "", "", "風袋CSVファイル作成")
                   sql = GetMSTPackingSelectSql()
-
+                Case "MST_WorkOrder"
+                  InsertTRNLOG(UnitNumberArray(j), "", "", "作業指示CSVファイル作成")
+                  sql = GetMSTWorkOrderSelectSql()
               End Select
             Else
               Select Case TableName
@@ -620,7 +660,9 @@ Module Module_Upload
                 Case "MST_Packing"
                   InsertTRNLOG(UnitNumberArray(j), "", "", "風袋CSVファイル作成失敗")
                   sql = GetMSTPackingSelectSql()
-
+                Case "MST_WorkOrder"
+                  InsertTRNLOG(UnitNumberArray(j), "", "", "風袋CSVファイル作成失敗")
+                  sql = GetMSTWorkOrderSelectSql()
               End Select
             End If
           End If
@@ -678,7 +720,7 @@ Module Module_Upload
     Dim sql As String = String.Empty
     sql &= " SELECT"
     sql &= "     Staff_Number As [担当者№],"
-    sql &= "     Staff_Name As [担当者名]"
+    sql &= "     Staff_Name As [担当者名称]"
     sql &= " FROM"
     sql &= "     MST_Staff"
     Call WriteExecuteLog("Module_Upload", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
@@ -694,6 +736,20 @@ Module Module_Upload
     sql &= "     PackingName As [風袋名称]"
     sql &= " FROM"
     sql &= "     MST_Packing"
+    Call WriteExecuteLog("Module_Upload", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
+    Return sql
+  End Function
+  Private Function GetMSTWorkOrderSelectSql() As String
+    Dim sql As String = String.Empty
+    sql &= " SELECT"
+    sql &= "     WorkOrderID As [作業指示№],"
+    sql &= "     DetailID As [明細№],"
+    sql &= "     WorkOrderName As [作業指示名称],"
+    sql &= "     IsDetailSubtotal As [明細小計(する/しない)],"
+    sql &= "     ProductID As [商品№],"
+    sql &= "     OrderQuantity As [指示数]"
+    sql &= " FROM"
+    sql &= "     dbo.MST_WorkOrder"
     Call WriteExecuteLog("Module_Upload", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
   End Function

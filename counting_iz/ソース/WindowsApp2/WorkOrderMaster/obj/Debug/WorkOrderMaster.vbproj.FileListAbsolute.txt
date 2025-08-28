@@ -16,3 +16,13 @@ D:\remote-repo\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkO
 D:\remote-repo\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkOrderMaster.exe
 D:\remote-repo\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkOrderMaster.xml
 D:\remote-repo\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkOrderMaster.pdb
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkOrderMaster.vbproj.AssemblyReference.cache
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkOrderMaster.Form_WorkOrderDetail.resources
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkOrderMaster.Resources.resources
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkOrderMaster.Form_WorkOrderList.resources
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkOrderMaster.vbproj.GenerateResource.cache
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkOrderMaster.vbproj.CoreCompileInputs.cache
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkOrderMaster.vbproj.CopyComplete
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkOrderMaster.exe
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkOrderMaster.xml
+D:\remote-repo\counting_iz\counting_iz\ソース\WindowsApp2\WorkOrderMaster\obj\Debug\WorkOrderMaster.pdb
