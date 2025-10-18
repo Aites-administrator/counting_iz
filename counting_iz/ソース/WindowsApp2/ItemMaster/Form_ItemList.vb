@@ -167,7 +167,7 @@ Public Class Form_ItemList
     sql &= "     MST_Item I"
     sql &= "     LEFT JOIN MST_Packing P ON I.packing_code = P.PackingNo"
     sql &= " ORDER BY"
-    sql &= "     I.call_code"
+    sql &= "     CAST(I.call_code AS INT)"
 
     Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql

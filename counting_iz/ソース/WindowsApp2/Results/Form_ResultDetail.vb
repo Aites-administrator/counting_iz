@@ -160,7 +160,7 @@ Public Class Form_ResultDetail
     free5NumberComboBox.Items.Clear()
 
     ' 商品マスタ
-    Dim ItemData As DataTable = GetMasterData("SELECT call_code FROM MST_Item ORDER BY call_code")
+    Dim ItemData As DataTable = GetMasterData("SELECT call_code FROM MST_Item ORDER BY CAST(call_code AS INT)")
     If ItemData.Rows.Count = 0 Then
       MessageBox.Show("商品マスタにデータが登録されていません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
     Else

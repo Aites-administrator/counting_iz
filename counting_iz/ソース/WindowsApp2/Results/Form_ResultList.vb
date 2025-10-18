@@ -405,7 +405,8 @@ Public Class Form_ResultList
 
     sql &= " SELECT CONVERT(VARCHAR, call_code) + ' ' + item_name"
     sql &= " FROM MST_Item "
-    sql &= " ORDER BY call_code "
+    sql &= " ORDER BY"
+    sql &= "     CAST(call_code AS INT)"
 
     Call WriteExecuteLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
@@ -518,8 +519,8 @@ Public Class Form_ResultList
     ' ComboBoxのテキストから特定の部分を抽出し、条件変数に格納
     If FromItemCode_ComboBox.Text <> "" Then
       wkFromItemCode = FromItemCode_ComboBox.Text.Substring(0, FromItemCode_ComboBox.Text.IndexOf(" "))
-    ElseIf FromItemCode_ComboBox.Items.Count > 0 Then
-      wkFromItemCode = FromItemCode_ComboBox.Items(0).ToString().Split(" "c)(0)
+      'ElseIf FromItemCode_ComboBox.Items.Count > 0 Then
+      '  wkFromItemCode = FromItemCode_ComboBox.Items(0).ToString().Split(" "c)(0)
     Else
       wkFromItemCode = 0
     End If
@@ -533,8 +534,8 @@ Public Class Form_ResultList
     ' StaffCode の範囲を設定
     If FromStaffCode_ComboBox.Text <> "" Then
       wkFromStaffCode = FromStaffCode_ComboBox.Text.Substring(0, FromStaffCode_ComboBox.Text.IndexOf(" "))
-    ElseIf FromStaffCode_ComboBox.Items.Count > 0 Then
-      wkFromStaffCode = FromStaffCode_ComboBox.Items(0).ToString().Split(" "c)(0)
+      'ElseIf FromStaffCode_ComboBox.Items.Count > 0 Then
+      '  wkFromStaffCode = FromStaffCode_ComboBox.Items(0).ToString().Split(" "c)(0)
     Else
       wkFromStaffCode = 0
     End If
@@ -606,8 +607,8 @@ Public Class Form_ResultList
     If Scale_ComboBox.Text <> "" Then
       sql &= "    AND terminal_number = " & Scale_ComboBox.Text
     End If
-    sql &= "    AND call_code  BETWEEN  '" & wkFromItemCode & "' AND '" & wkToItemCode & "'"
-    sql &= "    AND staff_number BETWEEN '" & wkFromStaffCode & "' AND '" & wkToStaffCode & "'"
+    sql &= "    AND CAST(call_code AS INT)  BETWEEN  '" & wkFromItemCode & "' AND '" & wkToItemCode & "'"
+    sql &= "    AND CAST(staff_number AS INT) BETWEEN '" & wkFromStaffCode & "' AND '" & wkToStaffCode & "'"
     'sql &= "    AND manufacturer_code BETWEEN '" & wkFromManufacturerCode & "' AND '" & wkToManufacturerCode & "'"
     'sql &= "    AND ("
     'sql &= "         PACKING_COUNT != 0"
@@ -968,6 +969,8 @@ Public Class Form_ResultList
     Dim wkAdditionTime As String = ResultDetail.Rows(ResultDetail.CurrentRow.Index).Cells(1).Value
     Dim wkTerminalNumber As String = ResultDetail.Rows(ResultDetail.CurrentRow.Index).Cells(2).Value
     Dim wkCallCode As String = ResultDetail.Rows(ResultDetail.CurrentRow.Index).Cells(3).Value
+
+    wkCallCode = wkCallCode.PadLeft(6, "0"c)
 
     sql &= " DELETE "
     sql &= " FROM "
