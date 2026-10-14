@@ -38,9 +38,18 @@ Public Class Form_monthlyReportOutput
 
     ' 閉め日をデフォルト31に設定
     ClosingDateText.Text = "31"
+    SetScaleNumberComboBoxes()
+    SetItemCodeComboBoxes()
   End Sub
 
   Private Sub StartButton_Click(sender As Object, e As EventArgs) Handles StartButton.Click
+    If Not ValidatePeriodInputs() OrElse Not CheckRangeConditions() Then Return
+    Using passwordForm As New Form_CsvExportPassword()
+      If passwordForm.ShowDialog(Me) <> DialogResult.OK Then
+        Exit Sub
+      End If
+    End Using
+
     OutputDetail()
   End Sub
   Private Sub MonthText_KeyPress(sender As Object, e As KeyPressEventArgs) Handles MonthText.KeyPress
@@ -67,7 +76,7 @@ Public Class Form_monthlyReportOutput
     End If
   End Sub
   Private Sub MonthText_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles MonthText.Validating
-    If ActiveControl.Name <> "MonthText" And ActiveControl.Name <> "CloseButton" Then
+    If ActiveControl IsNot Nothing AndAlso ActiveControl.Name <> "MonthText" And ActiveControl.Name <> "CloseButton" Then
       Dim currentMonth As Integer = DateTime.Now.Month
 
       ' MonthText のテキストの長さに応じて処理を分岐
@@ -89,7 +98,7 @@ Public Class Form_monthlyReportOutput
   End Sub
   Private Sub YearText_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles YearText.Validating
     ' アクティブなコントロールが "YearText" または "CloseButton" でない場合のみ処理を実行
-    If ActiveControl.Name <> "YearText" And ActiveControl.Name <> "CloseButton" Then
+    If ActiveControl IsNot Nothing AndAlso ActiveControl.Name <> "YearText" And ActiveControl.Name <> "CloseButton" Then
       Dim currentYear As Integer = DateTime.Now.Year
       Select Case YearText.Text.Length
         Case 0
@@ -114,7 +123,7 @@ Public Class Form_monthlyReportOutput
     End If
   End Sub
   Private Sub ClosingDateText_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ClosingDateText.Validating
-    If ActiveControl.Name <> "ClosingDateText" And ActiveControl.Name <> "CloseButton" Then
+    If ActiveControl IsNot Nothing AndAlso ActiveControl.Name <> "ClosingDateText" And ActiveControl.Name <> "CloseButton" Then
       SetPeriod()
     End If
   End Sub
@@ -149,7 +158,7 @@ Public Class Form_monthlyReportOutput
     End If
   End Sub
   Private Sub DateTime_From_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles DateTime_From.Validating
-    If ActiveControl.Name <> "DateTime_From" And ActiveControl.Name <> "CloseButton" Then
+    If ActiveControl IsNot Nothing AndAlso ActiveControl.Name <> "DateTime_From" And ActiveControl.Name <> "CloseButton" Then
       Dim inputText As String = DateTime_From.Text.Replace("/", "").Trim()
 
       If DateTypeCheck(inputText) Then
@@ -162,7 +171,7 @@ Public Class Form_monthlyReportOutput
     End If
   End Sub
   Private Sub DateTime_To_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles DateTime_To.Validating
-    If ActiveControl.Name <> "DateTime_To" And ActiveControl.Name <> "CloseButton" Then
+    If ActiveControl IsNot Nothing AndAlso ActiveControl.Name <> "DateTime_To" And ActiveControl.Name <> "CloseButton" Then
       Dim inputText As String = DateTime_To.Text.Replace("/", "").Trim()
 
       If DateTypeCheck(inputText) Then
@@ -224,8 +233,8 @@ Public Class Form_monthlyReportOutput
         End If
       End With
     Catch ex As Exception
-      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       OutputDt.Dispose()
     End Try
@@ -240,6 +249,10 @@ Public Class Form_monthlyReportOutput
   Private Function SetResultsSelectSql() As String
     Dim wkFromText As String
     Dim wkToText As String
+    Dim fromScaleNumber As String = GetSelectedCode(FromScaleNumberComboBox)
+    Dim toScaleNumber As String = GetSelectedCode(ToScaleNumberComboBox)
+    Dim fromItemCode As String = GetSelectedCode(FromItemCodeComboBox)
+    Dim toItemCode As String = GetSelectedCode(ToItemCodeComboBox)
     Dim sql As String = String.Empty
     wkFromText = DateTime_From.Text.Replace("/", "-")
     wkToText = DateTime_To.Text.Replace("/", "-")
@@ -301,6 +314,10 @@ Public Class Form_monthlyReportOutput
     sql &= "     TRN_Results "
     sql &= " WHERE "
     sql &= "     addition_date BETWEEN '" & wkFromText & "' AND '" & wkToText & "' "
+    If Not String.IsNullOrWhiteSpace(fromScaleNumber) Then sql &= " AND terminal_number >= '" & EscapeSqlLiteral(fromScaleNumber) & "' "
+    If Not String.IsNullOrWhiteSpace(toScaleNumber) Then sql &= " AND terminal_number <= '" & EscapeSqlLiteral(toScaleNumber) & "' "
+    If Not String.IsNullOrWhiteSpace(fromItemCode) Then sql &= " AND call_code >= '" & EscapeSqlLiteral(fromItemCode) & "' "
+    If Not String.IsNullOrWhiteSpace(toItemCode) Then sql &= " AND call_code <= '" & EscapeSqlLiteral(toItemCode) & "' "
     sql &= " ORDER BY "
     sql &= "     CAST(addition_date AS DATETIME) DESC, "
     sql &= "     CAST(addition_time AS DATETIME) DESC, "
@@ -312,17 +329,26 @@ Public Class Form_monthlyReportOutput
   End Function
 
   Private Sub SetPeriod()
-    Dim Day As String = YearText.Text & MonthText.Text & ClosingDateText.Text
+    Dim year As Integer
+    Dim month As Integer
+    Dim closingDay As Integer
+    If Not Integer.TryParse(YearText.Text, year) OrElse year < 1 OrElse year > 9999 OrElse
+       Not Integer.TryParse(MonthText.Text, month) OrElse month < 1 OrElse month > 12 OrElse
+       Not Integer.TryParse(ClosingDateText.Text, closingDay) OrElse closingDay < 1 OrElse closingDay > 31 Then
+      Return
+    End If
+
+    Dim Day As String = year.ToString("D4") & month.ToString("D2") & closingDay.ToString("D2")
     Dim ClosingDate As Date
     Dim wkFromText As Date
     Dim wkToText As Date
 
-    If ClosingDateText.Text = "31" Then
-      DateTime_From.Text = New Date(YearText.Text, MonthText.Text, 1)
-      DateTime_To.Text = New Date(YearText.Text, MonthText.Text, 1).AddMonths(1).AddDays(-1)
+    If closingDay = 31 Then
+      DateTime_From.Text = New Date(year, month, 1)
+      DateTime_To.Text = New Date(year, month, 1).AddMonths(1).AddDays(-1)
     Else
       If ClsFunction.DateTypeCheck(Day) Then
-        ClosingDate = New Date(YearText.Text, MonthText.Text, ClosingDateText.Text)
+        ClosingDate = New Date(year, month, closingDay)
         wkFromText = ClosingDate.AddMonths(-1).AddDays(+1)
         wkToText = ClosingDate
         DateTime_From.Text = wkFromText
@@ -343,4 +369,135 @@ Public Class Form_monthlyReportOutput
         Me.Close()
     End Select
   End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
+  End Sub
+  Private Sub SetScaleNumberComboBoxes()
+    Dim scaleData As New DataTable
+
+    Try
+      SqlServer.GetResult(scaleData, GetSelectScaleMasterSql())
+
+      FromScaleNumberComboBox.Items.Clear()
+      ToScaleNumberComboBox.Items.Clear()
+      FromScaleNumberComboBox.Items.Add("")
+      ToScaleNumberComboBox.Items.Add("")
+
+      For Each row As DataRow In scaleData.Rows
+        Dim scaleNumber As String = row("unit_number").ToString()
+        FromScaleNumberComboBox.Items.Add(scaleNumber)
+        ToScaleNumberComboBox.Items.Add(scaleNumber)
+      Next
+
+      FromScaleNumberComboBox.SelectedIndex = 0
+      ToScaleNumberComboBox.SelectedIndex = 0
+    Finally
+      scaleData.Dispose()
+    End Try
+  End Sub
+  Private Sub SetItemCodeComboBoxes()
+    Dim itemData As New DataTable
+
+    Try
+      SqlServer.GetResult(itemData, GetSelectItemMasterSql())
+
+      FromItemCodeComboBox.Items.Clear()
+      ToItemCodeComboBox.Items.Clear()
+      FromItemCodeComboBox.Items.Add("")
+      ToItemCodeComboBox.Items.Add("")
+
+      For Each row As DataRow In itemData.Rows
+        Dim itemDisplay As String = row("call_code").ToString() & " " & row("item_name").ToString()
+        FromItemCodeComboBox.Items.Add(itemDisplay)
+        ToItemCodeComboBox.Items.Add(itemDisplay)
+      Next
+
+      FromItemCodeComboBox.SelectedIndex = 0
+      ToItemCodeComboBox.SelectedIndex = 0
+    Finally
+      itemData.Dispose()
+    End Try
+  End Sub
+  Private Function GetSelectScaleMasterSql() As String
+    Dim sql As String = String.Empty
+    sql &= " SELECT unit_number"
+    sql &= " FROM MST_SCALE"
+    sql &= " ORDER BY unit_number"
+    Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
+    Return sql
+  End Function
+  Private Function GetSelectItemMasterSql() As String
+    Dim sql As String = String.Empty
+    sql &= " SELECT call_code, item_name"
+    sql &= " FROM MST_Item"
+    sql &= " ORDER BY call_code"
+    Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
+    Return sql
+  End Function
+  Private Function GetSelectedCode(comboBox As ComboBox) As String
+    If comboBox.SelectedIndex <= 0 OrElse String.IsNullOrWhiteSpace(comboBox.Text) Then Return String.Empty
+    Return comboBox.Text.Split(" "c)(0)
+  End Function
+  Private Function CheckRangeConditions() As Boolean
+    If FromScaleNumberComboBox.SelectedIndex > 0 AndAlso
+       ToScaleNumberComboBox.SelectedIndex > 0 AndAlso
+       FromScaleNumberComboBox.SelectedIndex > ToScaleNumberComboBox.SelectedIndex Then
+      MessageBox.Show("号機(開始)は号機(終了)以前を指定してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+      FromScaleNumberComboBox.Focus()
+      Return False
+    End If
+
+    If FromItemCodeComboBox.SelectedIndex > 0 AndAlso
+       ToItemCodeComboBox.SelectedIndex > 0 AndAlso
+       FromItemCodeComboBox.SelectedIndex > ToItemCodeComboBox.SelectedIndex Then
+      MessageBox.Show("商品(開始)は商品(終了)以前を指定してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+      FromItemCodeComboBox.Focus()
+      Return False
+    End If
+
+    Return True
+  End Function
+  Private Function ValidatePeriodInputs() As Boolean
+    Dim year As Integer
+    Dim month As Integer
+    Dim closingDay As Integer
+    Dim fromDate As Date
+    Dim toDate As Date
+
+    If Not Integer.TryParse(YearText.Text, year) OrElse year < 1 OrElse year > 9999 Then
+      MessageBox.Show("年は1～9999の数字で入力してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+      YearText.Focus()
+      Return False
+    End If
+    If Not Integer.TryParse(MonthText.Text, month) OrElse month < 1 OrElse month > 12 Then
+      MessageBox.Show("月は1～12の数字で入力してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+      MonthText.Focus()
+      Return False
+    End If
+    If Not Integer.TryParse(ClosingDateText.Text, closingDay) OrElse closingDay < 1 OrElse closingDay > 31 Then
+      MessageBox.Show("締め日は1～31の数字で入力してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+      ClosingDateText.Focus()
+      Return False
+    End If
+    If Not Date.TryParse(DateTime_From.Text, fromDate) Then
+      MessageBox.Show("開始日を正しい日付形式で入力してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+      DateTime_From.Focus()
+      Return False
+    End If
+    If Not Date.TryParse(DateTime_To.Text, toDate) Then
+      MessageBox.Show("終了日を正しい日付形式で入力してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+      DateTime_To.Focus()
+      Return False
+    End If
+    If fromDate > toDate Then
+      MessageBox.Show("開始日は終了日以前を指定してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+      DateTime_From.Focus()
+      Return False
+    End If
+
+    Return True
+  End Function
+  Private Function EscapeSqlValue(value As String) As String
+    Return value.Replace("'", "''")
+  End Function
 End Class

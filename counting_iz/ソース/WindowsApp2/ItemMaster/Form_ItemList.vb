@@ -103,7 +103,7 @@ Public Class Form_ItemList
       .EnableHeadersVisualStyles = False ' デフォルトの Windows スタイルを無効化
       .ColumnHeadersDefaultCellStyle.BackColor = Color.LightBlue ' ヘッダーの背景色
       .ColumnHeadersDefaultCellStyle.ForeColor = Color.Black ' ヘッダーの文字色
-      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo", 10, FontStyle.Bold) ' フォント変更
+      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo UI", 10, FontStyle.Bold) ' フォント変更
       .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter ' ヘッダー中央寄せ
     End With
   End Sub
@@ -115,6 +115,9 @@ Public Class Form_ItemList
         SqlServer.GetResult(tmpDt, sql)
 
         If tmpDt.Rows.Count = 0 Then
+          ItemDetail.Rows.Clear()
+          UpdateButton.Enabled = False
+          DeleteButton.Enabled = False
           MessageBox.Show("商品マスタにデータが登録されていません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Else
           WriteDetail(tmpDt, ItemDetail)
@@ -124,8 +127,8 @@ Public Class Form_ItemList
       End With
     Catch ex As Exception
       Call ComWriteErrLog([GetType]().Name,
-                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       tmpDt.Dispose()
     End Try
@@ -178,6 +181,7 @@ Public Class Form_ItemList
     Form_ItemDetail.ShowDialog()
   End Sub
   Private Sub UpdateButton_Click(sender As Object, e As EventArgs) Handles UpdateButton.Click
+    If ItemDetail.CurrentRow Is Nothing OrElse ItemDetail.CurrentRow.IsNewRow Then Return
     '詳細画面の項目値セット
     SetListData()
     Form_ItemDetail.InputMode = 2
@@ -220,10 +224,12 @@ Public Class Form_ItemList
   End Sub
 
   Private Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+    If ItemDetail.CurrentRow Is Nothing OrElse ItemDetail.CurrentRow.IsNewRow Then Return
     DeleteItemMaster()
   End Sub
 
   Private Sub DeleteItemMaster()
+    If ItemDetail.CurrentRow Is Nothing OrElse ItemDetail.CurrentRow.IsNewRow Then Return
     Dim sql As String = String.Empty
     Dim rowSelectionCode As String = String.Empty
     Dim confirmation As String
@@ -252,8 +258,8 @@ Public Class Form_ItemList
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -292,5 +298,8 @@ Public Class Form_ItemList
       Case Keys.Escape
         Me.Close()
     End Select
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

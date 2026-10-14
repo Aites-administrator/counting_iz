@@ -46,7 +46,7 @@ Partial Class Form_MainMenu
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("MS UI Gothic", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.TitleLabel.Location = New System.Drawing.Point(218, 8)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(275, 19)
@@ -211,6 +211,8 @@ Partial Class Form_MainMenu
         Me.Controls.Add(Me.MonthlyReportOutputButton)
         Me.Controls.Add(Me.DetailOutputButton)
         Me.Controls.Add(Me.TitleLabel)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_MainMenu"
         StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         CType(Me.LogoPictureBox, System.ComponentModel.ISupportInitialize).EndInit()

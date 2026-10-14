@@ -30,7 +30,7 @@ Partial Class Form_Log
         '
         'RealtimeConfirmation_Button
         '
-        Me.RealtimeConfirmation_Button.Font = New System.Drawing.Font("Segoe UI", 18.0!)
+        Me.RealtimeConfirmation_Button.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.RealtimeConfirmation_Button.Location = New System.Drawing.Point(12, 72)
         Me.RealtimeConfirmation_Button.Name = "RealtimeConfirmation_Button"
         Me.RealtimeConfirmation_Button.Size = New System.Drawing.Size(407, 79)
@@ -40,7 +40,7 @@ Partial Class Form_Log
         '
         'LogDisplayButton
         '
-        Me.LogDisplayButton.Font = New System.Drawing.Font("Segoe UI", 18.0!)
+        Me.LogDisplayButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.LogDisplayButton.Location = New System.Drawing.Point(426, 72)
         Me.LogDisplayButton.Name = "LogDisplayButton"
         Me.LogDisplayButton.Size = New System.Drawing.Size(407, 79)
@@ -51,7 +51,7 @@ Partial Class Form_Log
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 24.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 24.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TitleLabel.Location = New System.Drawing.Point(12, 9)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(185, 45)
@@ -61,7 +61,7 @@ Partial Class Form_Log
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.CloseButton.Location = New System.Drawing.Point(710, 586)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 50)
@@ -78,6 +78,8 @@ Partial Class Form_Log
         Me.Controls.Add(Me.TitleLabel)
         Me.Controls.Add(Me.RealtimeConfirmation_Button)
         Me.Controls.Add(Me.LogDisplayButton)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_Log"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "計量器管理"

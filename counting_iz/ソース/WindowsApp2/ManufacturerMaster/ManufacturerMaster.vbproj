@@ -107,6 +107,12 @@
       <DependentUpon>Form_ManufacturerList.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="..\Common\ApplicationEvents.vb">
+      <Link>My Project\ApplicationEvents.vb</Link>
+    </Compile>
+    <Compile Include="..\Common\SingleInstanceApplicationEvents.vb">
+      <Link>My Project\SingleInstanceApplicationEvents.vb</Link>
+    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

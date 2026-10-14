@@ -45,7 +45,7 @@ Partial Class Form_ItemList_GridMethod
         Me.ItemDetail.AllowUserToAddRows = False
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 12.0!)
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Meiryo UI", 12.0!)
         DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
         DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
@@ -54,7 +54,7 @@ Partial Class Form_ItemList_GridMethod
         Me.ItemDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 12.0!)
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Meiryo UI", 12.0!)
         DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
@@ -64,7 +64,7 @@ Partial Class Form_ItemList_GridMethod
         Me.ItemDetail.Name = "ItemDetail"
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 12.0!)
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Meiryo UI", 12.0!)
         DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
         DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
@@ -72,13 +72,13 @@ Partial Class Form_ItemList_GridMethod
         Me.ItemDetail.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
         Me.ItemDetail.RowHeadersWidth = 40
         Me.ItemDetail.RowTemplate.Height = 30
-        Me.ItemDetail.Size = New System.Drawing.Size(1711, 568)
+        Me.ItemDetail.Size = New System.Drawing.Size(1200, 568)
         Me.ItemDetail.TabIndex = 1
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        Me.CloseButton.Location = New System.Drawing.Point(1600, 633)
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
+        Me.CloseButton.Location = New System.Drawing.Point(1089, 635)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 54)
         Me.CloseButton.TabIndex = 7
@@ -88,7 +88,7 @@ Partial Class Form_ItemList_GridMethod
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TitleLabel.Location = New System.Drawing.Point(12, 9)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(150, 30)
@@ -97,8 +97,8 @@ Partial Class Form_ItemList_GridMethod
         '
         'OkButton
         '
-        Me.OkButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        Me.OkButton.Location = New System.Drawing.Point(1280, 633)
+        Me.OkButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
+        Me.OkButton.Location = New System.Drawing.Point(769, 634)
         Me.OkButton.Name = "OkButton"
         Me.OkButton.Size = New System.Drawing.Size(123, 54)
         Me.OkButton.TabIndex = 5
@@ -107,7 +107,7 @@ Partial Class Form_ItemList_GridMethod
         '
         'AddRowButton
         '
-        Me.AddRowButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.AddRowButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.AddRowButton.Location = New System.Drawing.Point(117, 634)
         Me.AddRowButton.Name = "AddRowButton"
         Me.AddRowButton.Size = New System.Drawing.Size(123, 54)
@@ -117,8 +117,8 @@ Partial Class Form_ItemList_GridMethod
         '
         'DeleteButton
         '
-        Me.DeleteButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        Me.DeleteButton.Location = New System.Drawing.Point(1409, 633)
+        Me.DeleteButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
+        Me.DeleteButton.Location = New System.Drawing.Point(898, 634)
         Me.DeleteButton.Name = "DeleteButton"
         Me.DeleteButton.Size = New System.Drawing.Size(123, 54)
         Me.DeleteButton.TabIndex = 6
@@ -127,7 +127,7 @@ Partial Class Form_ItemList_GridMethod
         '
         'CopyRowButton
         '
-        Me.CopyRowButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.CopyRowButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.CopyRowButton.Location = New System.Drawing.Point(246, 634)
         Me.CopyRowButton.Name = "CopyRowButton"
         Me.CopyRowButton.Size = New System.Drawing.Size(123, 54)
@@ -148,7 +148,7 @@ Partial Class Form_ItemList_GridMethod
         '
         'AddRowTextBox
         '
-        Me.AddRowTextBox.Font = New System.Drawing.Font("メイリオ", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.AddRowTextBox.Font = New System.Drawing.Font("Meiryo UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.AddRowTextBox.Location = New System.Drawing.Point(54, 34)
         Me.AddRowTextBox.MaxLength = 2
         Me.AddRowTextBox.Name = "AddRowTextBox"
@@ -159,7 +159,7 @@ Partial Class Form_ItemList_GridMethod
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(6, 37)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(44, 21)
@@ -170,7 +170,7 @@ Partial Class Form_ItemList_GridMethod
         '
         Me.NumberCheckBox.AutoSize = True
         Me.NumberCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.NumberCheckBox.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.NumberCheckBox.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.NumberCheckBox.Location = New System.Drawing.Point(6, 6)
         Me.NumberCheckBox.Name = "NumberCheckBox"
         Me.NumberCheckBox.Size = New System.Drawing.Size(63, 25)
@@ -182,7 +182,7 @@ Partial Class Form_ItemList_GridMethod
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1735, 696)
+        Me.ClientSize = New System.Drawing.Size(1224, 701)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.CopyRowButton)
         Me.Controls.Add(Me.DeleteButton)
@@ -191,6 +191,8 @@ Partial Class Form_ItemList_GridMethod
         Me.Controls.Add(Me.ItemDetail)
         Me.Controls.Add(Me.CloseButton)
         Me.Controls.Add(Me.TitleLabel)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_ItemList_GridMethod"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "商品マスタ一覧"

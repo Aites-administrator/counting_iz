@@ -78,8 +78,8 @@ Public Class Form_LogDisplay
       End With
     Catch ex As Exception
       Call ComWriteErrLog([GetType]().Name,
-                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       tmpDt.Dispose()
     End Try
@@ -93,7 +93,7 @@ Public Class Form_LogDisplay
       .EnableHeadersVisualStyles = False ' デフォルトの Windows スタイルを無効化
       .ColumnHeadersDefaultCellStyle.BackColor = Color.LightBlue ' ヘッダーの背景色
       .ColumnHeadersDefaultCellStyle.ForeColor = Color.Black ' ヘッダーの文字色
-      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo", 10, FontStyle.Bold) ' フォント変更
+      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo UI", 10, FontStyle.Bold) ' フォント変更
       .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter ' ヘッダー中央寄せ
     End With
   End Sub
@@ -167,8 +167,8 @@ Public Class Form_LogDisplay
       End With
     Catch ex As Exception
       Call ComWriteErrLog([GetType]().Name,
-                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       tmpDt.Dispose()
     End Try
@@ -225,5 +225,8 @@ Public Class Form_LogDisplay
       Case Keys.Escape
         Me.Close()
     End Select
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

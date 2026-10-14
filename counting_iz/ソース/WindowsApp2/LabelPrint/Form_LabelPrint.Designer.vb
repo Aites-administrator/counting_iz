@@ -31,7 +31,7 @@ Partial Class Form_LabelPrint
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("MS UI Gothic", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.TitleLabel.Location = New System.Drawing.Point(12, 9)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(237, 27)
@@ -41,7 +41,7 @@ Partial Class Form_LabelPrint
         'PagesNumberLabel
         '
         Me.PagesNumberLabel.AutoSize = True
-        Me.PagesNumberLabel.Font = New System.Drawing.Font("MS UI Gothic", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.PagesNumberLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.PagesNumberLabel.Location = New System.Drawing.Point(28, 73)
         Me.PagesNumberLabel.Name = "PagesNumberLabel"
         Me.PagesNumberLabel.Size = New System.Drawing.Size(70, 21)
@@ -50,7 +50,7 @@ Partial Class Form_LabelPrint
         '
         'PagesNumberText
         '
-        Me.PagesNumberText.Font = New System.Drawing.Font("MS UI Gothic", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.PagesNumberText.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.PagesNumberText.Location = New System.Drawing.Point(102, 70)
         Me.PagesNumberText.Name = "PagesNumberText"
         Me.PagesNumberText.Size = New System.Drawing.Size(64, 28)
@@ -59,7 +59,7 @@ Partial Class Form_LabelPrint
         '
         'PrintButton
         '
-        Me.PrintButton.Font = New System.Drawing.Font("MS UI Gothic", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.PrintButton.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.PrintButton.Location = New System.Drawing.Point(102, 164)
         Me.PrintButton.Name = "PrintButton"
         Me.PrintButton.Size = New System.Drawing.Size(123, 43)
@@ -76,6 +76,8 @@ Partial Class Form_LabelPrint
         Me.Controls.Add(Me.PagesNumberText)
         Me.Controls.Add(Me.PagesNumberLabel)
         Me.Controls.Add(Me.TitleLabel)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_LabelPrint"
         StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.ResumeLayout(False)

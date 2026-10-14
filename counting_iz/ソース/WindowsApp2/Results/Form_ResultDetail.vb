@@ -137,6 +137,8 @@ Public Class Form_ResultDetail
     Me.KeyPreview = True
 
     FormBorderStyle = FormBorderStyle.FixedSingle
+    MarkRequiredLabels(Label23, Label21, Label22, Label19)
+    AlignDetailActionButtons(Me, OkButton, CloseButton)
 
     SetMstComboBox()
     SetUnitComboBox()
@@ -230,8 +232,8 @@ Public Class Form_ResultDetail
     Try
       SqlServer.GetResult(data, query)
     Catch ex As Exception
-      Call ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      Call ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
     Return data
   End Function
@@ -268,8 +270,8 @@ Public Class Form_ResultDetail
   '            SqlServer.GetResult(PackingData, GetSelectPackingMaster)
   '        End With
   '    Catch ex As Exception
-  '        Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-  '        Throw New Exception(ex.Message)
+  '        Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+  '        Throw
   '    End Try
 
   '    Return PackingData
@@ -290,8 +292,8 @@ Public Class Form_ResultDetail
   '            SqlServer.GetResult(ScaleData, GetSelectScaleMaster)
   '        End With
   '    Catch ex As Exception
-  '        Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-  '        Throw New Exception(ex.Message)
+  '        Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+  '        Throw
   '    End Try
 
   '    Return ScaleData
@@ -418,8 +420,8 @@ Public Class Form_ResultDetail
     Try
       SqlServer.GetResult(freeData, GetSelectStaffNameQuery(selectedOption))
     Catch ex As Exception
-      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
 
     Return freeData
@@ -429,7 +431,7 @@ Public Class Form_ResultDetail
     Dim sql As String = String.Empty
     sql &= " SELECT staff_name "
     sql &= " FROM MST_Staff "
-    sql &= " WHERE staff_number = '" & selectedOption & "'"
+    sql &= " WHERE staff_number = '" & EscapeSqlLiteral(selectedOption) & "'"
     Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
   End Function
@@ -484,8 +486,8 @@ Public Class Form_ResultDetail
     Try
       SqlServer.GetResult(freeData, GetSelectFreeNameQuery(freeType, selectedOption))
     Catch ex As Exception
-      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
 
     Return freeData
@@ -676,8 +678,8 @@ Public Class Form_ResultDetail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -691,27 +693,27 @@ Public Class Form_ResultDetail
     'sql &= "     ,manufacturer_code = '" & manufacturerCodeComboBox.Text & "'"
     'sql &= "     ,manufacturer_name = '" & manufacturerNameTextValue.Text & "'"
     sql &= "     call_code = '" & callCodeComboBox.SelectedItem.ToString() & "'"
-    sql &= "     ,item_number = '" & itemNoText.Text & "'"
-    sql &= "     ,item_name = '" & itemNameText.Text & "'"
-    sql &= "     ,staff_number = '" & staffNumberComboBox.Text & "'"
-    sql &= "     ,staff_name = '" & staffNameText.Text & "'"
-    sql &= "     ,lot1 = '" & lot1TextValue.Text & "'"
-    sql &= "     ,lot2 = '" & lot2TextValue.Text & "'"
-    sql &= "     ,classification = '" & classificationTextValue.Text & "'"
+    sql &= "     ,item_number = '" & EscapeSqlLiteral(itemNoText.Text) & "'"
+    sql &= "     ,item_name = '" & EscapeSqlLiteral(itemNameText.Text) & "'"
+    sql &= "     ,staff_number = '" & EscapeSqlLiteral(staffNumberComboBox.Text) & "'"
+    sql &= "     ,staff_name = '" & EscapeSqlLiteral(staffNameText.Text) & "'"
+    sql &= "     ,lot1 = '" & EscapeSqlLiteral(lot1TextValue.Text) & "'"
+    sql &= "     ,lot2 = '" & EscapeSqlLiteral(lot2TextValue.Text) & "'"
+    sql &= "     ,classification = '" & EscapeSqlLiteral(classificationTextValue.Text) & "'"
     sql &= "     ,free1_number = '" & free1NumberComboBox.SelectedItem & "'"
-    sql &= "     ,free1_name = '" & free1NameTextValue.Text & "'"
+    sql &= "     ,free1_name = '" & EscapeSqlLiteral(free1NameTextValue.Text) & "'"
     sql &= "     ,free2_number = '" & free2NumberComboBox.SelectedItem & "'"
-    sql &= "     ,free2_name = '" & free2NameTextValue.Text & "'"
+    sql &= "     ,free2_name = '" & EscapeSqlLiteral(free2NameTextValue.Text) & "'"
     sql &= "     ,free3_number = '" & free3NumberComboBox.SelectedItem & "'"
-    sql &= "     ,free3_name = '" & free3NameTextValue.Text & "'"
+    sql &= "     ,free3_name = '" & EscapeSqlLiteral(free3NameTextValue.Text) & "'"
     sql &= "     ,free4_number = '" & free4NumberComboBox.SelectedItem & "'"
-    sql &= "     ,free4_name = '" & free4NameTextValue.Text & "'"
+    sql &= "     ,free4_name = '" & EscapeSqlLiteral(free4NameTextValue.Text) & "'"
     sql &= "     ,free5_number = '" & free5NumberComboBox.SelectedItem & "'"
-    sql &= "     ,free5_name = '" & free5NameTextValue.Text & "'"
+    sql &= "     ,free5_name = '" & EscapeSqlLiteral(free5NameTextValue.Text) & "'"
     sql &= "  WHERE "
-    sql &= "      addition_date = '" & additionDateText.Text & "'"
-    sql &= "      AND addition_time = '" & additionTimeText.Text & "'"
-    sql &= "      AND terminal_number = '" & terminalComboBox.Text & "'"
+    sql &= "      addition_date = '" & EscapeSqlLiteral(additionDateText.Text) & "'"
+    sql &= "      AND addition_time = '" & EscapeSqlLiteral(additionTimeText.Text) & "'"
+    sql &= "      AND terminal_number = '" & EscapeSqlLiteral(terminalComboBox.Text) & "'"
     'sql &= "      AND call_code = '" & callCodeComboBox.Text & "'"
 
     Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
@@ -726,39 +728,51 @@ Public Class Form_ResultDetail
         End If
       End With
     Catch ex As Exception
-      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
     Return False
   End Function
   Private Function ValidateInputs() As Boolean
     Dim isValid As Boolean = True
 
+    Dim parsedDate As Date
+    Dim parsedTime As Date
+    If Not Date.TryParse(additionDateText.Text, parsedDate) Then
+      ShowWarningMessage("正しい日付を入力してください。", Me)
+      FocusInputError(additionDateText)
+      Return False
+    End If
+    If Not Date.TryParseExact(additionTimeText.Text, New String() {"HH:mm:ss", "H:mm:ss", "HH:mm", "H:mm"}, Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.None, parsedTime) Then
+      ShowWarningMessage("時刻は時:分:秒の形式で入力してください。", Me)
+      FocusInputError(additionTimeText)
+      Return False
+    End If
     ' 日付チェック
     If String.IsNullOrWhiteSpace(additionDateText.Text) Then
       MessageBox.Show("日付を入力してください。", "入力エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-      additionDateText.Focus()
+      Common.ClsFunction.FocusInputError(additionDateText)
       isValid = False
     End If
 
     ' 時刻チェック
     If String.IsNullOrWhiteSpace(additionTimeText.Text) Then
       MessageBox.Show("時刻を入力してください。", "入力エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-      additionTimeText.Focus()
+      Common.ClsFunction.FocusInputError(additionTimeText)
       isValid = False
     End If
 
     ' 端末機№チェック
     If terminalComboBox.SelectedIndex = -1 Then
       MessageBox.Show("端末機№を選択してください。", "入力エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-      terminalComboBox.Focus()
+      Common.ClsFunction.FocusInputError(terminalComboBox)
       isValid = False
     End If
 
     ' 呼出コードチェック
     If callCodeComboBox.SelectedIndex = -1 Then
       MessageBox.Show("呼出コードを選択してください。", "入力エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-      callCodeComboBox.Focus()
+      Common.ClsFunction.FocusInputError(callCodeComboBox)
       isValid = False
     End If
 
@@ -789,8 +803,8 @@ Public Class Form_ResultDetail
     Try
       SqlServer.GetResult(freeData, GetSelectCallCodeQuery(selectedOption))
     Catch ex As Exception
-      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
 
     Return freeData
@@ -800,7 +814,7 @@ Public Class Form_ResultDetail
     Dim sql As String = String.Empty
     sql &= " SELECT item_number,item_name "
     sql &= " FROM MST_Item "
-    sql &= " WHERE call_code = '" & selectedOption & "'"
+    sql &= " WHERE call_code = '" & EscapeSqlLiteral(selectedOption) & "'"
     Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
   End Function
@@ -825,8 +839,8 @@ Public Class Form_ResultDetail
     Try
       SqlServer.GetResult(freeData, GetSelectManufacturerQuery(selectedOption))
     Catch ex As Exception
-      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
 
     Return freeData
@@ -836,7 +850,7 @@ Public Class Form_ResultDetail
     Dim sql As String = String.Empty
     sql &= " SELECT Manufacturer_Name "
     sql &= " FROM MST_Manufacturer "
-    sql &= " WHERE Manufacturer_Code = '" & selectedOption & "'"
+    sql &= " WHERE Manufacturer_Code = '" & EscapeSqlLiteral(selectedOption) & "'"
     Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
   End Function
@@ -878,8 +892,8 @@ Public Class Form_ResultDetail
   '            SqlServer.GetResult(scaleData, GetSelectPackingUnit(selectedOption))
   '        End With
   '    Catch ex As Exception
-  '        Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-  '        Throw New Exception(ex.Message)
+  '        Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+  '        Throw
   '    End Try
 
   '    Return scaleData
@@ -894,4 +908,7 @@ Public Class Form_ResultDetail
   '    Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
   '    Return sql
   'End Function
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
+  End Sub
 End Class

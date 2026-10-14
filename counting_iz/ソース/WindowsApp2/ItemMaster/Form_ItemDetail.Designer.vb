@@ -76,7 +76,7 @@ Partial Class Form_ItemDetail
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!)
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!)
         Me.TitleLabel.Location = New System.Drawing.Point(12, 9)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(150, 30)
@@ -85,7 +85,7 @@ Partial Class Form_ItemDetail
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.CloseButton.Location = New System.Drawing.Point(620, 608)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 50)
@@ -95,7 +95,7 @@ Partial Class Form_ItemDetail
         '
         'OkButton
         '
-        Me.OkButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.OkButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.OkButton.Location = New System.Drawing.Point(491, 608)
         Me.OkButton.Name = "OkButton"
         Me.OkButton.Size = New System.Drawing.Size(123, 50)
@@ -113,14 +113,14 @@ Partial Class Form_ItemDetail
         Me.GroupBox1.Controls.Add(Me.Label23)
         Me.GroupBox1.Location = New System.Drawing.Point(42, 42)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(344, 269)
+        Me.GroupBox1.Size = New System.Drawing.Size(344, 281)
         Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = False
         '
         'itemCodeText
         '
-        Me.itemCodeText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-        Me.itemCodeText.Location = New System.Drawing.Point(183, 97)
+        Me.itemCodeText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
+        Me.itemCodeText.Location = New System.Drawing.Point(183, 57)
         Me.itemCodeText.MaxLength = 20
         Me.itemCodeText.Name = "itemCodeText"
         Me.itemCodeText.Size = New System.Drawing.Size(147, 33)
@@ -129,9 +129,9 @@ Partial Class Form_ItemDetail
         'Label21
         '
         Me.Label21.AutoSize = True
-        Me.Label21.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label21.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label21.ForeColor = System.Drawing.Color.Black
-        Me.Label21.Location = New System.Drawing.Point(6, 100)
+        Me.Label21.Location = New System.Drawing.Point(6, 60)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(57, 30)
         Me.Label21.TabIndex = 2
@@ -139,8 +139,8 @@ Partial Class Form_ItemDetail
         '
         'itemNameText
         '
-        Me.itemNameText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-        Me.itemNameText.Location = New System.Drawing.Point(183, 57)
+        Me.itemNameText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
+        Me.itemNameText.Location = New System.Drawing.Point(183, 97)
         Me.itemNameText.MaxLength = 99
         Me.itemNameText.Name = "itemNameText"
         Me.itemNameText.Size = New System.Drawing.Size(147, 33)
@@ -149,9 +149,9 @@ Partial Class Form_ItemDetail
         'Label22
         '
         Me.Label22.AutoSize = True
-        Me.Label22.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label22.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label22.ForeColor = System.Drawing.Color.Red
-        Me.Label22.Location = New System.Drawing.Point(6, 60)
+        Me.Label22.Location = New System.Drawing.Point(6, 100)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(57, 30)
         Me.Label22.TabIndex = 4
@@ -159,7 +159,7 @@ Partial Class Form_ItemDetail
         '
         'codeText
         '
-        Me.codeText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.codeText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.codeText.Location = New System.Drawing.Point(183, 17)
         Me.codeText.MaxLength = 8
         Me.codeText.Name = "codeText"
@@ -169,7 +169,7 @@ Partial Class Form_ItemDetail
         'Label23
         '
         Me.Label23.AutoSize = True
-        Me.Label23.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label23.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label23.ForeColor = System.Drawing.Color.Red
         Me.Label23.Location = New System.Drawing.Point(6, 20)
         Me.Label23.Name = "Label23"
@@ -189,7 +189,7 @@ Partial Class Form_ItemDetail
         Me.GroupBox2.Controls.Add(Me.safetyFactorText)
         Me.GroupBox2.Controls.Add(Me.Label2)
         Me.GroupBox2.Controls.Add(Me.Label12)
-        Me.GroupBox2.Location = New System.Drawing.Point(42, 317)
+        Me.GroupBox2.Location = New System.Drawing.Point(42, 329)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(344, 269)
         Me.GroupBox2.TabIndex = 3
@@ -197,7 +197,7 @@ Partial Class Form_ItemDetail
         '
         'maxText
         '
-        Me.maxText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.maxText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.maxText.Location = New System.Drawing.Point(183, 97)
         Me.maxText.MaxLength = 6
         Me.maxText.Name = "maxText"
@@ -206,7 +206,7 @@ Partial Class Form_ItemDetail
         '
         'minText
         '
-        Me.minText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.minText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.minText.Location = New System.Drawing.Point(183, 177)
         Me.minText.MaxLength = 6
         Me.minText.Name = "minText"
@@ -216,7 +216,7 @@ Partial Class Form_ItemDetail
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label9.Location = New System.Drawing.Point(6, 180)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(79, 30)
@@ -225,7 +225,7 @@ Partial Class Form_ItemDetail
         '
         'standardText
         '
-        Me.standardText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.standardText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.standardText.Location = New System.Drawing.Point(183, 137)
         Me.standardText.MaxLength = 6
         Me.standardText.Name = "standardText"
@@ -235,7 +235,7 @@ Partial Class Form_ItemDetail
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label5.Location = New System.Drawing.Point(6, 140)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(79, 30)
@@ -244,7 +244,7 @@ Partial Class Form_ItemDetail
         '
         'targetQtyText
         '
-        Me.targetQtyText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.targetQtyText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.targetQtyText.Location = New System.Drawing.Point(183, 17)
         Me.targetQtyText.MaxLength = 6
         Me.targetQtyText.Name = "targetQtyText"
@@ -254,7 +254,7 @@ Partial Class Form_ItemDetail
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.Black
         Me.Label1.Location = New System.Drawing.Point(6, 20)
         Me.Label1.Name = "Label1"
@@ -264,7 +264,7 @@ Partial Class Form_ItemDetail
         '
         'safetyFactorText
         '
-        Me.safetyFactorText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.safetyFactorText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.safetyFactorText.Location = New System.Drawing.Point(183, 57)
         Me.safetyFactorText.MaxLength = 6
         Me.safetyFactorText.Name = "safetyFactorText"
@@ -274,7 +274,7 @@ Partial Class Form_ItemDetail
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(6, 60)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(101, 30)
@@ -284,7 +284,7 @@ Partial Class Form_ItemDetail
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label12.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label12.Location = New System.Drawing.Point(6, 100)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(79, 30)
@@ -307,13 +307,13 @@ Partial Class Form_ItemDetail
         Me.GroupBox3.Controls.Add(Me.Label24)
         Me.GroupBox3.Location = New System.Drawing.Point(398, 42)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(343, 269)
+        Me.GroupBox3.Size = New System.Drawing.Size(343, 281)
         Me.GroupBox3.TabIndex = 2
         Me.GroupBox3.TabStop = False
         '
         'weightMinText
         '
-        Me.weightMinText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.weightMinText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.weightMinText.Location = New System.Drawing.Point(183, 181)
         Me.weightMinText.MaxLength = 10
         Me.weightMinText.Name = "weightMinText"
@@ -323,7 +323,7 @@ Partial Class Form_ItemDetail
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.Location = New System.Drawing.Point(6, 180)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(123, 30)
@@ -334,7 +334,7 @@ Partial Class Form_ItemDetail
         '
         Me.weightMinUnitCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.weightMinUnitCombo.Enabled = False
-        Me.weightMinUnitCombo.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.weightMinUnitCombo.Font = New System.Drawing.Font("Meiryo UI", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.weightMinUnitCombo.FormattingEnabled = True
         Me.weightMinUnitCombo.Location = New System.Drawing.Point(183, 221)
         Me.weightMinUnitCombo.Name = "weightMinUnitCombo"
@@ -344,7 +344,7 @@ Partial Class Form_ItemDetail
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.Location = New System.Drawing.Point(6, 220)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(167, 30)
@@ -353,7 +353,7 @@ Partial Class Form_ItemDetail
         '
         'weightMaxText
         '
-        Me.weightMaxText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.weightMaxText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.weightMaxText.Location = New System.Drawing.Point(183, 97)
         Me.weightMaxText.MaxLength = 10
         Me.weightMaxText.Name = "weightMaxText"
@@ -363,7 +363,7 @@ Partial Class Form_ItemDetail
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label7.Location = New System.Drawing.Point(6, 100)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(123, 30)
@@ -374,7 +374,7 @@ Partial Class Form_ItemDetail
         '
         Me.weightMaxUnitCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.weightMaxUnitCombo.Enabled = False
-        Me.weightMaxUnitCombo.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.weightMaxUnitCombo.Font = New System.Drawing.Font("Meiryo UI", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.weightMaxUnitCombo.FormattingEnabled = True
         Me.weightMaxUnitCombo.Location = New System.Drawing.Point(183, 141)
         Me.weightMaxUnitCombo.Name = "weightMaxUnitCombo"
@@ -384,7 +384,7 @@ Partial Class Form_ItemDetail
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label11.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label11.Location = New System.Drawing.Point(6, 140)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(167, 30)
@@ -393,7 +393,7 @@ Partial Class Form_ItemDetail
         '
         'weightText
         '
-        Me.weightText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.weightText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.weightText.Location = New System.Drawing.Point(183, 17)
         Me.weightText.MaxLength = 10
         Me.weightText.Name = "weightText"
@@ -403,7 +403,7 @@ Partial Class Form_ItemDetail
         'Label15
         '
         Me.Label15.AutoSize = True
-        Me.Label15.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label15.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label15.ForeColor = System.Drawing.Color.Black
         Me.Label15.Location = New System.Drawing.Point(6, 20)
         Me.Label15.Name = "Label15"
@@ -415,7 +415,7 @@ Partial Class Form_ItemDetail
         '
         Me.weightUnitCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.weightUnitCombo.Enabled = False
-        Me.weightUnitCombo.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.weightUnitCombo.Font = New System.Drawing.Font("Meiryo UI", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.weightUnitCombo.FormattingEnabled = True
         Me.weightUnitCombo.Location = New System.Drawing.Point(183, 57)
         Me.weightUnitCombo.Name = "weightUnitCombo"
@@ -425,7 +425,7 @@ Partial Class Form_ItemDetail
         'Label24
         '
         Me.Label24.AutoSize = True
-        Me.Label24.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label24.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label24.ForeColor = System.Drawing.Color.Black
         Me.Label24.Location = New System.Drawing.Point(6, 60)
         Me.Label24.Name = "Label24"
@@ -445,7 +445,7 @@ Partial Class Form_ItemDetail
         Me.GroupBox4.Controls.Add(Me.tareCombo)
         Me.GroupBox4.Controls.Add(Me.Label6)
         Me.GroupBox4.Controls.Add(Me.Label8)
-        Me.GroupBox4.Location = New System.Drawing.Point(397, 317)
+        Me.GroupBox4.Location = New System.Drawing.Point(398, 329)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(344, 269)
         Me.GroupBox4.TabIndex = 4
@@ -454,7 +454,7 @@ Partial Class Form_ItemDetail
         'tareWeightUnitTextBox
         '
         Me.tareWeightUnitTextBox.Enabled = False
-        Me.tareWeightUnitTextBox.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.tareWeightUnitTextBox.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.tareWeightUnitTextBox.Location = New System.Drawing.Point(183, 97)
         Me.tareWeightUnitTextBox.MaxLength = 6
         Me.tareWeightUnitTextBox.Name = "tareWeightUnitTextBox"
@@ -464,7 +464,7 @@ Partial Class Form_ItemDetail
         'tareWeightTextBox
         '
         Me.tareWeightTextBox.Enabled = False
-        Me.tareWeightTextBox.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.tareWeightTextBox.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.tareWeightTextBox.Location = New System.Drawing.Point(183, 58)
         Me.tareWeightTextBox.MaxLength = 6
         Me.tareWeightTextBox.Name = "tareWeightTextBox"
@@ -474,7 +474,7 @@ Partial Class Form_ItemDetail
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label14.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label14.Location = New System.Drawing.Point(6, 20)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(79, 30)
@@ -483,7 +483,7 @@ Partial Class Form_ItemDetail
         '
         'subtotalCountText
         '
-        Me.subtotalCountText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.subtotalCountText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.subtotalCountText.Location = New System.Drawing.Point(183, 177)
         Me.subtotalCountText.MaxLength = 6
         Me.subtotalCountText.Name = "subtotalCountText"
@@ -493,7 +493,7 @@ Partial Class Form_ItemDetail
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label13.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label13.Location = New System.Drawing.Point(6, 180)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(145, 30)
@@ -502,7 +502,7 @@ Partial Class Form_ItemDetail
         '
         'subtotalTargetText
         '
-        Me.subtotalTargetText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.subtotalTargetText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.subtotalTargetText.Location = New System.Drawing.Point(183, 137)
         Me.subtotalTargetText.MaxLength = 6
         Me.subtotalTargetText.Name = "subtotalTargetText"
@@ -512,7 +512,7 @@ Partial Class Form_ItemDetail
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label10.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label10.Location = New System.Drawing.Point(6, 140)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(123, 30)
@@ -523,7 +523,7 @@ Partial Class Form_ItemDetail
         '
         Me.tareCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.tareCombo.Enabled = False
-        Me.tareCombo.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.tareCombo.Font = New System.Drawing.Font("Meiryo UI", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.tareCombo.FormattingEnabled = True
         Me.tareCombo.Location = New System.Drawing.Point(183, 17)
         Me.tareCombo.Name = "tareCombo"
@@ -533,7 +533,7 @@ Partial Class Form_ItemDetail
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label6.Location = New System.Drawing.Point(6, 60)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(101, 30)
@@ -543,7 +543,7 @@ Partial Class Form_ItemDetail
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label8.Location = New System.Drawing.Point(6, 100)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(101, 30)
@@ -562,6 +562,8 @@ Partial Class Form_ItemDetail
         Me.Controls.Add(Me.CloseButton)
         Me.Controls.Add(Me.OkButton)
         Me.Controls.Add(Me.TitleLabel)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_ItemDetail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "ItemDetail"

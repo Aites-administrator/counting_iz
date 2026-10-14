@@ -31,7 +31,7 @@ Partial Class Form_OutPut
         '
         'MonthlyReportOutputButton
         '
-        Me.MonthlyReportOutputButton.Font = New System.Drawing.Font("Segoe UI", 18.0!)
+        Me.MonthlyReportOutputButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.MonthlyReportOutputButton.Location = New System.Drawing.Point(12, 72)
         Me.MonthlyReportOutputButton.Name = "MonthlyReportOutputButton"
         Me.MonthlyReportOutputButton.Size = New System.Drawing.Size(407, 79)
@@ -41,7 +41,7 @@ Partial Class Form_OutPut
         '
         'DetailOutputButton
         '
-        Me.DetailOutputButton.Font = New System.Drawing.Font("Segoe UI", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.DetailOutputButton.Font = New System.Drawing.Font("Meiryo UI", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.DetailOutputButton.Location = New System.Drawing.Point(12, 260)
         Me.DetailOutputButton.Name = "DetailOutputButton"
         Me.DetailOutputButton.Size = New System.Drawing.Size(407, 79)
@@ -53,7 +53,7 @@ Partial Class Form_OutPut
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 24.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 24.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TitleLabel.Location = New System.Drawing.Point(12, 9)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(229, 45)
@@ -63,7 +63,7 @@ Partial Class Form_OutPut
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.CloseButton.Location = New System.Drawing.Point(710, 586)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 50)
@@ -73,7 +73,7 @@ Partial Class Form_OutPut
         '
         'WeightCheckButton
         '
-        Me.WeightCheckButton.Font = New System.Drawing.Font("Segoe UI", 18.0!)
+        Me.WeightCheckButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.WeightCheckButton.Location = New System.Drawing.Point(426, 72)
         Me.WeightCheckButton.Name = "WeightCheckButton"
         Me.WeightCheckButton.Size = New System.Drawing.Size(407, 79)
@@ -92,6 +92,8 @@ Partial Class Form_OutPut
         Me.Controls.Add(Me.TitleLabel)
         Me.Controls.Add(Me.MonthlyReportOutputButton)
         Me.Controls.Add(Me.DetailOutputButton)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_OutPut"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "累計データ管理"

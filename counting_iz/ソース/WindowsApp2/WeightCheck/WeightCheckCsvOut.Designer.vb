@@ -36,7 +36,7 @@ Partial Class WeightCheckCsvOut
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 15.75!)
+        Me.Label1.Font = New System.Drawing.Font("Meiryo UI", 15.75!)
         Me.Label1.Location = New System.Drawing.Point(12, 9)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(226, 30)
@@ -46,7 +46,7 @@ Partial Class WeightCheckCsvOut
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 15.75!)
+        Me.Label2.Font = New System.Drawing.Font("Meiryo UI", 15.75!)
         Me.Label2.Location = New System.Drawing.Point(46, 70)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(57, 30)
@@ -56,7 +56,7 @@ Partial Class WeightCheckCsvOut
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 15.75!)
+        Me.Label3.Font = New System.Drawing.Font("Meiryo UI", 15.75!)
         Me.Label3.Location = New System.Drawing.Point(46, 110)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(57, 30)
@@ -65,7 +65,7 @@ Partial Class WeightCheckCsvOut
         '
         'DateTimeFrom
         '
-        Me.DateTimeFrom.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.DateTimeFrom.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.DateTimeFrom.Location = New System.Drawing.Point(126, 111)
         Me.DateTimeFrom.Name = "DateTimeFrom"
         Me.DateTimeFrom.Size = New System.Drawing.Size(151, 33)
@@ -74,7 +74,7 @@ Partial Class WeightCheckCsvOut
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Segoe UI", 15.75!)
+        Me.Label4.Font = New System.Drawing.Font("Meiryo UI", 15.75!)
         Me.Label4.Location = New System.Drawing.Point(292, 114)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(35, 30)
@@ -83,7 +83,7 @@ Partial Class WeightCheckCsvOut
         '
         'StartButton
         '
-        Me.StartButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.StartButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.StartButton.Location = New System.Drawing.Point(246, 181)
         Me.StartButton.Name = "StartButton"
         Me.StartButton.Size = New System.Drawing.Size(123, 50)
@@ -93,7 +93,7 @@ Partial Class WeightCheckCsvOut
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.CloseButton.Location = New System.Drawing.Point(375, 181)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 50)
@@ -104,7 +104,7 @@ Partial Class WeightCheckCsvOut
         'ItemCode_ComboBox
         '
         Me.ItemCode_ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ItemCode_ComboBox.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.ItemCode_ComboBox.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.ItemCode_ComboBox.FormattingEnabled = True
         Me.ItemCode_ComboBox.Location = New System.Drawing.Point(126, 67)
         Me.ItemCode_ComboBox.Name = "ItemCode_ComboBox"
@@ -113,7 +113,7 @@ Partial Class WeightCheckCsvOut
         '
         'DateTimeTo
         '
-        Me.DateTimeTo.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.DateTimeTo.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.DateTimeTo.Location = New System.Drawing.Point(341, 115)
         Me.DateTimeTo.Name = "DateTimeTo"
         Me.DateTimeTo.Size = New System.Drawing.Size(151, 33)
@@ -133,6 +133,8 @@ Partial Class WeightCheckCsvOut
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "WeightCheckCsvOut"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Form1"

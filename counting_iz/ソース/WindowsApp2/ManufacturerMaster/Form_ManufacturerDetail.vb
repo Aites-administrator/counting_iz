@@ -28,6 +28,8 @@ Public Class Form_ManufacturerDetail
     Text = "製造者マスタ詳細" & " ( " & updateTime & " ) "
     Me.KeyPreview = True
     FormBorderStyle = FormBorderStyle.FixedSingle
+    MarkRequiredLabels(CodeLabel, NameLabel)
+    AlignDetailActionButtons(Me, OkButton, CloseButton)
     SetInitialProperty()
   End Sub
 
@@ -44,15 +46,14 @@ Public Class Form_ManufacturerDetail
   End Sub
 
   Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
-    Close()
+    Me.Dispose()
   End Sub
 
   Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+    If Not CheckValue() Then Exit Sub
+
     Select Case InputMode
       Case 1
-        If CheckValue() = False Then
-          Exit Sub
-        End If
         '新規登録メソッド呼出し
         InsertManufacturerMaster()
       Case 2
@@ -60,43 +61,46 @@ Public Class Form_ManufacturerDetail
         UpdateManufacturerMaster()
     End Select
   End Sub
-  Function CheckValue()
+  Function CheckValue() As Boolean
     Dim errorMessages As New List(Of String)
+    Dim code As String = CodeText.Text.Trim()
+    Dim name As String = NameText.Text.Trim()
 
-    ' 必須項目チェック
-    If String.IsNullOrEmpty(CodeText.Text) Then
+    If String.IsNullOrEmpty(code) Then
       errorMessages.Add("製造者コードを入力してください。")
-    ElseIf CodeText.Text = "0000" Then
-      errorMessages.Add("製造者コードに0000は登録できません。")
-      CodeText.Focus()
+    ElseIf Not IsDigitsOnly(code) OrElse code.Length > CodeDigits Then
+      errorMessages.Add("製造者コードは1～" & CodeDigits & "桁の数字で入力してください。")
+    ElseIf code.All(Function(c) c = "0"c) Then
+      errorMessages.Add("製造者コードに全て0は登録できません。")
     End If
 
-    If String.IsNullOrEmpty(NameText.Text) Then
+    If String.IsNullOrEmpty(name) Then
       errorMessages.Add("製造者名を入力してください。")
-      NameText.Focus()
+    ElseIf name.Length > 48 Then
+      errorMessages.Add("製造者名は48文字以内で入力してください。")
     End If
 
     If errorMessages.Count > 0 Then
       MessageBox.Show(String.Join(vbCrLf, errorMessages), "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
-      ' 最初のエラー項目にフォーカスを設定
-      If String.IsNullOrEmpty(CodeText.Text) Then
-        CodeText.Focus()
-      ElseIf String.IsNullOrEmpty(NameText.Text) Then
-        NameText.Focus()
+      If String.IsNullOrEmpty(code) OrElse Not IsDigitsOnly(code) OrElse code.Length > CodeDigits OrElse code.All(Function(c) c = "0"c) Then
+        Common.ClsFunction.FocusInputError(CodeText)
+      Else
+        Common.ClsFunction.FocusInputError(NameText)
       End If
 
       Return False
     End If
 
-    '重複チェック
-    If Form_ManufacturerList.ManufacturerDetail.Rows.Count > 0 Then
+    CodeText.Text = code.PadLeft(CodeDigits, "0"c)
+    NameText.Text = name
+
+    If InputMode = 1 AndAlso Form_ManufacturerList.ManufacturerDetail.Rows.Count > 0 Then
       For i As Integer = 0 To Form_ManufacturerList.ManufacturerDetail.Rows.Count - 1
         If CodeText.Text.Equals(Form_ManufacturerList.ManufacturerDetail.Rows(i).Cells(0).Value) Then
           MessageBox.Show("既に登録されている製造者コードです。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+          Common.ClsFunction.FocusInputError(CodeText)
           Return False
-          CodeText.Focus()
-          Exit For
         End If
       Next
     End If
@@ -127,36 +131,34 @@ Public Class Form_ManufacturerDetail
             Close()
           Else
             ' 登録失敗
-            MessageBox.Show("商品マスタの登録に失敗しました。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("製造者マスタの登録に失敗しました。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
           End If
         Else
           Exit Sub
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
 
   Private Function GetInsertSql() As String
     Dim sql As String = String.Empty
-    Dim CodeTxtInt As String = CodeText.Text
-    Dim NameTxt As String = NameText.Text
+    Dim CodeTxtInt As String = EscapeSqlLiteral(CodeText.Text)
+    Dim NameTxt As String = EscapeSqlLiteral(NameText.Text)
     Dim tmpdate As DateTime = CDate(ComGetProcTime())
 
     sql &= " INSERT INTO MST_Manufacturer("
     sql &= "     Manufacturer_Code,"
     sql &= "     Manufacturer_Name,"
-    sql &= "     delete_flg,"
     sql &= "     create_date,"
     sql &= "     update_date"
     sql &= " )"
     sql &= " VALUES("
     sql &= "     '" & CodeTxtInt & "',"
-    sql &= "     '" & NameTxt & "',"
-    sql &= "     0,"
+    sql &= "     '" & EscapeSqlLiteral(NameTxt) & "',"
     sql &= "     '" & tmpdate & "',"
     sql &= "     '" & tmpdate & "'"
     sql &= " )"
@@ -196,21 +198,21 @@ Public Class Form_ManufacturerDetail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
   Private Function GetUpdateSql() As String
     Dim sql As String = String.Empty
-    Dim CodeTxt As String = CodeText.Text
-    Dim NameTxt As String = NameText.Text
+    Dim CodeTxt As String = EscapeSqlLiteral(CodeText.Text)
+    Dim NameTxt As String = EscapeSqlLiteral(NameText.Text)
     Dim tmpdate As DateTime = CDate(ComGetProcTime())
 
     sql &= " UPDATE MST_Manufacturer SET"
-    sql &= "     Manufacturer_Name = '" & NameTxt & "',"
+    sql &= "     Manufacturer_Name = '" & EscapeSqlLiteral(NameTxt) & "',"
     sql &= "     update_date = '" & tmpdate & "'"
-    sql &= " WHERE Manufacturer_Code = '" & CodeTxt & "'"
+    sql &= " WHERE Manufacturer_Code = '" & EscapeSqlLiteral(CodeTxt) & "'"
 
     Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
@@ -236,5 +238,8 @@ Public Class Form_ManufacturerDetail
       Case Keys.Escape
         Me.Close()
     End Select
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

@@ -112,6 +112,12 @@
     <Compile Include="ClsGlobalData.vb" />
     <Compile Include="ClsFunction.vb" />
     <Compile Include="CommonSrc\ClsFunction.vb" />
+    <Compile Include="Form_CsvExportPassword.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_CsvExportPassword.Designer.vb">
+      <DependentUpon>Form_CsvExportPassword.vb</DependentUpon>
+    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

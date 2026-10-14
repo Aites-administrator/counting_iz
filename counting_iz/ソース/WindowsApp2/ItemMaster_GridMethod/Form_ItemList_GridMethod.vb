@@ -5,6 +5,11 @@ Imports Common.ClsFunction
 Public Class Form_ItemList_GridMethod
   Private dt As DataTable
   Private adapter As SqlDataAdapter
+  Private CallCodeDigits As Integer
+  Private isClosing As Boolean = False
+  Private isUserLimitUnitChange As Boolean = False
+  Private isRevertingLimitUnit As Boolean = False
+  Private previousLimitUnit As String = String.Empty
 
   ' ClsSqlServer のインスタンスを共有
   Private _SqlServer As ClsSqlServer
@@ -24,6 +29,14 @@ Public Class Form_ItemList_GridMethod
     Dim updateTime As DateTime = System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location)
     Text = "商品マスタ一覧" & " ( " & updateTime & " ) "
     Me.KeyPreview = True
+    ' 終了操作では編集中セルの入力チェックを実行しない
+    CloseButton.CausesValidation = False
+
+    If Not TryLoadCallCodeDigits() Then
+      ForceClose()
+      Return
+    End If
+
     LoadData()
     CustomizeDataGridViewHeader() ' ヘッダーのデザイン変更
 
@@ -32,7 +45,30 @@ Public Class Form_ItemList_GridMethod
 
     NumberCheckBox.Checked = True
     AddRowTextBox.Text = 1
+
+    ItemDetail.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
   End Sub
+
+  Private Function TryLoadCallCodeDigits() As Boolean
+    Try
+      Dim settingValue As String = ReadSettingIniFile("ITEM_DIGITS", "VALUE")
+      If Not Integer.TryParse(settingValue, CallCodeDigits) OrElse
+         CallCodeDigits < 1 OrElse CallCodeDigits > 9 Then
+        MessageBox.Show("呼出コードの桁数設定が正しくありません。" & vbCrLf &
+                        "ITEM_DIGITS は1～9で設定してください。",
+                        "設定エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Return False
+      End If
+
+      Return True
+    Catch ex As Exception
+      Call ComWriteErrLog([GetType]().Name,
+                          System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      MessageBox.Show("呼出コードの桁数設定を読み込めませんでした。" & vbCrLf & ex.Message,
+                      "設定エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+      Return False
+    End Try
+  End Function
 
   ' DataGridView のヘッダーのデザインを変更
   Private Sub CustomizeDataGridViewHeader()
@@ -41,7 +77,7 @@ Public Class Form_ItemList_GridMethod
       .EnableHeadersVisualStyles = False ' デフォルトの Windows スタイルを無効化
       .ColumnHeadersDefaultCellStyle.BackColor = Color.LightBlue ' ヘッダーの背景色
       .ColumnHeadersDefaultCellStyle.ForeColor = Color.Black ' ヘッダーの文字色
-      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo", 10, FontStyle.Bold) ' フォント変更
+      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo UI", 10, FontStyle.Bold) ' フォント変更
       .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter ' ヘッダー中央寄せ
     End With
   End Sub
@@ -90,30 +126,34 @@ Public Class Form_ItemList_GridMethod
       ' DataGridView にデータをバインド
       ItemDetail.DataSource = dt
 
+      ' 重量単位は通常の商品マスタ詳細と同じ選択肢のコンボボックスにする
+
       ' ヘッダー名変更 & 不要なカラム非表示
       With ItemDetail
-        .Columns("call_code").HeaderText = "呼出番号"
+        .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+        .MultiSelect = True
+        .Columns("call_code").HeaderText = "呼出コード"
         .Columns("item_number").HeaderText = "品番"
         .Columns("item_name").HeaderText = "品名"
+        .Columns("call_code").HeaderCell.Style.ForeColor = Color.Firebrick
+        .Columns("item_name").HeaderCell.Style.ForeColor = Color.Firebrick
 
         ' item_number と item_name の幅を広げる
         .Columns("item_number").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
         .Columns("item_name").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
 
-        .Columns("packing_bag").HeaderText = "風袋"
-        .Columns("packing_bag_unit").HeaderText = "単位"
+        ' 通常の商品マスタ詳細と同じ項目だけを一覧表示する
+        .Columns("packing_bag").Visible = False
+        .Columns("packing_bag_unit").Visible = False
         .Columns("upper_limit").HeaderText = "上限値"
-        .Columns("upper_limit_unit").HeaderText = "単位"
+        .Columns("upper_limit_unit").HeaderText = "上限値単位"
         .Columns("reference_value").HeaderText = "基準値"
-        .Columns("reference_value_unit").HeaderText = "単位"
+        .Columns("reference_value_unit").HeaderText = "基準値単位"
         .Columns("lower_limit").HeaderText = "下限値"
-        .Columns("lower_limit_unit").HeaderText = "単位"
-        .Columns("subtotal_target_value").HeaderText = "小計目標値"
-        ' subtotal_target_value の幅を広げる
-        .Columns("subtotal_target_value").Width = 110
-
-        .Columns("subtotal_target_value_unit").HeaderText = "単位"
-        .Columns("subtotal_target_count").HeaderText = "回数"
+        .Columns("lower_limit_unit").HeaderText = "下限値単位"
+        .Columns("subtotal_target_value").Visible = False
+        .Columns("subtotal_target_value_unit").Visible = False
+        .Columns("subtotal_target_count").Visible = False
 
         ' 作成日・更新日は非表示
         .Columns("create_date").Visible = False
@@ -125,17 +165,41 @@ Public Class Form_ItemList_GridMethod
         ItemDetail.ClearSelection()
         ItemDetail.Rows(0).Selected = True
         ItemDetail.CurrentCell = ItemDetail.Rows(0).Cells(0)
+
+        ' 検索後にセルの内容に合わせて列幅を自動調整
+        ItemDetail.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells)
+
+        ' 改行を防ぐ（必要なら再適用）
+        ItemDetail.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
+        ItemDetail.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        ItemDetail.ColumnHeadersHeight = 30
       End If
 
+      SetEditControlsEnabled(True)
+
     Catch ex As Exception
+      ItemDetail.DataSource = Nothing
+      SetEditControlsEnabled(False)
       Call ComWriteErrLog([GetType]().Name,
-                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      MessageBox.Show("データの読み込みに失敗しました: " & ex.Message)
+                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      MessageBox.Show("データの読み込みに失敗しました: " & ex.Message,
+                      "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
     End Try
   End Sub
 
+  Private Sub SetEditControlsEnabled(enabled As Boolean)
+    ItemDetail.Enabled = enabled
+    AddRowButton.Enabled = enabled
+    CopyRowButton.Enabled = enabled
+    OkButton.Enabled = enabled
+    DeleteButton.Enabled = enabled
+    NumberCheckBox.Enabled = enabled
+    AddRowTextBox.Enabled = enabled
+  End Sub
+
+
   Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
-    If dt.GetChanges() IsNot Nothing Then
+    If dt IsNot Nothing AndAlso dt.GetChanges() IsNot Nothing Then
       Dim message As String = "現在、編集中のデータがあります。" & vbCrLf &
                               "このまま閉じると変更が失われますが、" & vbCrLf &
                               "よろしいですか？"
@@ -143,47 +207,75 @@ Public Class Form_ItemList_GridMethod
       Dim result As DialogResult = MessageBox.Show(message, "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning)
 
       If result = DialogResult.OK Then
-        Me.Close() ' フォームを閉じる
+        ForceClose()
       End If
     Else
-      Me.Close()
+      ForceClose()
     End If
   End Sub
 
+  ' 入力途中や入力エラーのセルがあっても、終了時は編集を破棄して画面を閉じる
+  Private Sub ForceClose()
+    isClosing = True
+    Me.AutoValidate = AutoValidate.Disable
+
+    Try
+      If ItemDetail.IsCurrentCellInEditMode Then
+        ItemDetail.CancelEdit()
+      End If
+    Finally
+      Me.Close()
+    End Try
+  End Sub
+
+  ' ボタン操作前に編集中セルを確定し、検証エラー中の状態変更を防ぐ
+  Private Function TryCommitPendingEdit() As Boolean
+    Try
+      If Not Me.Validate() Then Return False
+
+      If ItemDetail.IsCurrentCellInEditMode AndAlso Not ItemDetail.EndEdit() Then
+        MessageBox.Show("編集中のセルを確定できません。入力内容を確認してください。",
+                        "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        Return False
+      End If
+
+      Dim currencyManager As CurrencyManager =
+        TryCast(BindingContext(ItemDetail.DataSource), CurrencyManager)
+      If currencyManager IsNot Nothing Then currencyManager.EndCurrentEdit()
+      Return True
+    Catch ex As Exception
+      Call ComWriteErrLog([GetType]().Name,
+                          System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      MessageBox.Show("入力内容を確定できません。編集中のセルを確認してください。" & vbCrLf & ex.Message,
+                      "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+      Return False
+    End Try
+  End Function
+
   Private Sub AddRowButton_Click(sender As Object, e As EventArgs) Handles AddRowButton.Click
+    If dt Is Nothing OrElse Not TryCommitPendingEdit() Then Return
+
     ' 入力された行数を取得
     Dim rowCount As Integer
     If Not Integer.TryParse(AddRowTextBox.Text, rowCount) OrElse rowCount <= 0 Then
-      MessageBox.Show("追加する行数を正しく入力してください。", "入力エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+      MessageBox.Show("追加する行数を正しく入力してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
       Return
     End If
 
     Try
-      ' call_code の最大値を取得（NumberCheckBox がチェックされている場合のみ）
-      Dim maxCallCode As Integer = 0
-      If NumberCheckBox.Checked AndAlso dt.Rows.Count > 0 Then
-        '' call_code の最大値を取得（NULLでないデータのみ対象）
-        'Dim existingCallCodes = dt.AsEnumerable().
-        '        Where(Function(row) Not IsDBNull(row("call_code")) AndAlso Not String.IsNullOrWhiteSpace(row("call_code").ToString())).
-        '        Select(Function(row) Convert.ToInt32(row("call_code")))
-
-        'If existingCallCodes.Any() Then
-        '  maxCallCode = existingCallCodes.Max()
-        'End
-        '
-        '上記のLINQをComputeに変更
-        Dim maxValue = dt.Compute("MAX(call_code)", "call_code IS NOT NULL")
-        maxCallCode = If(IsDBNull(maxValue), 0, Convert.ToInt32(maxValue))
+      Dim availableCallCodes As List(Of String) = Nothing
+      If NumberCheckBox.Checked Then
+        availableCallCodes = GetAvailableCallCodes(rowCount)
+        If availableCallCodes Is Nothing Then Return
       End If
 
       ' DataTable に新規行を追加
       For i As Integer = 1 To rowCount
         Dim newRow As DataRow = dt.NewRow() ' 空の新規行を作成
 
-        ' NumberCheckBox がチェックされている場合は call_code を採番（6桁のゼロ埋め）
+        ' NumberCheckBox がチェックされている場合は、INI設定の桁数で call_code を採番
         If NumberCheckBox.Checked Then
-          maxCallCode += 1
-          newRow("call_code") = maxCallCode.ToString("D6") ' 6桁のゼロ埋め
+          newRow("call_code") = availableCallCodes(i - 1)
         Else
           newRow("call_code") = DBNull.Value ' チェックされていない場合は空
         End If
@@ -208,21 +300,22 @@ Public Class Form_ItemList_GridMethod
         dt.Rows.Add(newRow) ' DataTable に追加
       Next
 
-      ' DataGridView を更新
-      ItemDetail.DataSource = dt
-
       ' 最後に追加した行へフォーカスを移動
       If dt.Rows.Count > 0 Then
+        ItemDetail.ClearSelection()
+        ItemDetail.Rows(dt.Rows.Count - 1).Selected = True
         ItemDetail.CurrentCell = ItemDetail.Rows(dt.Rows.Count - 1).Cells(0)
       End If
 
     Catch ex As Exception
       MessageBox.Show("行の追加に失敗しました: " & ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
       Call ComWriteErrLog([GetType]().Name,
-                  System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
+                  System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
     End Try
   End Sub
   Private Sub CopyRowButton_Click(sender As Object, e As EventArgs) Handles CopyRowButton.Click
+    If dt Is Nothing OrElse Not TryCommitPendingEdit() Then Return
+
     ' 選択された行があるか確認
     If ItemDetail.SelectedRows.Count = 0 Then
       MessageBox.Show("コピーする行を選択してください。", "注意", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -230,33 +323,22 @@ Public Class Form_ItemList_GridMethod
     End If
 
     Try
-      ' call_code の最大値を取得（NumberCheckBox がチェックされている場合のみ）
-      Dim maxCallCode As Integer = 0
-      If NumberCheckBox.Checked AndAlso dt.Rows.Count > 0 Then
-        ' call_code の最大値を取得（NULLでないデータのみ対象）
-        'Dim existingCallCodes = dt.AsEnumerable().
-        '        Where(Function(row) Not IsDBNull(row("call_code")) AndAlso Not String.IsNullOrWhiteSpace(row("call_code").ToString())).
-        '        Select(Function(row) Convert.ToInt32(row("call_code")))
-
-        'If existingCallCodes.Any() Then
-        '  maxCallCode = existingCallCodes.Max()
-        'End If
-
-        '上記のLINQをComputeに変更
-        Dim maxValue = dt.Compute("MAX(call_code)", "call_code IS NOT NULL")
-        maxCallCode = If(IsDBNull(maxValue), 0, Convert.ToInt32(maxValue))
-
+      Dim availableCallCodes As List(Of String) = Nothing
+      If NumberCheckBox.Checked Then
+        availableCallCodes = GetAvailableCallCodes(ItemDetail.SelectedRows.Count)
+        If availableCallCodes Is Nothing Then Return
       End If
 
       ' 選択された行をコピーして新規追加
+      Dim copyIndex As Integer = 0
       For Each row As DataGridViewRow In ItemDetail.SelectedRows
         ' DataRow を作成
         Dim newRow As DataRow = dt.NewRow()
 
         ' call_code の採番
         If NumberCheckBox.Checked Then
-          maxCallCode += 1
-          newRow("call_code") = maxCallCode.ToString("D6") ' 6桁のゼロ埋め
+          newRow("call_code") = availableCallCodes(copyIndex)
+          copyIndex += 1
         Else
           newRow("call_code") = DBNull.Value ' チェックされていない場合は空
         End If
@@ -284,87 +366,158 @@ Public Class Form_ItemList_GridMethod
         dt.Rows.Add(newRow)
       Next
 
-      ' DataGridView を更新
-      ItemDetail.DataSource = dt
-
       ' 最後に追加した行へフォーカスを移動
       If dt.Rows.Count > 0 Then
+        ItemDetail.ClearSelection()
+        ItemDetail.Rows(dt.Rows.Count - 1).Selected = True
         ItemDetail.CurrentCell = ItemDetail.Rows(dt.Rows.Count - 1).Cells(0)
       End If
 
     Catch ex As Exception
       MessageBox.Show("行のコピーに失敗しました: " & ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
       Call ComWriteErrLog([GetType]().Name,
-                  System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
+                  System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
     End Try
   End Sub
 
+  Private Function GetAvailableCallCodes(requiredCount As Integer) As List(Of String)
+    Dim maxCallCode As Integer
+    Dim maxCallCodeText As String = New String("9"c, CallCodeDigits)
+
+    If Not Integer.TryParse(maxCallCodeText, maxCallCode) Then
+      MessageBox.Show("呼出コードの桁数設定が正しくありません。" & vbCrLf &
+                      "管理者へお問い合わせください。",
+                      "設定エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+      Return Nothing
+    End If
+
+    Dim usedCallCodes As New HashSet(Of Integer)()
+    For Each row As DataRow In dt.Rows
+      If row.RowState = DataRowState.Deleted OrElse row.IsNull("call_code") Then Continue For
+
+      Dim callCode As Integer
+      If Integer.TryParse(row("call_code").ToString(), callCode) AndAlso
+         callCode >= 1 AndAlso callCode <= maxCallCode Then
+        usedCallCodes.Add(callCode)
+      End If
+    Next
+
+    Dim availableCallCodes As New List(Of String)()
+    Dim startCode As Integer = If(usedCallCodes.Count > 0, usedCallCodes.Min(), 1)
+
+    ' 現在使われている番号帯から空きを探し、上限到達後は先頭側も探す
+    For callCode As Integer = startCode To maxCallCode
+      If Not usedCallCodes.Contains(callCode) Then
+        availableCallCodes.Add(callCode.ToString("D" & CallCodeDigits.ToString()))
+        If availableCallCodes.Count = requiredCount Then Return availableCallCodes
+      End If
+    Next
+
+    For callCode As Integer = 1 To startCode - 1
+      If Not usedCallCodes.Contains(callCode) Then
+        availableCallCodes.Add(callCode.ToString("D" & CallCodeDigits.ToString()))
+        If availableCallCodes.Count = requiredCount Then Return availableCallCodes
+      End If
+    Next
+
+    If availableCallCodes.Count < requiredCount Then
+      MessageBox.Show("呼出コードは最大" & CallCodeDigits.ToString() & "桁です。" & vbCrLf &
+                      "使用できる空き番号が不足しているため、" & vbCrLf &
+                      "行を追加できません。" & vbCrLf &
+                      "管理者へお問い合わせください。",
+                      "採番上限", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+      Return Nothing
+    End If
+
+    Return availableCallCodes
+  End Function
+
 
   Private Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+    If dt Is Nothing Then Return
+
+    ' 入力エラー中の新規行も取り消せるよう、削除時は編集中セルだけを破棄する
+    If ItemDetail.IsCurrentCellInEditMode Then ItemDetail.CancelEdit()
+
     ' 選択された行があるか確認
     If ItemDetail.SelectedRows.Count = 0 Then
       MessageBox.Show("削除する行を選択してください。", "注意", MessageBoxButtons.OK, MessageBoxIcon.Warning)
       Return
     End If
 
-    ' 削除確認メッセージ
-    Dim result As DialogResult = MessageBox.Show("選択された行を削除しますか？", "確認", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)
+    Dim selectedDataRows As New List(Of DataRow)()
+    For Each gridRow As DataGridViewRow In ItemDetail.SelectedRows
+      Dim rowView As DataRowView = TryCast(gridRow.DataBoundItem, DataRowView)
+      If rowView IsNot Nothing AndAlso Not selectedDataRows.Contains(rowView.Row) Then
+        selectedDataRows.Add(rowView.Row)
+      End If
+    Next
+    If selectedDataRows.Count = 0 Then Return
 
-    ' OK が押された場合
-    If result = DialogResult.OK Then
-      Try
-        ' ClsSqlServer を使用して接続情報を取得
+    Dim persistedCount As Integer = selectedDataRows.Where(
+      Function(row) row.RowState <> DataRowState.Added AndAlso
+                    row.RowState <> DataRowState.Detached).Count()
+    Dim message As String = If(persistedCount > 0,
+      "選択された登録済みデータを削除します。" & vbCrLf & "よろしいですか？",
+      "選択された未登録行を取り消しますか？")
+    If MessageBox.Show(message, "確認", MessageBoxButtons.OKCancel,
+                       MessageBoxIcon.Question) <> DialogResult.OK Then Return
+
+    Try
+      If persistedCount > 0 Then
         Dim connectionString As String = SqlServer.GetConnectionString()
-
         Using connection As New SqlConnection(connectionString)
           connection.Open()
-
-          ' トランザクションを開始
           Using transaction As SqlTransaction = connection.BeginTransaction()
             Try
-              ' 選択された行をループ処理
-              For Each row As DataGridViewRow In ItemDetail.SelectedRows
-                ' call_code（主キー）を取得
-                Dim callCode As String = row.Cells("call_code").Value.ToString()
+              For Each row As DataRow In selectedDataRows
+                If row.RowState = DataRowState.Added OrElse row.RowState = DataRowState.Detached Then Continue For
 
-                ' SQL DELETE コマンド
-                Dim query As String = "DELETE FROM MST_Item WHERE call_code = @call_code"
-
-                ' ログ用にパラメータ展開したSQL文字列を生成（文字列連結）
-                Dim logQuery As String = "DELETE FROM MST_Item WHERE call_code = '" & callCode.Replace("'", "''") & "'"
-
-                Using command As New SqlCommand(query, connection, transaction)
+                Dim callCode As String = Convert.ToString(row("call_code", DataRowVersion.Original))
+                Using command As New SqlCommand(
+                    "DELETE FROM MST_Item WHERE call_code = @call_code", connection, transaction)
                   command.Parameters.AddWithValue("@call_code", callCode)
-                  command.ExecuteNonQuery()
-                  Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, logQuery)
+                  Call WriteExecuteLog([GetType]().Name,
+                                       System.Reflection.MethodBase.GetCurrentMethod().Name,
+                                       BuildCommandTextWithParams(command))
+                  If command.ExecuteNonQuery() <> 1 Then
+                    Throw New DBConcurrencyException(
+                      "ほかの端末で更新または削除された商品があります。画面を開き直してください。")
+                  End If
                 End Using
               Next
-
-              ' トランザクションをコミット
               transaction.Commit()
-
-              ' 削除成功メッセージ
-              MessageBox.Show("削除が完了しました。", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information)
-
-            Catch ex As Exception
-              ' エラーが発生した場合はロールバック
-              transaction.Rollback()
-              MessageBox.Show("削除に失敗しました: " & ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-              Call ComWriteErrLog([GetType]().Name,
-                  System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
+            Catch
+              Try
+                transaction.Rollback()
+              Catch rollbackException As Exception
+                Call ComWriteErrLog([GetType]().Name,
+                                    System.Reflection.MethodBase.GetCurrentMethod().Name, rollbackException)
+              End Try
+              Throw
             End Try
           End Using
         End Using
+      End If
 
-        ' DataGridView を再読み込み
-        LoadData()
+      ' DB再読込を行わず、対象行だけを外す。ほかの未登録・編集中データは保持する。
+      For Each row As DataRow In selectedDataRows
+        If row.RowState = DataRowState.Added Then
+          dt.Rows.Remove(row)
+        ElseIf row.RowState <> DataRowState.Detached Then
+          row.Delete()
+          row.AcceptChanges()
+        End If
+      Next
 
-      Catch ex As Exception
-        MessageBox.Show("データベース接続エラー: " & ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Call ComWriteErrLog([GetType]().Name,
-                  System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      End Try
-    End If
+      MessageBox.Show(If(persistedCount > 0, "削除が完了しました。", "未登録行を取り消しました。"),
+                      "完了", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    Catch ex As Exception
+      MessageBox.Show("削除に失敗しました: " & ex.Message, "エラー",
+                      MessageBoxButtons.OK, MessageBoxIcon.Error)
+      Call ComWriteErrLog([GetType]().Name,
+                          System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+    End Try
   End Sub
   'Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
   '  Try
@@ -498,118 +651,216 @@ Public Class Form_ItemList_GridMethod
   '  Catch ex As Exception
   '    MessageBox.Show("データの保存に失敗しました: " & ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
   '    Call ComWriteErrLog([GetType]().Name,
-  '                System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
+  '                System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
   '  End Try
   'End Sub
   Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+    If dt Is Nothing Then
+      MessageBox.Show("商品データが読み込まれていません。再度画面を開いてください。", "エラー",
+                      MessageBoxButtons.OK, MessageBoxIcon.Error)
+      Return
+    End If
+
+    If Not TryCommitPendingEdit() Then Return
+
+    If dt.GetChanges() Is Nothing Then
+      MessageBox.Show("変更されたデータがありません。", "情報",
+                      MessageBoxButtons.OK, MessageBoxIcon.Information)
+      Return
+    End If
+
+    If Not ValidateChangedRows() Then Return
+
+    If MessageBox.Show("変更内容を登録します。" & vbCrLf & "よろしいですか？",
+                       "確認", MessageBoxButtons.YesNo,
+                       MessageBoxIcon.Question) <> DialogResult.Yes Then Return
+
     Try
       Dim connectionString As String = SqlServer.GetConnectionString()
       Using connection As New SqlConnection(connectionString)
         connection.Open()
-        Dim transaction = connection.BeginTransaction()
+        Using transaction As SqlTransaction = connection.BeginTransaction()
+          Try
+            Dim currentDateTime As DateTime = DateTime.Now
 
-        ' 変更のある行を確認
-        If dt.GetChanges() IsNot Nothing Then
+            For Each row As DataRow In dt.Rows
+              If row.RowState <> DataRowState.Modified AndAlso row.RowState <> DataRowState.Added Then Continue For
 
-          For Each row As DataRow In dt.Rows
-            If row.RowState = DataRowState.Added Or row.RowState = DataRowState.Modified Then
-              Dim callCode As String = row("call_code").ToString()
-              Dim itemNumber As String = row("item_number").ToString()
-              Dim itemName As String = row("item_name").ToString()
+              ' 通常の商品マスタ詳細と同じく、未入力の数値項目は登録時に0として扱う
+              ' 未入力値は計数版の従来仕様どおりDBNullを維持する。
 
-              Dim currentRowIndex As Integer = dt.Rows.IndexOf(row)
+              Dim isAdded As Boolean = row.RowState = DataRowState.Added
+              row("update_date") = currentDateTime
+              If isAdded Then row("create_date") = currentDateTime
 
-              Dim duplicateCallCode = dt.AsEnumerable().Where(Function(r) r("call_code").ToString() = callCode AndAlso Not r Is row).Any()
-              Dim duplicateItemNumber = dt.AsEnumerable().Where(Function(r) r("item_number").ToString() = itemNumber AndAlso Not r Is row).Any()
-              Dim duplicateItemName = dt.AsEnumerable().Where(Function(r) r("item_name").ToString() = itemName AndAlso Not r Is row).Any()
-
-              Dim duplicateFields As New List(Of String)
-              Dim duplicateColumn As String = ""
-
-              If duplicateCallCode Then
-                duplicateFields.Add("呼出コード")
-                duplicateColumn = "call_code"
-              End If
-              If duplicateItemNumber Then
-                duplicateFields.Add("品番")
-                duplicateColumn = "item_number"
-              End If
-              If duplicateItemName Then
-                duplicateFields.Add("品名")
-                duplicateColumn = "item_name"
-              End If
-
-              If duplicateFields.Count > 0 Then
-                MessageBox.Show(String.Join("、", duplicateFields) & " が既に存在しています。別の値を入力してください。", "重複エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                If currentRowIndex >= 0 AndAlso Not String.IsNullOrEmpty(duplicateColumn) Then
-                  ItemDetail.CurrentCell = ItemDetail.Rows(currentRowIndex).Cells(duplicateColumn)
+              Using command As New SqlCommand()
+                command.Connection = connection
+                command.Transaction = transaction
+                If isAdded Then
+                  command.CommandText =
+                    "INSERT INTO MST_Item (call_code, item_number, item_name, packing_bag, packing_bag_unit, upper_limit, upper_limit_unit, reference_value, reference_value_unit, lower_limit, lower_limit_unit, subtotal_target_value, subtotal_target_value_unit, subtotal_target_count, create_date, update_date) " &
+                    "VALUES (@call_code, @item_number, @item_name, @packing_bag, @packing_bag_unit, @upper_limit, @upper_limit_unit, @reference_value, @reference_value_unit, @lower_limit, @lower_limit_unit, @subtotal_target_value, @subtotal_target_value_unit, @subtotal_target_count, @create_date, @update_date)"
+                Else
+                  command.CommandText =
+                    "UPDATE MST_Item SET call_code = @call_code, item_number = @item_number, item_name = @item_name, packing_bag = @packing_bag, packing_bag_unit = @packing_bag_unit, upper_limit = @upper_limit, upper_limit_unit = @upper_limit_unit, reference_value = @reference_value, reference_value_unit = @reference_value_unit, lower_limit = @lower_limit, lower_limit_unit = @lower_limit_unit, subtotal_target_value = @subtotal_target_value, subtotal_target_value_unit = @subtotal_target_value_unit, subtotal_target_count = @subtotal_target_count, update_date = @update_date WHERE call_code = @original_call_code"
+                  command.Parameters.AddWithValue("@original_call_code",
+                                                  row("call_code", DataRowVersion.Original))
                 End If
-                transaction.Rollback()
-                Return
-              End If
-            End If
-          Next
 
-          ' 明示的なDB更新
-          Dim currentDateTime As String = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                command.Parameters.AddWithValue("@call_code", row("call_code"))
+                command.Parameters.AddWithValue("@item_number", row("item_number"))
+                command.Parameters.AddWithValue("@item_name", row("item_name"))
+                command.Parameters.AddWithValue("@packing_bag", row("packing_bag"))
+                command.Parameters.AddWithValue("@packing_bag_unit", row("packing_bag_unit"))
+                command.Parameters.AddWithValue("@upper_limit", row("upper_limit"))
+                command.Parameters.AddWithValue("@upper_limit_unit", row("upper_limit_unit"))
+                command.Parameters.AddWithValue("@reference_value", row("reference_value"))
+                command.Parameters.AddWithValue("@reference_value_unit", row("reference_value_unit"))
+                command.Parameters.AddWithValue("@lower_limit", row("lower_limit"))
+                command.Parameters.AddWithValue("@lower_limit_unit", row("lower_limit_unit"))
+                command.Parameters.AddWithValue("@subtotal_target_value", row("subtotal_target_value"))
+                command.Parameters.AddWithValue("@subtotal_target_value_unit", row("subtotal_target_value_unit"))
+                command.Parameters.AddWithValue("@subtotal_target_count", row("subtotal_target_count"))
+                command.Parameters.AddWithValue("@update_date", row("update_date"))
+                If isAdded Then command.Parameters.AddWithValue("@create_date", row("create_date"))
 
-          For Each row As DataRow In dt.Rows
-            If row.RowState = DataRowState.Modified Or row.RowState = DataRowState.Added Then
+                Call WriteExecuteLog([GetType]().Name,
+                                     System.Reflection.MethodBase.GetCurrentMethod().Name,
+                                     BuildCommandTextWithParams(command))
+                If command.ExecuteNonQuery() <> 1 Then
+                  Throw New DBConcurrencyException(
+                    "ほかの端末で更新または削除された商品があります。画面を開き直してください。")
+                End If
+              End Using
+            Next
 
-              Dim commandText As String = ""
-              Dim command As New SqlCommand()
-              command.Connection = connection
-              command.Transaction = transaction
-
-              If row.RowState = DataRowState.Added Then
-                row("create_date") = currentDateTime
-                row("update_date") = currentDateTime
-                commandText = "INSERT INTO MST_Item (call_code, item_number, item_name, packing_bag, packing_bag_unit, upper_limit, upper_limit_unit, reference_value, reference_value_unit, lower_limit, lower_limit_unit, subtotal_target_value, subtotal_target_value_unit, subtotal_target_count, create_date, update_date) " &
-                                          "VALUES (@call_code, @item_number, @item_name, @packing_bag, @packing_bag_unit, @upper_limit, @upper_limit_unit, @reference_value, @reference_value_unit, @lower_limit, @lower_limit_unit, @subtotal_target_value, @subtotal_target_value_unit, @subtotal_target_count, @create_date, @update_date)"
-              ElseIf row.RowState = DataRowState.Modified Then
-                row("update_date") = currentDateTime
-                commandText = "UPDATE MST_Item SET item_number = @item_number, item_name = @item_name, packing_bag = @packing_bag, packing_bag_unit = @packing_bag_unit, upper_limit = @upper_limit, upper_limit_unit = @upper_limit_unit, reference_value = @reference_value, reference_value_unit = @reference_value_unit, lower_limit = @lower_limit, lower_limit_unit = @lower_limit_unit, subtotal_target_value = @subtotal_target_value, subtotal_target_value_unit = @subtotal_target_value_unit, subtotal_target_count = @subtotal_target_count, update_date = @update_date WHERE call_code = @call_code"
-              End If
-
-              command.CommandText = commandText
-
-              command.Parameters.AddWithValue("@call_code", row("call_code"))
-              command.Parameters.AddWithValue("@item_number", row("item_number"))
-              command.Parameters.AddWithValue("@item_name", row("item_name"))
-              command.Parameters.AddWithValue("@packing_bag", row("packing_bag"))
-              command.Parameters.AddWithValue("@packing_bag_unit", row("packing_bag_unit"))
-              command.Parameters.AddWithValue("@upper_limit", row("upper_limit"))
-              command.Parameters.AddWithValue("@upper_limit_unit", row("upper_limit_unit"))
-              command.Parameters.AddWithValue("@reference_value", row("reference_value"))
-              command.Parameters.AddWithValue("@reference_value_unit", row("reference_value_unit"))
-              command.Parameters.AddWithValue("@lower_limit", row("lower_limit"))
-              command.Parameters.AddWithValue("@lower_limit_unit", row("lower_limit_unit"))
-              command.Parameters.AddWithValue("@subtotal_target_value", row("subtotal_target_value"))
-              command.Parameters.AddWithValue("@subtotal_target_value_unit", row("subtotal_target_value_unit"))
-              command.Parameters.AddWithValue("@subtotal_target_count", row("subtotal_target_count"))
-              command.Parameters.AddWithValue("@create_date", row("create_date"))
-              command.Parameters.AddWithValue("@update_date", row("update_date"))
-
-              command.ExecuteNonQuery()
-
-              ' SQLログ出力
-              Dim sqlForLog As String = BuildCommandTextWithParams(command)
-              Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sqlForLog)
-            End If
-          Next
-
-          transaction.Commit()
-          MessageBox.Show("データを保存しました。", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information)
-          LoadData()
-        Else
-          MessageBox.Show("変更されたデータがありません。", "情報", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        End If
+            transaction.Commit()
+          Catch
+            Try
+              transaction.Rollback()
+            Catch rollbackException As Exception
+              Call ComWriteErrLog([GetType]().Name,
+                                  System.Reflection.MethodBase.GetCurrentMethod().Name, rollbackException)
+            End Try
+            Throw
+          End Try
+        End Using
       End Using
+
+      MessageBox.Show("データを保存しました。", "成功",
+                      MessageBoxButtons.OK, MessageBoxIcon.Information)
+      LoadData()
     Catch ex As Exception
       MessageBox.Show("データの保存に失敗しました: " & ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
+      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
     End Try
   End Sub
+
+  Private Function ValidateChangedRows() As Boolean
+    For Each row As DataRow In dt.Rows
+      If row.RowState <> DataRowState.Added AndAlso row.RowState <> DataRowState.Modified Then Continue For
+
+      Dim callCode As String = Convert.ToString(row("call_code")).Trim()
+      Dim callCodeNumber As Integer
+      If String.IsNullOrEmpty(callCode) OrElse
+         callCode.Length > CallCodeDigits OrElse
+         Not Integer.TryParse(callCode, callCodeNumber) OrElse callCodeNumber <= 0 Then
+        Return ShowRowValidationError(row, "call_code",
+          "呼出コードは1～" & CallCodeDigits.ToString() & "桁の数字で入力してください。" & vbCrLf &
+          "全桁0は登録できません。")
+      End If
+      callCode = callCodeNumber.ToString("D" & CallCodeDigits.ToString())
+      row("call_code") = callCode
+
+      Dim itemNumber As String = Convert.ToString(row("item_number")).Trim()
+      Dim itemName As String = Convert.ToString(row("item_name")).Trim()
+      If itemNumber.Length > 20 Then
+        Return ShowRowValidationError(row, "item_number", "品番は20文字以内で入力してください。")
+      End If
+      If itemName.Length > 50 Then
+        Return ShowRowValidationError(row, "item_name", "品名は50文字以内で入力してください。")
+      End If
+
+      If Not ValidateDecimalValue(row, "upper_limit", "上限値", "upper_limit_unit") OrElse
+         Not ValidateDecimalValue(row, "reference_value", "基準値") OrElse
+         Not ValidateDecimalValue(row, "lower_limit", "下限値", "lower_limit_unit") Then
+        Return False
+      End If
+
+      Dim subtotalCount As Integer
+      If Not row.IsNull("subtotal_target_count") AndAlso
+         (Not Integer.TryParse(Convert.ToString(row("subtotal_target_count")), subtotalCount) OrElse
+          subtotalCount < 0 OrElse subtotalCount > 999999) Then
+        Return ShowRowValidationError(row, "call_code",
+          "小計目標回数は0～999999の範囲で入力してください。")
+      End If
+
+      For Each columnName In New String() {"packing_bag_unit", "upper_limit_unit", "reference_value_unit", "lower_limit_unit", "subtotal_target_value_unit"}
+        If Convert.ToString(row(columnName)).Length > 3 Then
+          Return ShowRowValidationError(row, columnName, "単位は3文字以内で入力してください。")
+        End If
+      Next
+
+      row("item_number") = itemNumber
+      row("item_name") = itemName
+
+      For Each otherRow As DataRow In dt.Rows
+        If otherRow Is row OrElse otherRow.RowState = DataRowState.Deleted Then Continue For
+
+        Dim otherCallCode As String = NormalizeCallCode(Convert.ToString(otherRow("call_code")))
+        If String.Equals(otherCallCode, callCode, StringComparison.Ordinal) Then
+          Return ShowRowValidationError(row, "call_code",
+            "呼出コードは既に存在しています。別の値を入力してください。")
+        End If
+
+      Next
+    Next
+
+    Return True
+  End Function
+
+  Private Function ValidateDecimalValue(row As DataRow, columnName As String,
+                                        displayName As String,
+                                        Optional unitColumnName As String = Nothing) As Boolean
+    If row.IsNull(columnName) OrElse String.IsNullOrWhiteSpace(Convert.ToString(row(columnName))) Then
+      Return True
+    End If
+
+    Dim value As Decimal
+    If Not Decimal.TryParse(Convert.ToString(row(columnName)), value) OrElse
+       value < 0D OrElse value > 99999.99D OrElse Decimal.Round(value, 2) <> value Then
+      Return ShowRowValidationError(row, columnName,
+        displayName & "は0～99999.99の範囲で、小数点以下2桁まで入力してください。")
+    End If
+
+
+    Return True
+  End Function
+
+  Private Function NormalizeCallCode(value As String) As String
+    Dim number As Integer
+    value = If(value, String.Empty).Trim()
+    If Integer.TryParse(value, number) AndAlso number >= 0 Then
+      Return number.ToString("D" & CallCodeDigits.ToString())
+    End If
+    Return value
+  End Function
+
+  Private Function ShowRowValidationError(row As DataRow, columnName As String,
+                                          message As String) As Boolean
+    MessageBox.Show(message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+    Dim rowIndex As Integer = dt.Rows.IndexOf(row)
+    If rowIndex >= 0 AndAlso rowIndex < ItemDetail.Rows.Count Then
+      ItemDetail.ClearSelection()
+      ItemDetail.Rows(rowIndex).Selected = True
+      ItemDetail.CurrentCell = ItemDetail.Rows(rowIndex).Cells(columnName)
+      ItemDetail.CurrentCell.Style.BackColor = Color.MistyRose
+      ItemDetail.CurrentCell.Style.SelectionBackColor = Color.Maroon
+      ItemDetail.BeginEdit(True)
+    End If
+    Return False
+  End Function
+
 
   Private Function BuildCommandTextWithParams(cmd As SqlCommand) As String
     Dim sql As String = cmd.CommandText
@@ -655,36 +906,66 @@ Public Class Form_ItemList_GridMethod
 
   Private Sub ItemDetail_KeyDown(sender As Object, e As KeyEventArgs) Handles ItemDetail.KeyDown
     ' DELETE キーが押された場合、DeleteButton のクリックイベントを呼び出す
-    If e.KeyCode = Keys.Delete Then
+    If e.KeyCode = Keys.Delete AndAlso Not ItemDetail.IsCurrentCellInEditMode Then
       e.SuppressKeyPress = True ' デフォルトの削除動作を防止
       DeleteButton_Click(DeleteButton, EventArgs.Empty) ' 削除ボタンの動作を実行
     End If
   End Sub
+
+  Private Sub ItemDetail_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles ItemDetail.DataError
+    e.ThrowException = False
+    If e.Exception IsNot Nothing Then
+      Call ComWriteErrLog([GetType]().Name,
+                          System.Reflection.MethodBase.GetCurrentMethod().Name, e.Exception)
+    End If
+
+    If (e.Context And DataGridViewDataErrorContexts.Commit) <> 0 OrElse
+       (e.Context And DataGridViewDataErrorContexts.Parsing) <> 0 Then
+      MessageBox.Show("入力値を確定できません。選択肢または数値形式を確認してください。",
+                      "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+    End If
+  End Sub
+
   ' DataGridView の CellValidating イベントを処理
   Private Sub ItemDetail_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles ItemDetail.CellValidating
 
+    If isClosing Then Return
+
     Dim columnName As String = ItemDetail.Columns(e.ColumnIndex).Name
     Dim headerText As String = ItemDetail.Columns(e.ColumnIndex).HeaderText ' ヘッダー名を取得
-    Dim cellValue As String = e.FormattedValue.ToString().Trim()
+    Dim cellValue As String = Convert.ToString(e.FormattedValue).Trim()
 
-    '' **必須チェック（call_code, item_number, item_name のみ）**
-    'Dim requiredColumns As String() = {"call_code", "item_number", "item_name"}
-
-    '**必須チェック（call_codeのみ）**
+    ' 通常の商品マスタ詳細と同じ必須項目
     Dim requiredColumns As String() = {"call_code"}
     If requiredColumns.Contains(columnName) AndAlso String.IsNullOrEmpty(cellValue) Then
-      MessageBox.Show(headerText & " は必須入力です。", "入力エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+      MessageBox.Show(headerText & " は必須入力です。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
       e.Cancel = True
       Return
     End If
 
-    ' **重複チェック（call_code, item_number）**
-    'If columnName = "call_code" OrElse columnName = "item_number" Then
     If columnName = "call_code" Then
+      Dim callCodeNumber As Integer
+      If cellValue.Length > CallCodeDigits OrElse
+         Not Integer.TryParse(cellValue, callCodeNumber) OrElse callCodeNumber <= 0 Then
+        MessageBox.Show("呼出コードは1～" & CallCodeDigits.ToString() &
+                        "桁の数字で入力してください。" & vbCrLf &
+                        "全桁0は登録できません。",
+                        "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        e.Cancel = True
+        Return
+      End If
+    End If
+
+    ' 呼出コード・入力済みの品番・品名は一覧内で重複させない
+    If columnName = "call_code" Then
+      Dim comparisonValue As String = If(columnName = "call_code", NormalizeCallCode(cellValue), cellValue)
       Dim duplicateCount As Integer = 0
       For Each row As DataGridViewRow In ItemDetail.Rows
         If Not row.IsNewRow AndAlso row.Index <> e.RowIndex Then ' 現在編集している行を除外
-          If row.Cells(columnName).Value IsNot Nothing AndAlso row.Cells(columnName).Value.ToString().Trim() = cellValue Then
+          Dim otherValue As String = Convert.ToString(row.Cells(columnName).Value).Trim()
+          If columnName = "call_code" Then otherValue = NormalizeCallCode(otherValue)
+          If Not String.IsNullOrEmpty(comparisonValue) AndAlso
+             String.Equals(otherValue, comparisonValue, StringComparison.OrdinalIgnoreCase) Then
             duplicateCount += 1
           End If
         End If
@@ -698,12 +979,12 @@ Public Class Form_ItemList_GridMethod
 
     ' **文字列長チェック（varchar）**
     Dim maxLengths As New Dictionary(Of String, Integer) From {
-        {"call_code", 6}, {"item_number", 20}, {"item_name", 50},
+        {"call_code", CallCodeDigits}, {"item_number", 20}, {"item_name", 50},
         {"packing_bag_unit", 3}, {"upper_limit_unit", 3}, {"reference_value_unit", 3},
         {"lower_limit_unit", 3}, {"subtotal_target_value_unit", 3}
     }
     If maxLengths.ContainsKey(columnName) AndAlso cellValue.Length > maxLengths(columnName) Then
-      MessageBox.Show(headerText & " の最大桁数は " & maxLengths(columnName) & " 文字です。", "入力エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+      MessageBox.Show(headerText & " の最大桁数は " & maxLengths(columnName) & " 文字です。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
       e.Cancel = True
       Return
     End If
@@ -711,45 +992,107 @@ Public Class Form_ItemList_GridMethod
     ' **小数チェック（decimal(7,2)）**
     Dim decimalColumns As String() = {"packing_bag", "upper_limit", "reference_value", "lower_limit", "subtotal_target_value"}
     If decimalColumns.Contains(columnName) Then
+      ' 空欄は登録時に0へ変換するため、入力チェックでは許可する
+      If String.IsNullOrEmpty(cellValue) Then Return
+
       Dim value As Decimal
-      If Not Decimal.TryParse(cellValue, value) OrElse value < 0 Then
-        MessageBox.Show(headerText & " は 0 以上の数値を入力してください。", "入力エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+      If Not Decimal.TryParse(cellValue, value) OrElse value < 0 OrElse value > 99999.99D Then
+        MessageBox.Show(headerText & " は 0～99999.99 の範囲で入力してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         e.Cancel = True
         Return
       End If
 
       ' **小数点以下2桁チェック**
       If (value * 100) Mod 1 <> 0 Then
-        MessageBox.Show(headerText & " は小数点以下2桁まで入力してください。", "入力エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        MessageBox.Show(headerText & " は小数点以下2桁まで入力してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         e.Cancel = True
         Return
       End If
+
+
     End If
 
     ' **整数チェック（subtotal_target_count のみ）**
     If columnName = "subtotal_target_count" Then
+      ' 空欄は登録時に0へ変換するため、入力チェックでは許可する
+      If String.IsNullOrEmpty(cellValue) Then Return
+
       Dim intValue As Integer
-      If Not Integer.TryParse(cellValue, intValue) OrElse intValue < 0 Then
-        MessageBox.Show(headerText & " は 0 以上の整数を入力してください。", "入力エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+      If Not Integer.TryParse(cellValue, intValue) OrElse intValue < 0 OrElse intValue > 999999 Then
+        MessageBox.Show(headerText & " は 0～999999 の範囲で入力してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         e.Cancel = True
         Return
       End If
     End If
   End Sub
 
+  Private Sub ItemDetail_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles ItemDetail.CellBeginEdit
+    If e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then Return
+    Dim columnName As String = ItemDetail.Columns(e.ColumnIndex).Name
+    If columnName = "upper_limit_unit" OrElse columnName = "lower_limit_unit" Then
+      previousLimitUnit = Convert.ToString(ItemDetail.Rows(e.RowIndex).Cells(e.ColumnIndex).Value)
+    End If
+  End Sub
 
-  ' DataGridView の CellEndEdit イベントを処理（call_code の 6桁ゼロ埋め処理）
+  Private Sub ItemDetail_CurrentCellDirtyStateChanged(sender As Object, e As EventArgs) Handles ItemDetail.CurrentCellDirtyStateChanged
+    If Not ItemDetail.IsCurrentCellDirty OrElse ItemDetail.CurrentCell Is Nothing Then Return
+
+    Dim columnName As String = ItemDetail.Columns(ItemDetail.CurrentCell.ColumnIndex).Name
+    If columnName = "upper_limit_unit" OrElse columnName = "lower_limit_unit" Then
+      isUserLimitUnitChange = True
+      ItemDetail.CommitEdit(DataGridViewDataErrorContexts.Commit)
+    End If
+  End Sub
+
+  Private Sub ItemDetail_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles ItemDetail.CellValueChanged
+    If isRevertingLimitUnit Then Return
+    If Not isUserLimitUnitChange OrElse e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then Return
+
+    Dim columnName As String = ItemDetail.Columns(e.ColumnIndex).Name
+    If columnName <> "upper_limit_unit" AndAlso columnName <> "lower_limit_unit" Then Return
+
+    isUserLimitUnitChange = False
+    Dim newUnit As String = Convert.ToString(ItemDetail.Rows(e.RowIndex).Cells(e.ColumnIndex).Value)
+    If String.Equals(previousLimitUnit, newUnit, StringComparison.Ordinal) Then Return
+
+    Dim valueColumnName As String = If(columnName = "upper_limit_unit", "upper_limit", "lower_limit")
+    Dim currentValue As Decimal
+    Decimal.TryParse(Convert.ToString(ItemDetail.Rows(e.RowIndex).Cells(valueColumnName).Value), currentValue)
+
+    If currentValue <> 0D Then
+      Dim result As DialogResult = MessageBox.Show(
+        ItemDetail.Columns(valueColumnName).HeaderText & "の単位を変更すると、現在値 " &
+        currentValue.ToString("0.##") & " は0に戻ります。" & vbCrLf & "変更しますか？",
+        "単位変更の確認", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+      If result <> DialogResult.Yes Then
+        isRevertingLimitUnit = True
+        Try
+          ItemDetail.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = previousLimitUnit
+        Finally
+          isRevertingLimitUnit = False
+        End Try
+        Return
+      End If
+    End If
+
+    ItemDetail.Rows(e.RowIndex).Cells(valueColumnName).Value = 0D
+  End Sub
+
+
+  ' DataGridView の CellEndEdit イベントを処理（INI設定の桁数で call_code をゼロ埋め）
   Private Sub ItemDetail_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles ItemDetail.CellEndEdit
     Dim columnName As String = ItemDetail.Columns(e.ColumnIndex).Name
 
     ' **call_code のゼロ埋め処理**
     If columnName = "call_code" Then
-      Dim cellValue As String = ItemDetail.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString().Trim()
+      Dim rawValue As Object = ItemDetail.Rows(e.RowIndex).Cells(e.ColumnIndex).Value
+      If rawValue Is Nothing OrElse rawValue Is DBNull.Value Then Return
+      Dim cellValue As String = rawValue.ToString().Trim()
       Dim intValue As Integer
 
       ' 数値に変換できる場合のみゼロ埋め
       If Integer.TryParse(cellValue, intValue) Then
-        ItemDetail.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = intValue.ToString("D6")
+        ItemDetail.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = intValue.ToString("D" & CallCodeDigits.ToString())
       End If
     End If
   End Sub
@@ -767,13 +1110,19 @@ Public Class Form_ItemList_GridMethod
 
       ' **桁数制限の設定**
       Dim maxLengths As New Dictionary(Of String, Integer) From {
-            {"call_code", 6}, {"subtotal_target_count", 10}, ' subtotal_target_count の最大桁数を10に設定
+            {"call_code", CallCodeDigits}, {"subtotal_target_count", 6},
             {"item_number", 20}, {"item_name", 50},
             {"packing_bag_unit", 3}, {"upper_limit_unit", 3}, {"reference_value_unit", 3},
             {"lower_limit_unit", 3}, {"subtotal_target_value_unit", 3}
         }
       If maxLengths.ContainsKey(columnName) Then
         textBox.MaxLength = maxLengths(columnName) ' 最大桁数を設定
+      ElseIf columnName = "upper_limit" OrElse columnName = "lower_limit" Then
+        Dim unitColumnName As String = If(columnName = "upper_limit", "upper_limit_unit", "lower_limit_unit")
+        Dim unitValue As String = Convert.ToString(ItemDetail.CurrentRow.Cells(unitColumnName).Value)
+        textBox.MaxLength = If(unitValue = "%", 5, 8)
+      ElseIf {"packing_bag", "reference_value", "subtotal_target_value"}.Contains(columnName) Then
+        textBox.MaxLength = 8
       Else
         textBox.MaxLength = 0 ' デフォルト（制限なし）
       End If
@@ -807,15 +1156,18 @@ Public Class Form_ItemList_GridMethod
   ' **整数のみ許可（call_code, subtotal_target_count）**
   Private Sub NumericOnly_KeyPress(sender As Object, e As KeyPressEventArgs)
     Dim textBox As TextBox = TryCast(sender, TextBox)
+    If textBox Is Nothing Then Return
 
     ' **数字、バックスペース、削除キーのみ許可**
     If Not Char.IsDigit(e.KeyChar) AndAlso Not Char.IsControl(e.KeyChar) Then
       e.Handled = True ' 入力を禁止
     End If
 
-    ' **最大桁数チェック**
-    If textBox.MaxLength > 0 AndAlso textBox.Text.Length >= textBox.MaxLength AndAlso Not Char.IsControl(e.KeyChar) Then
-      e.Handled = True ' ただし、バックスペースや削除キーは許可
+    ' **最大桁数チェック（選択中の文字は入力時に置換される）**
+    Dim remainingLength As Integer = textBox.Text.Length - textBox.SelectionLength
+    If textBox.MaxLength > 0 AndAlso remainingLength >= textBox.MaxLength AndAlso
+       Not Char.IsControl(e.KeyChar) Then
+      e.Handled = True
     End If
   End Sub
 
@@ -824,43 +1176,34 @@ Public Class Form_ItemList_GridMethod
   ' **小数のみ許可（decimal(7,2) 型: packing_bag, upper_limit など）**
   Private Sub DecimalOnly_KeyPress(sender As Object, e As KeyPressEventArgs)
     Dim textBox As TextBox = TryCast(sender, TextBox)
-    If textBox IsNot Nothing Then
-      ' **数字、小数点、バックスペースのみ許可**
-      If Not Char.IsDigit(e.KeyChar) AndAlso e.KeyChar <> "."c AndAlso Not Char.IsControl(e.KeyChar) Then
-        e.Handled = True
-      End If
+    If textBox Is Nothing OrElse Char.IsControl(e.KeyChar) Then Return
 
-      ' **小数点は1回のみ許可**
-      If e.KeyChar = "."c AndAlso textBox.Text.Contains(".") Then
-        e.Handled = True
-      End If
+    If Not Char.IsDigit(e.KeyChar) AndAlso e.KeyChar <> "."c Then
+      e.Handled = True
+      Return
+    End If
 
-      ' **バックスペースが有効になるようにする**
-      If e.KeyChar = ChrW(Keys.Back) Then
-        e.Handled = False ' バックスペースを許可
-        Return
-      End If
+    Dim proposedText As String = textBox.Text.Remove(textBox.SelectionStart, textBox.SelectionLength).
+      Insert(textBox.SelectionStart, e.KeyChar.ToString())
+    Dim parts As String() = proposedText.Split("."c)
+    Dim maxIntegerDigits As Integer = If(textBox.MaxLength = 5, 2, 5)
 
-      ' **桁数制限（整数5桁 + 小数2桁 = 最大8桁）**
-      If textBox.Text.Contains(".") Then
-        Dim parts() As String = textBox.Text.Split("."c)
-        If parts(0).Length > 5 AndAlso textBox.SelectionStart <= parts(0).Length Then
-          e.Handled = True ' 整数部の桁数制限
-        End If
-        If parts.Length > 1 AndAlso parts(1).Length >= 2 AndAlso textBox.SelectionStart > parts(0).Length Then
-          e.Handled = True ' 小数部の桁数制限
-        End If
-      ElseIf textBox.Text.Length >= 5 AndAlso Not Char.IsControl(e.KeyChar) AndAlso e.KeyChar <> "."c Then
-        e.Handled = True ' 整数部の桁数制限
-      End If
+    If parts.Length > 2 OrElse
+       parts(0).Length > maxIntegerDigits OrElse
+       (parts.Length = 2 AndAlso (parts(0).Length = 0 OrElse parts(1).Length > 2)) Then
+      e.Handled = True
     End If
   End Sub
 
   ' **文字列のみ許可（varchar 型）**
   Private Sub StringOnly_KeyPress(sender As Object, e As KeyPressEventArgs)
     Dim textBox As TextBox = TryCast(sender, TextBox)
-    ' **最大桁数チェック**
-    If textBox.Text.Length >= textBox.MaxLength AndAlso Not Char.IsControl(e.KeyChar) Then
+    If textBox Is Nothing Then Return
+
+    ' **最大桁数チェック（選択中の文字は入力時に置換される）**
+    Dim remainingLength As Integer = textBox.Text.Length - textBox.SelectionLength
+    If textBox.MaxLength > 0 AndAlso remainingLength >= textBox.MaxLength AndAlso
+       Not Char.IsControl(e.KeyChar) Then
       e.Handled = True
     End If
   End Sub
@@ -876,7 +1219,11 @@ Public Class Form_ItemList_GridMethod
       Case Keys.F6
         DeleteButton.PerformClick()
       Case Keys.Escape
-        Me.Close()
+        e.SuppressKeyPress = True
+        CloseButton.PerformClick()
     End Select
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

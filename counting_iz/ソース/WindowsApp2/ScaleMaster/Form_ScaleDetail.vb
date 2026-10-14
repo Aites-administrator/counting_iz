@@ -26,15 +26,16 @@ Public Class Form_ScaleDetail
     Dim updateTime As DateTime = System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location)
     Text = "計量器マスタ詳細" & " ( " & updateTime & " ) "
     Me.KeyPreview = True
+    MarkRequiredLabels(CodeLabel, NameLabel)
+    AlignDetailActionButtons(Me, OkButton, CloseButton)
     SetInitialProperty()
     FormBorderStyle = FormBorderStyle.FixedSingle
   End Sub
   Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+    If Not CheckValue() Then Exit Sub
+
     Select Case InputMode
       Case 1
-        If CheckValue() = False Then
-          Exit Sub
-        End If
         '新規登録メソッド呼出し
         InsertScaleMaster()
       Case 2
@@ -55,7 +56,7 @@ Public Class Form_ScaleDetail
     End If
   End Sub
   Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
-    Close()
+    Me.Dispose()
   End Sub
 
   Private Sub SetInitialProperty()
@@ -67,68 +68,64 @@ Public Class Form_ScaleDetail
         ClearTextBox(Me)
         'コード入力不可
         UnitNumberText.Enabled = True
-        UnitNumberText.Focus()
+        Common.ClsFunction.FocusInputError(UnitNumberText)
       Case 2
         'コード入力不可
         UnitNumberText.Enabled = False
         '名称入力不可
         IpAddressText.Enabled = True
-        IpAddressText.Focus()
+        Common.ClsFunction.FocusInputError(IpAddressText)
     End Select
   End Sub
   Function CheckValue() As Boolean
-    Dim CheckResult As Boolean = True
+    Dim unitNumber As Integer
+    Dim unitText As String = UnitNumberText.Text.Trim()
+    Dim ipAddress As String = IpAddressText.Text.Trim()
 
     ' === 必須項目チェック①：号機番号 ===
-    If String.IsNullOrEmpty(UnitNumberText.Text) Then
-      MessageBox.Show("号機番号を入力してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-      CheckResult = False
-      UnitNumberText.Focus()
-      Return CheckResult
-    ElseIf UnitNumberText.Text = "00" Then
-      MessageBox.Show("号機番号に00は登録できません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-      UnitNumberText.Focus()
-      Return CheckResult
+    If Not Integer.TryParse(unitText, unitNumber) OrElse unitNumber < 1 OrElse unitNumber > 99 Then
+      MessageBox.Show("号機番号は1～99の数字で入力してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+      Common.ClsFunction.FocusInputError(UnitNumberText)
+      Return False
     End If
+    UnitNumberText.Text = unitNumber.ToString("D2")
 
     ' === 必須項目チェック②：IPアドレス ===
-    If String.IsNullOrEmpty(IpAddressText.Text) Then
+    If String.IsNullOrEmpty(ipAddress) Then
       MessageBox.Show("IPアドレスを入力してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-      CheckResult = False
-      IpAddressText.Focus()
-      Return CheckResult
-    ElseIf Not IsValidIpAddress(IpAddressText.Text) Then
+      Common.ClsFunction.FocusInputError(IpAddressText)
+      Return False
+    ElseIf Not IsValidIpAddress(ipAddress) Then
       MessageBox.Show("IPアドレスの形式が正しくありません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-      CheckResult = False
-      IpAddressText.Focus()
-      Return CheckResult
-    ElseIf IpAddressText.Text = "127.0.0.1" Then
+      Common.ClsFunction.FocusInputError(IpAddressText)
+      Return False
+    ElseIf ipAddress = "127.0.0.1" Then
       MessageBox.Show("127.0.0.1は登録できません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-      CheckResult = False
-      IpAddressText.Focus()
-      Return CheckResult
+      Common.ClsFunction.FocusInputError(IpAddressText)
+      Return False
     End If
+    IpAddressText.Text = ipAddress
 
     ' === 重複チェック：号機番号 & IPアドレス ===
     If Form_ScaleList.ScaleDetail.Rows.Count > 0 Then
       For i As Integer = 0 To Form_ScaleList.ScaleDetail.Rows.Count - 1
-        If UnitNumberText.Text.Equals(Form_ScaleList.ScaleDetail.Rows(i).Cells(0).Value) Then
+        Dim existingUnit As String = Convert.ToString(Form_ScaleList.ScaleDetail.Rows(i).Cells(0).Value)
+        Dim isCurrentRecord As Boolean = InputMode = 2 AndAlso existingUnit = UnitNumberTextValue
+        If InputMode = 1 AndAlso UnitNumberText.Text = existingUnit Then
           MessageBox.Show("既に登録されている号機番号です。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-          CheckResult = False
-          UnitNumberText.Focus()
-          Exit For
+          Common.ClsFunction.FocusInputError(UnitNumberText)
+          Return False
         End If
 
-        If IpAddressText.Text.Equals(Form_ScaleList.ScaleDetail.Rows(i).Cells(1).Value) Then
+        If Not isCurrentRecord AndAlso IpAddressText.Text = Convert.ToString(Form_ScaleList.ScaleDetail.Rows(i).Cells(1).Value) Then
           MessageBox.Show("既に登録されているIPアドレスです。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-          CheckResult = False
-          IpAddressText.Focus()
-          Exit For
+          Common.ClsFunction.FocusInputError(IpAddressText)
+          Return False
         End If
       Next
     End If
 
-    Return CheckResult
+    Return True
   End Function
 
   ' === IPアドレス形式チェック用の関数 ===
@@ -175,8 +172,8 @@ Public Class Form_ScaleDetail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -186,14 +183,12 @@ Public Class Form_ScaleDetail
     sql &= " INSERT INTO MST_SCALE("
     sql &= "     UNIT_NUMBER,"
     sql &= "     IP_ADDRESS,"
-    sql &= "     DELETE_FLG,"
     sql &= "     CREATE_DATE,"
     sql &= "     UPDATE_DATE"
     sql &= " )"
     sql &= " VALUES("
-    sql &= "     '" & UnitNumberText.Text & "',"
-    sql &= "     '" & IpAddressText.Text & "',"
-    sql &= "     '" & 0 & "',"
+    sql &= "     '" & EscapeSqlLiteral(UnitNumberText.Text) & "',"
+    sql &= "     '" & EscapeSqlLiteral(IpAddressText.Text) & "',"
     sql &= "     '" & tmpdate & "',"
     sql &= "     '" & tmpdate & "'"
     sql &= " )"
@@ -230,8 +225,8 @@ Public Class Form_ScaleDetail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -239,12 +234,12 @@ Public Class Form_ScaleDetail
     Dim sql As String = String.Empty
     Dim tmpdate As DateTime = CDate(ComGetProcTime())
     sql &= " UPDATE MST_SCALE"
-    sql &= "    SET UNIT_NUMBER = '" & UnitNumberText.Text & "'"
-    sql &= "       ,IP_ADDRESS = '" & IpAddressText.Text & "'"
+    sql &= "    SET UNIT_NUMBER = '" & EscapeSqlLiteral(UnitNumberText.Text) & "'"
+    sql &= "       ,IP_ADDRESS = '" & EscapeSqlLiteral(IpAddressText.Text) & "'"
     'sql &= "       ,DOWN_PROCESSING_TIME = '" & DateTimePicker_DownLoad.Value & "'"
     'sql &= "       ,UPLOAD_PROCESSING_TIME = '" & DateTimePicker_Upload.Value & "'"
     sql &= "       ,UPDATE_DATE = '" & tmpdate & "'"
-    sql &= " WHERE UNIT_NUMBER = '" & UnitNumberText.Text & "' "
+    sql &= " WHERE UNIT_NUMBER = '" & EscapeSqlLiteral(UnitNumberTextValue) & "' "
     Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
   End Function
@@ -262,5 +257,8 @@ Public Class Form_ScaleDetail
       Case Keys.Escape
         Me.Close()
     End Select
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

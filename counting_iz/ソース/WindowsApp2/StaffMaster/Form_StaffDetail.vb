@@ -27,6 +27,8 @@ Public Class Form_StaffDetail
     Text = "担当者マスタ詳細" & " ( " & updateTime & " ) "
     Me.KeyPreview = True
     FormBorderStyle = FormBorderStyle.FixedSingle
+    MarkRequiredLabels(CodeLabel, NameLabel)
+    AlignDetailActionButtons(Me, OkButton, CloseButton)
     SetInitialProperty()
   End Sub
   Private Sub SetInitialProperty()
@@ -45,11 +47,10 @@ Public Class Form_StaffDetail
   End Sub
 
   Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+    If Not CheckValue() Then Exit Sub
+
     Select Case InputMode
       Case 1
-        If CheckValue() = False Then
-          Exit Sub
-        End If
         '新規登録メソッド呼出し
         InsertStaffMaster()
       Case 2
@@ -57,43 +58,47 @@ Public Class Form_StaffDetail
         UpdateStaffMaster()
     End Select
   End Sub
-  Function CheckValue()
+  Function CheckValue() As Boolean
     Dim errorMessages As New List(Of String)
+    Dim code As String = CodeText.Text.Trim()
+    Dim name As String = NameText.Text.Trim()
 
-    ' 必須項目チェック
-    If String.IsNullOrEmpty(CodeText.Text) Then
+    If String.IsNullOrEmpty(code) Then
       errorMessages.Add("担当者コードを入力してください。")
-    ElseIf CodeText.Text = "0000" Then
-      errorMessages.Add("担当者コードに0000は登録できません。")
-      CodeText.Focus()
+    ElseIf Not IsDigitsOnly(code) OrElse code.Length > CodeDigits Then
+      errorMessages.Add("担当者コードは1～" & CodeDigits & "桁の数字で入力してください。")
+    ElseIf code.All(Function(c) c = "0"c) Then
+      errorMessages.Add("担当者コードに全て0は登録できません。")
     End If
 
-    If String.IsNullOrEmpty(NameText.Text) Then
+    If String.IsNullOrEmpty(name) Then
       errorMessages.Add("担当者名を入力してください。")
-      NameText.Focus()
+    ElseIf name.Length > 10 Then
+      errorMessages.Add("担当者名は10文字以内で入力してください。")
     End If
 
     If errorMessages.Count > 0 Then
       MessageBox.Show(String.Join(vbCrLf, errorMessages), "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
       ' 最初のエラー項目にフォーカスを設定
-      If String.IsNullOrEmpty(CodeText.Text) Then
-        CodeText.Focus()
-      ElseIf String.IsNullOrEmpty(NameText.Text) Then
-        NameText.Focus()
+      If String.IsNullOrEmpty(code) OrElse Not IsDigitsOnly(code) OrElse code.Length > CodeDigits OrElse code.All(Function(c) c = "0"c) Then
+        Common.ClsFunction.FocusInputError(CodeText)
+      Else
+        Common.ClsFunction.FocusInputError(NameText)
       End If
 
       Return False
     End If
 
-    '重複チェック
-    If Form_StaffList.StaffDetail.Rows.Count > 0 Then
+    CodeText.Text = code.PadLeft(CodeDigits, "0"c)
+    NameText.Text = name
+
+    If InputMode = 1 AndAlso Form_StaffList.StaffDetail.Rows.Count > 0 Then
       For i As Integer = 0 To Form_StaffList.StaffDetail.Rows.Count - 1
         If CodeText.Text.Equals(Form_StaffList.StaffDetail.Rows(i).Cells(0).Value) Then
           MessageBox.Show("既に登録されている担当者コードです。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+          Common.ClsFunction.FocusInputError(CodeText)
           Return False
-          CodeText.Focus()
-          Exit For
         End If
       Next
     End If
@@ -130,15 +135,15 @@ Public Class Form_StaffDetail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
   Private Function GetInsertSql() As String
     Dim sql As String = String.Empty
-    Dim CodeTxtInt As String = CodeText.Text
-    Dim NameTxt As String = NameText.Text
+    Dim CodeTxtInt As String = EscapeSqlLiteral(CodeText.Text)
+    Dim NameTxt As String = EscapeSqlLiteral(NameText.Text)
     Dim tmpdate As DateTime = CDate(ComGetProcTime())
 
     sql &= " INSERT INTO MST_Staff("
@@ -149,7 +154,7 @@ Public Class Form_StaffDetail
     sql &= " )"
     sql &= " VALUES("
     sql &= "     '" & CodeTxtInt & "',"
-    sql &= "     '" & NameTxt & "',"
+    sql &= "     '" & EscapeSqlLiteral(NameTxt) & "',"
     sql &= "     '" & tmpdate & "',"
     sql &= "     '" & tmpdate & "'"
     sql &= " )"
@@ -186,21 +191,21 @@ Public Class Form_StaffDetail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
   Private Function GetUpdateSql() As String
     Dim sql As String = String.Empty
-    Dim CodeTxt As String = CodeText.Text
-    Dim NameTxt As String = NameText.Text
+    Dim CodeTxt As String = EscapeSqlLiteral(CodeText.Text)
+    Dim NameTxt As String = EscapeSqlLiteral(NameText.Text)
     Dim tmpdate As DateTime = CDate(ComGetProcTime())
 
     sql &= " UPDATE MST_Staff SET"
-    sql &= "     Staff_Name = '" & NameTxt & "',"
+    sql &= "     Staff_Name = '" & EscapeSqlLiteral(NameTxt) & "',"
     sql &= "     update_date = '" & tmpdate & "'"
-    sql &= " WHERE Staff_Number = '" & CodeTxt & "'"
+    sql &= " WHERE Staff_Number = '" & EscapeSqlLiteral(CodeTxt) & "'"
 
     Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
@@ -213,9 +218,9 @@ Public Class Form_StaffDetail
   End Sub
 
   Private Sub CodeText_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles CodeText.Validating
-    'If String.IsNullOrEmpty(CodeText.Text) = False Then
-    '  CodeText.Text = CodeText.Text.PadLeft(CodeDigits, "0"c)
-    'End If
+    If String.IsNullOrEmpty(CodeText.Text) = False Then
+      CodeText.Text = CodeText.Text.PadLeft(CodeDigits, "0"c)
+    End If
   End Sub
 
   Private Sub Form_StaffDetail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
@@ -225,5 +230,8 @@ Public Class Form_StaffDetail
       Case Keys.Escape
         Me.Close()
     End Select
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

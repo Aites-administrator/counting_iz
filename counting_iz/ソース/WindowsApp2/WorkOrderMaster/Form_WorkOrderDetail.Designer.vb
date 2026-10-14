@@ -41,7 +41,7 @@ Partial Class Form_WorkOrderDetail
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.CloseButton.Location = New System.Drawing.Point(455, 340)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 50)
@@ -51,7 +51,7 @@ Partial Class Form_WorkOrderDetail
         '
         'DetailIDText
         '
-        Me.DetailIDText.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.DetailIDText.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.DetailIDText.Location = New System.Drawing.Point(208, 115)
         Me.DetailIDText.MaxLength = 2
         Me.DetailIDText.Name = "DetailIDText"
@@ -60,7 +60,7 @@ Partial Class Form_WorkOrderDetail
         '
         'WorkOrderIDText
         '
-        Me.WorkOrderIDText.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.WorkOrderIDText.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.WorkOrderIDText.Location = New System.Drawing.Point(208, 75)
         Me.WorkOrderIDText.MaxLength = 2
         Me.WorkOrderIDText.Name = "WorkOrderIDText"
@@ -70,7 +70,7 @@ Partial Class Form_WorkOrderDetail
         'NameLabel
         '
         Me.NameLabel.AutoSize = True
-        Me.NameLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.NameLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.NameLabel.Location = New System.Drawing.Point(98, 115)
         Me.NameLabel.Name = "NameLabel"
         Me.NameLabel.Size = New System.Drawing.Size(107, 30)
@@ -80,7 +80,7 @@ Partial Class Form_WorkOrderDetail
         'CodeLabel
         '
         Me.CodeLabel.AutoSize = True
-        Me.CodeLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CodeLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CodeLabel.Location = New System.Drawing.Point(54, 75)
         Me.CodeLabel.Name = "CodeLabel"
         Me.CodeLabel.Size = New System.Drawing.Size(151, 30)
@@ -89,7 +89,7 @@ Partial Class Form_WorkOrderDetail
         '
         'OkButton
         '
-        Me.OkButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.OkButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.OkButton.Location = New System.Drawing.Point(326, 340)
         Me.OkButton.Name = "OkButton"
         Me.OkButton.Size = New System.Drawing.Size(123, 50)
@@ -100,7 +100,7 @@ Partial Class Form_WorkOrderDetail
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TitleLabel.Location = New System.Drawing.Point(12, 10)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(194, 30)
@@ -109,7 +109,7 @@ Partial Class Form_WorkOrderDetail
         '
         'WorkOrderNameText
         '
-        Me.WorkOrderNameText.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.WorkOrderNameText.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.WorkOrderNameText.Location = New System.Drawing.Point(208, 155)
         Me.WorkOrderNameText.MaxLength = 10
         Me.WorkOrderNameText.Name = "WorkOrderNameText"
@@ -118,7 +118,7 @@ Partial Class Form_WorkOrderDetail
         '
         'OrderQuantityText
         '
-        Me.OrderQuantityText.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.OrderQuantityText.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.OrderQuantityText.Location = New System.Drawing.Point(208, 275)
         Me.OrderQuantityText.MaxLength = 6
         Me.OrderQuantityText.Name = "OrderQuantityText"
@@ -128,7 +128,7 @@ Partial Class Form_WorkOrderDetail
         'IsDetailSubtotalCombo
         '
         Me.IsDetailSubtotalCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.IsDetailSubtotalCombo.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.IsDetailSubtotalCombo.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.IsDetailSubtotalCombo.FormattingEnabled = True
         Me.IsDetailSubtotalCombo.Location = New System.Drawing.Point(208, 195)
         Me.IsDetailSubtotalCombo.Name = "IsDetailSubtotalCombo"
@@ -138,7 +138,7 @@ Partial Class Form_WorkOrderDetail
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(38, 155)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(167, 30)
@@ -148,7 +148,7 @@ Partial Class Form_WorkOrderDetail
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(83, 195)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(123, 30)
@@ -158,7 +158,7 @@ Partial Class Form_WorkOrderDetail
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.Location = New System.Drawing.Point(99, 235)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(107, 30)
@@ -168,7 +168,7 @@ Partial Class Form_WorkOrderDetail
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.Location = New System.Drawing.Point(99, 275)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(101, 30)
@@ -178,7 +178,7 @@ Partial Class Form_WorkOrderDetail
         'ProductIDCombo
         '
         Me.ProductIDCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ProductIDCombo.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.ProductIDCombo.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.ProductIDCombo.FormattingEnabled = True
         Me.ProductIDCombo.Location = New System.Drawing.Point(208, 235)
         Me.ProductIDCombo.Name = "ProductIDCombo"
@@ -205,6 +205,8 @@ Partial Class Form_WorkOrderDetail
         Me.Controls.Add(Me.CodeLabel)
         Me.Controls.Add(Me.OkButton)
         Me.Controls.Add(Me.TitleLabel)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_WorkOrderDetail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Form2"

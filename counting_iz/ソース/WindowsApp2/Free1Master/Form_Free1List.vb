@@ -69,7 +69,7 @@ Public Class Form_Free1List
       .EnableHeadersVisualStyles = False ' デフォルトの Windows スタイルを無効化
       .ColumnHeadersDefaultCellStyle.BackColor = Color.LightBlue ' ヘッダーの背景色
       .ColumnHeadersDefaultCellStyle.ForeColor = Color.Black ' ヘッダーの文字色
-      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo", 10, FontStyle.Bold) ' フォント変更
+      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo UI", 10, FontStyle.Bold) ' フォント変更
       .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter ' ヘッダー中央寄せ
     End With
   End Sub
@@ -81,16 +81,12 @@ Public Class Form_Free1List
       With tmpDb
         SqlServer.GetResult(tmpDt, sql)
 
-        If tmpDt.Rows.Count = 0 Then
-          MessageBox.Show("フリー１マスタにデータが登録されていません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Else
-          WriteDetail(tmpDt, Free1Detail)
-        End If
+        WriteDetail(tmpDt, Free1Detail)
       End With
     Catch ex As Exception
       Call ComWriteErrLog([GetType]().Name,
-                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       tmpDt.Dispose()
     End Try
@@ -123,6 +119,7 @@ Public Class Form_Free1List
   End Sub
 
   Private Sub UpdateButton_Click(sender As Object, e As EventArgs) Handles UpdateButton.Click
+    If Free1Detail.CurrentRow Is Nothing Then Return
     '詳細画面の項目値セット
     SetListData()
     Form_Free1Detail.InputMode = 2
@@ -137,6 +134,10 @@ Public Class Form_Free1List
   End Sub
 
   Private Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+    If Free1Detail.SelectedCells.Count = 0 Then
+      MessageBox.Show("削除する行を選択してください。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+      Return
+    End If
     DeleteFree1Master()
   End Sub
 
@@ -169,8 +170,8 @@ Public Class Form_Free1List
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -190,6 +191,7 @@ Public Class Form_Free1List
   End Function
 
   Private Sub Free1Detail_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles Free1Detail.CellDoubleClick
+    If e.RowIndex < 0 Then Return
     '詳細画面の項目値セット
     SetListData()
     Form_Free1Detail.InputMode = 2
@@ -207,5 +209,8 @@ Public Class Form_Free1List
       Case Keys.Escape
         Me.Close()
     End Select
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

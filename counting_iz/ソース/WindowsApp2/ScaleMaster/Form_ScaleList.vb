@@ -63,7 +63,7 @@ Public Class Form_ScaleList
       .EnableHeadersVisualStyles = False ' デフォルトの Windows スタイルを無効化
       .ColumnHeadersDefaultCellStyle.BackColor = Color.LightBlue ' ヘッダーの背景色
       .ColumnHeadersDefaultCellStyle.ForeColor = Color.Black ' ヘッダーの文字色
-      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo", 10, FontStyle.Bold) ' フォント変更
+      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo UI", 10, FontStyle.Bold) ' フォント変更
       .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter ' ヘッダー中央寄せ
     End With
   End Sub
@@ -72,12 +72,17 @@ Public Class Form_ScaleList
     Form_ScaleDetail.ShowDialog()
   End Sub
   Private Sub UpdateButton_Click(sender As Object, e As EventArgs) Handles UpdateButton.Click
+    If ScaleDetail.CurrentRow Is Nothing Then Return
     '詳細画面の項目値セット
     SetListData()
     Form_ScaleDetail.InputMode = 2
     Form_ScaleDetail.ShowDialog()
   End Sub
   Private Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+    If ScaleDetail.SelectedCells.Count = 0 Then
+      MessageBox.Show("削除する行を選択してください。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+      Return
+    End If
     DeleteScaleMaster()
   End Sub
   'Private Sub ScaleDetail_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles ScaleDetail.CellClick
@@ -99,6 +104,7 @@ Public Class Form_ScaleList
   '    End If
   'End Sub
   Private Sub ScaleDetail_DoubleClick(sender As Object, e As EventArgs) Handles ScaleDetail.DoubleClick
+    If ScaleDetail.CurrentRow Is Nothing Then Return
     '詳細画面の項目値セット
     SetListData()
     Form_ScaleDetail.InputMode = 2
@@ -120,17 +126,13 @@ Public Class Form_ScaleList
     Try
       With tmpDb
         SqlServer.GetResult(tmpDt, sql)
-        If tmpDt.Rows.Count = 0 Then
-          MessageBox.Show("計量器マスタにデータが登録されていません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Else
-          WriteDetail(tmpDt, ScaleDetail)
-        End If
+        WriteDetail(tmpDt, ScaleDetail)
 
       End With
     Catch ex As Exception
       Call ComWriteErrLog([GetType]().Name,
-                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       tmpDt.Dispose()
     End Try
@@ -142,7 +144,6 @@ Public Class Form_ScaleList
     sql &= " SELECT"
     sql &= "     UNIT_NUMBER,"
     sql &= "     IP_ADDRESS"
-    'sql &= "     DELETE_FLG"
     sql &= " FROM"
     sql &= "     MST_SCALE"
     sql &= " ORDER BY  "
@@ -180,8 +181,8 @@ Public Class Form_ScaleList
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -211,5 +212,8 @@ Public Class Form_ScaleList
       Case Keys.Escape
         Me.Close()
     End Select
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

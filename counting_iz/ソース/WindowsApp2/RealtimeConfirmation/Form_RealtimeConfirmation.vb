@@ -82,7 +82,7 @@ Public Class Form_RealtimeConfirmation
       .EnableHeadersVisualStyles = False ' デフォルトの Windows スタイルを無効化
       .ColumnHeadersDefaultCellStyle.BackColor = Color.LightBlue ' ヘッダーの背景色
       .ColumnHeadersDefaultCellStyle.ForeColor = Color.Black ' ヘッダーの文字色
-      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo", 10, FontStyle.Bold) ' フォント変更
+      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo UI", 10, FontStyle.Bold) ' フォント変更
       .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter ' ヘッダー中央寄せ
     End With
   End Sub
@@ -124,8 +124,8 @@ Public Class Form_RealtimeConfirmation
       End With
     Catch ex As Exception
       Call ComWriteErrLog([GetType]().Name,
-                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       tmpDt.Dispose()
     End Try
@@ -230,8 +230,8 @@ Public Class Form_RealtimeConfirmation
       End With
     Catch ex As Exception
       Call ComWriteErrLog([GetType]().Name,
-                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       tmpDt.Dispose()
     End Try
@@ -484,17 +484,11 @@ Public Class Form_RealtimeConfirmation
     Dim OutputDb As New DataTable
     Dim OutputDt As New DataTable
 
-    CsvPath = UsbPath & "\" & PathName & FileNameDigits & ScaleNumber & ".CSV"
-    DefPath = UsbPath & "\" & PathName & FileNameDigits & ScaleNumber & ".DEF"
+    CsvPath = UsbPath & "\" & PathName & FormatUnitNumberForFileName(ScaleNumber, FileNameDigits) & ".CSV"
+    DefPath = UsbPath & "\" & PathName & FormatUnitNumberForFileName(ScaleNumber, FileNameDigits) & ".DEF"
     'CSVファイル出力時に使うEncoding
     '「Shift_JIS」を使用
     Dim encoding As System.Text.Encoding = System.Text.Encoding.GetEncoding("Shift_JIS")
-    '書き込むファイルを開く
-    Dim wrCsv As New System.IO.StreamWriter(CsvPath, False, encoding)
-    Dim wrDef As New System.IO.StreamWriter(DefPath, False, encoding)
-    wrDef.Write(DefText)
-    wrDef.Close()
-
     Select Case TableName
       Case "MST_Item"
         sql = GetItemMasterSelectSql()
@@ -522,29 +516,13 @@ Public Class Form_RealtimeConfirmation
       With OutputDb
         SqlServer.GetResult(OutputDt, sql)
         If OutputDt.Rows.Count = 0 Then
-          Select Case TableName
-            Case "MST_Item"
-              MessageBox.Show("商品マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Case "MST_Manufacturer"
-              MessageBox.Show("製造者マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Case "MST_Packing"
-              MessageBox.Show("風袋マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Case "MST_Staff"
-              MessageBox.Show("担当者マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Case "MST_WorkOrder"
-              MessageBox.Show("作業指示マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Case "MST_Free1"
-              MessageBox.Show("フリー1マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Case "MST_Free2"
-              MessageBox.Show("フリー2マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Case "MST_Free3"
-              MessageBox.Show("フリー3マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Case "MST_Free4"
-              MessageBox.Show("フリー4マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Case "MST_Free5"
-              MessageBox.Show("フリー5マスタのデータがありません。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Error)
-          End Select
+          WriteExecuteLog([GetType]().Name, NameOf(CreateCsv), TableName & "が0件のためUSB出力対象外")
+          Return
         Else
+          Using wrDef As New StreamWriter(DefPath, False, encoding)
+            wrDef.Write(DefText)
+          End Using
+          Using wrCsv As New StreamWriter(CsvPath, False, encoding)
           Dim colCount As Integer = OutputDt.Columns.Count
           Dim lastColIndex As Integer = colCount - 1
           Dim i As Integer
@@ -582,13 +560,13 @@ Public Class Form_RealtimeConfirmation
             wrCsv.Write(vbCrLf)
           Next
           '閉じる
-          wrCsv.Close()
+          End Using
         End If
       End With
     Catch ex As Exception
       Call ComWriteErrLog([GetType]().Name,
-                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       OutputDt.Dispose()
     End Try
@@ -741,9 +719,11 @@ Public Class Form_RealtimeConfirmation
     End If
 
     ' FTP バックアップパスを取得（フォルダが存在しない場合、バックアップフォルダ作成）
-    If String.IsNullOrEmpty(FtpBackupPath) Then
-      Directory.CreateDirectory(FtpBackupPath)
+    If String.IsNullOrWhiteSpace(FtpBackupPath) Then
+      ShowWarningMessage("FTPバックアップ先が設定されていません。", Me)
+      Return
     End If
+    Directory.CreateDirectory(FtpBackupPath)
 
     ' 確認ダイアログ
     Dim confirmation As DialogResult
@@ -753,6 +733,10 @@ Public Class Form_RealtimeConfirmation
     Try
       ' USB内の該当ファイルを取得
       Dim usbDir As String = Path.Combine(usbPath, "IM-7000\TEMP")
+      If Not Directory.Exists(usbDir) Then
+        ShowWarningMessage("USBメモリに実績フォルダーがありません。", Me)
+        Return
+      End If
       Dim files As String() = Directory.GetFiles(usbDir, "40TRAN*.CSV", System.IO.SearchOption.TopDirectoryOnly)
 
       If files.Length = 0 Then
@@ -766,7 +750,7 @@ Public Class Form_RealtimeConfirmation
         DuplicateCount = 0
         ' ファイルパスから号機番号を取得
         Dim fileName As String = System.IO.Path.GetFileNameWithoutExtension(filePath) ' ファイル名（拡張子なし）
-        Dim machineNumber As String = fileName.Substring(fileName.Length - 2, 2) & "号機" ' 号機番号 + "号機"
+        Dim machineNumber As String = fileName.Substring("40TRAN".Length).TrimStart("0"c) & "号機" ' 号機番号 + "号機"
 
         ' CSVを処理
         Dim dt As New DataTable("TRN_Results")
@@ -805,7 +789,8 @@ Public Class Form_RealtimeConfirmation
 
             ' 行データ追加
             Dim i As Integer
-            For i = 0 To Math.Min(csvRow.Length - 1, columnNames.Length - 1)
+            If csvRow.Length > columnNames.Length Then Throw New InvalidOperationException("実績CSVの列数が定義を超えています。")
+            For i = 0 To csvRow.Length - 1
               dr(i) = csvRow(i)
             Next
 
@@ -813,62 +798,12 @@ Public Class Form_RealtimeConfirmation
             dr("create_date") = DateTime.Now.ToString("yyyy-MM-dd")
             dr("update_date") = DateTime.Now.ToString("yyyy-MM-dd")
 
-            ' 重複チェック
-            If DuplicateCheck(dr(0), dr(1), dr(2)) Then
-              DuplicateCount += 1
-              Continue While
-            End If
-
             dt.Rows.Add(dr)
           End While
         End Using
 
-        ' データをDBに登録
-        For Each dr As DataRow In dt.Rows
-          Dim sql As String = GetInsertSql(columnNames, dr)
-          With tmpDb
-            Try
-              If .Execute(sql) = 1 Then
-                .TrnCommit()
-                InsertCount += 1
-              Else
-                MessageBox.Show("実績管理の登録処理に失敗しました。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-              End If
-            Catch ex As Exception
-              Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-              Throw New Exception(ex.Message)
-            End Try
-          End With
-        Next
-
-        ' 処理結果メッセージ
-        If InsertCount > 0 Then
-          If DuplicateCount > 0 Then
-            MessageBox.Show(
-            machineNumber & "：" & InsertCount & "件 取り込み完了しました。" & vbCrLf &
-            "既に登録されている実績データが" & DuplicateCount & "件存在します。",
-            "確認", MessageBoxButtons.OK, MessageBoxIcon.Information
-        )
-          Else
-            MessageBox.Show(
-            machineNumber & "：" & InsertCount & "件 取り込み完了しました。",
-            "完了", MessageBoxButtons.OK, MessageBoxIcon.Information
-        )
-          End If
-        Else
-          If DuplicateCount > 0 Then
-            MessageBox.Show(
-            machineNumber & "：取り込み失敗しました。" & vbCrLf &
-            "既に登録されている実績データが" & DuplicateCount & "件存在します。",
-            "確認", MessageBoxButtons.OK, MessageBoxIcon.Error
-        )
-          Else
-            MessageBox.Show(
-            machineNumber & "：取り込みに失敗しました。データがありません。",
-            "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error
-        )
-          End If
-        End If
+        SqlServer.InsertResultsIfNotExists(dt, columnNames, InsertCount, DuplicateCount)
+        ShowInformationMessage(machineNumber & "：登録=" & InsertCount & "件、重複除外=" & DuplicateCount & "件", Me)
 
         ' ----------------------------------------------------
         ' 取り込みが完了した CSVファイルをFTP バックアップ用に
@@ -905,6 +840,7 @@ Public Class Form_RealtimeConfirmation
         End If
       Next
     Catch ex As Exception
+      ComWriteErrLog([GetType]().Name, NameOf(USB_ReceiveButton_Click), ex)
       MessageBox.Show("エラーが発生しました：" & ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
     End Try
   End Sub
@@ -941,5 +877,8 @@ Public Class Form_RealtimeConfirmation
       Case Keys.Escape
         Me.Close()
     End Select
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

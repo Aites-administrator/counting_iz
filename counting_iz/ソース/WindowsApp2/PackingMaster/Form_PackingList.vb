@@ -72,7 +72,7 @@ Public Class Form_PackingList
       .EnableHeadersVisualStyles = False ' デフォルトの Windows スタイルを無効化
       .ColumnHeadersDefaultCellStyle.BackColor = Color.LightBlue ' ヘッダーの背景色
       .ColumnHeadersDefaultCellStyle.ForeColor = Color.Black ' ヘッダーの文字色
-      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo", 10, FontStyle.Bold) ' フォント変更
+      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo UI", 10, FontStyle.Bold) ' フォント変更
       .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter ' ヘッダー中央寄せ
     End With
   End Sub
@@ -81,12 +81,14 @@ Public Class Form_PackingList
     Form_PackingDetail.ShowDialog()
   End Sub
   Private Sub UpdateButton_Click(sender As Object, e As EventArgs) Handles UpdateButton.Click
+    If PackingDetail.CurrentRow Is Nothing OrElse PackingDetail.CurrentRow.IsNewRow Then Return
     '詳細画面の項目値セット
     SetListData()
     Form_PackingDetail.InputMode = 2
     Form_PackingDetail.ShowDialog()
   End Sub
   Private Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+    If PackingDetail.CurrentRow Is Nothing OrElse PackingDetail.CurrentRow.IsNewRow Then Return
     DeleteScaleMaster()
   End Sub
   Private Sub PackingDetail_DoubleClick(sender As Object, e As EventArgs) Handles PackingDetail.DoubleClick
@@ -115,6 +117,9 @@ Public Class Form_PackingList
       With tmpDb
         SqlServer.GetResult(tmpDt, sql)
         If tmpDt.Rows.Count = 0 Then
+          PackingDetail.Rows.Clear()
+          UpdateButton.Enabled = False
+          DeleteButton.Enabled = False
           MessageBox.Show("風袋マスタにデータが登録されていません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Else
           WriteDetail(tmpDt, PackingDetail)
@@ -122,8 +127,8 @@ Public Class Form_PackingList
       End With
     Catch ex As Exception
       Call ComWriteErrLog([GetType]().Name,
-                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       tmpDt.Dispose()
     End Try
@@ -177,8 +182,8 @@ Public Class Form_PackingList
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -218,5 +223,8 @@ Public Class Form_PackingList
       Case Keys.Escape
         Me.Close()
     End Select
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

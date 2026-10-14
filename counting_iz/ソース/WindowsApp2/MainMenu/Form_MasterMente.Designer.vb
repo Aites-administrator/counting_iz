@@ -40,7 +40,7 @@ Partial Class Form_MasterMente
         '
         'Free4MasterButton
         '
-        Me.Free4MasterButton.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Free4MasterButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Free4MasterButton.Location = New System.Drawing.Point(426, 412)
         Me.Free4MasterButton.Name = "Free4MasterButton"
         Me.Free4MasterButton.Size = New System.Drawing.Size(407, 79)
@@ -50,7 +50,7 @@ Partial Class Form_MasterMente
         '
         'Free5MasterButton
         '
-        Me.Free5MasterButton.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Free5MasterButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Free5MasterButton.Location = New System.Drawing.Point(11, 497)
         Me.Free5MasterButton.Name = "Free5MasterButton"
         Me.Free5MasterButton.Size = New System.Drawing.Size(407, 79)
@@ -60,7 +60,7 @@ Partial Class Form_MasterMente
         '
         'Free1MasterButton
         '
-        Me.Free1MasterButton.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Free1MasterButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Free1MasterButton.Location = New System.Drawing.Point(11, 327)
         Me.Free1MasterButton.Name = "Free1MasterButton"
         Me.Free1MasterButton.Size = New System.Drawing.Size(407, 79)
@@ -70,7 +70,7 @@ Partial Class Form_MasterMente
         '
         'Free3MasterButton
         '
-        Me.Free3MasterButton.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Free3MasterButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Free3MasterButton.Location = New System.Drawing.Point(12, 412)
         Me.Free3MasterButton.Name = "Free3MasterButton"
         Me.Free3MasterButton.Size = New System.Drawing.Size(407, 79)
@@ -80,8 +80,8 @@ Partial Class Form_MasterMente
         '
         'StaffMasterButton
         '
-        Me.StaffMasterButton.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.StaffMasterButton.Location = New System.Drawing.Point(11, 157)
+        Me.StaffMasterButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.StaffMasterButton.Location = New System.Drawing.Point(13, 157)
         Me.StaffMasterButton.Name = "StaffMasterButton"
         Me.StaffMasterButton.Size = New System.Drawing.Size(407, 79)
         Me.StaffMasterButton.TabIndex = 3
@@ -90,7 +90,7 @@ Partial Class Form_MasterMente
         '
         'ScalesMasterButton
         '
-        Me.ScalesMasterButton.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ScalesMasterButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ScalesMasterButton.Location = New System.Drawing.Point(426, 242)
         Me.ScalesMasterButton.Name = "ScalesMasterButton"
         Me.ScalesMasterButton.Size = New System.Drawing.Size(407, 79)
@@ -100,7 +100,7 @@ Partial Class Form_MasterMente
         '
         'ItemMasterButton
         '
-        Me.ItemMasterButton.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ItemMasterButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ItemMasterButton.Location = New System.Drawing.Point(12, 72)
         Me.ItemMasterButton.Name = "ItemMasterButton"
         Me.ItemMasterButton.Size = New System.Drawing.Size(407, 79)
@@ -111,17 +111,17 @@ Partial Class Form_MasterMente
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 24.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 24.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TitleLabel.Location = New System.Drawing.Point(12, 9)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(166, 45)
         Me.TitleLabel.TabIndex = 0
-        Me.TitleLabel.Text = "マスタメンテ"
+        Me.TitleLabel.Text = "マスタメンテナンス"
         Me.TitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Free2MasterButton
         '
-        Me.Free2MasterButton.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Free2MasterButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Free2MasterButton.Location = New System.Drawing.Point(426, 327)
         Me.Free2MasterButton.Name = "Free2MasterButton"
         Me.Free2MasterButton.Size = New System.Drawing.Size(407, 79)
@@ -131,7 +131,7 @@ Partial Class Form_MasterMente
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CloseButton.Location = New System.Drawing.Point(710, 586)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 50)
@@ -141,7 +141,7 @@ Partial Class Form_MasterMente
         '
         'ItemLMasterButton
         '
-        Me.ItemLMasterButton.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ItemLMasterButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ItemLMasterButton.Location = New System.Drawing.Point(426, 497)
         Me.ItemLMasterButton.Name = "ItemLMasterButton"
         Me.ItemLMasterButton.Size = New System.Drawing.Size(407, 79)
@@ -152,7 +152,7 @@ Partial Class Form_MasterMente
         '
         'PackingButton
         '
-        Me.PackingButton.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PackingButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.PackingButton.Location = New System.Drawing.Point(11, 242)
         Me.PackingButton.Name = "PackingButton"
         Me.PackingButton.Size = New System.Drawing.Size(407, 79)
@@ -162,7 +162,7 @@ Partial Class Form_MasterMente
         '
         'ManufacturerMasterButton
         '
-        Me.ManufacturerMasterButton.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ManufacturerMasterButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ManufacturerMasterButton.Location = New System.Drawing.Point(426, 157)
         Me.ManufacturerMasterButton.Name = "ManufacturerMasterButton"
         Me.ManufacturerMasterButton.Size = New System.Drawing.Size(407, 79)
@@ -172,7 +172,7 @@ Partial Class Form_MasterMente
         '
         'WorkOrderButton
         '
-        Me.WorkOrderButton.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.WorkOrderButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.WorkOrderButton.Location = New System.Drawing.Point(425, 72)
         Me.WorkOrderButton.Name = "WorkOrderButton"
         Me.WorkOrderButton.Size = New System.Drawing.Size(407, 79)
@@ -200,6 +200,8 @@ Partial Class Form_MasterMente
         Me.Controls.Add(Me.ScalesMasterButton)
         Me.Controls.Add(Me.ItemMasterButton)
         Me.KeyPreview = True
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_MasterMente"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "マスタメンテナンス"

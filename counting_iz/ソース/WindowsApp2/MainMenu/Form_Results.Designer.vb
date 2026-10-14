@@ -30,17 +30,17 @@ Partial Class Form_Results
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 24.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 24.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TitleLabel.Location = New System.Drawing.Point(12, 9)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(159, 45)
         Me.TitleLabel.TabIndex = 22
-        Me.TitleLabel.Text = "実績メンテ"
+        Me.TitleLabel.Text = "実績メンテナンス"
         Me.TitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'AchievementCreateButton
         '
-        Me.AchievementCreateButton.Font = New System.Drawing.Font("Segoe UI", 18.0!)
+        Me.AchievementCreateButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.AchievementCreateButton.Location = New System.Drawing.Point(12, 72)
         Me.AchievementCreateButton.Name = "AchievementCreateButton"
         Me.AchievementCreateButton.Size = New System.Drawing.Size(407, 79)
@@ -50,7 +50,7 @@ Partial Class Form_Results
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.CloseButton.Location = New System.Drawing.Point(710, 586)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 50)
@@ -66,9 +66,11 @@ Partial Class Form_Results
         Me.Controls.Add(Me.CloseButton)
         Me.Controls.Add(Me.TitleLabel)
         Me.Controls.Add(Me.AchievementCreateButton)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_Results"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "実績メンテ"
+        Me.Text = "実績メンテナンス"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

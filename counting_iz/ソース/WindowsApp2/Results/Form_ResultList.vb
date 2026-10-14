@@ -158,7 +158,7 @@ Public Class Form_ResultList
       .EnableHeadersVisualStyles = False ' デフォルトの Windows スタイルを無効化
       .ColumnHeadersDefaultCellStyle.BackColor = Color.LightBlue ' ヘッダーの背景色
       .ColumnHeadersDefaultCellStyle.ForeColor = Color.Black ' ヘッダーの文字色
-      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo", 10, FontStyle.Bold) ' フォント変更
+      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo UI", 10, FontStyle.Bold) ' フォント変更
       .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter ' ヘッダー中央寄せ
     End With
   End Sub
@@ -167,6 +167,7 @@ Public Class Form_ResultList
     Form_ResultDetail.ShowDialog()
   End Sub
   Private Sub UpdateButton_Click(sender As Object, e As EventArgs) Handles UpdateButton.Click
+    If ResultDetail.CurrentRow Is Nothing OrElse ResultDetail.CurrentRow.IsNewRow Then Return
     '詳細画面の項目値セット
     SetListData()
     Form_ResultDetail.InputMode = 2
@@ -196,8 +197,8 @@ Public Class Form_ResultList
       End If
     Catch ex As Exception
       ' エラーログを書き込んで例外をスロー
-      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
   End Sub
   Private Sub SetItemCodeComboBox()
@@ -230,8 +231,8 @@ Public Class Form_ResultList
       End If
     Catch ex As Exception
       ' エラーログを書き込んで例外をスロー
-      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
   End Sub
   Private Sub SetStaffNumberComboBox()
@@ -262,8 +263,8 @@ Public Class Form_ResultList
       End If
     Catch ex As Exception
       ' エラーログを書き込んで例外をスロー
-      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
   End Sub
   Private Function GetDataStaffNumber() As DataTable
@@ -281,8 +282,8 @@ Public Class Form_ResultList
       Return tmpDt
     Catch ex As Exception
       ' エラーログを書き込んで例外をスロー
-      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       ' 一時的なデータテーブルを解放
       tmpDt.Dispose()
@@ -315,8 +316,8 @@ Public Class Form_ResultList
   '    End If
   '  Catch ex As Exception
   '    ' エラーログを書き込んで例外をスロー
-  '    ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-  '    Throw New Exception(ex.Message)
+  '    ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+  '    Throw
   '  End Try
   'End Sub
 
@@ -335,8 +336,8 @@ Public Class Form_ResultList
       Return tmpDt
     Catch ex As Exception
       ' エラーログを書き込んで例外をスロー
-      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       ' 一時的なデータテーブルを解放
       tmpDt.Dispose()
@@ -358,8 +359,8 @@ Public Class Form_ResultList
       Return tmpDt
     Catch ex As Exception
       ' エラーログを書き込んで例外をスロー
-      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       ' 一時的なデータテーブルを解放
       tmpDt.Dispose()
@@ -381,8 +382,8 @@ Public Class Form_ResultList
   '    Return tmpDt
   '  Catch ex As Exception
   '    ' エラーログを書き込んで例外をスロー
-  '    ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-  '    Throw New Exception(ex.Message)
+  '    ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+  '    Throw
   '  Finally
   '    ' 一時的なデータテーブルを解放
   '    tmpDt.Dispose()
@@ -451,14 +452,13 @@ Public Class Form_ResultList
 
         ResultDetail.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells)
         ResultDetail.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
-        ResultDetail.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        ResultDetail.ColumnHeadersHeight = 20
+        ResultDetail.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
 
       End With
     Catch ex As Exception
       Call ComWriteErrLog(Me.GetType().Name,
-                    System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+                    System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       tmpDt.Dispose()
     End Try
@@ -617,11 +617,11 @@ Public Class Form_ResultList
     'sql &= "      OR MEASURING_WEIGHT != 0"
     'sql &= "     )"
     If lot1TextBox.Text <> "" Then
-      sql &= " AND lot1 LIKE '%" & lot1TextBox.Text & "%'"
+      sql &= " AND lot1 LIKE '%" & EscapeSqlLiteral(lot1TextBox.Text) & "%'"
     End If
 
     If lot2TextBox.Text <> "" Then
-      sql &= " AND lot2 LIKE '%" & lot2TextBox.Text & "%'"
+      sql &= " AND lot2 LIKE '%" & EscapeSqlLiteral(lot2TextBox.Text) & "%'"
     End If
     sql &= " ORDER BY "
     sql &= "     addition_date DESC, "
@@ -881,6 +881,12 @@ Public Class Form_ResultList
       Exit Sub
     End If
 
+    Using passwordForm As New Form_CsvExportPassword()
+      If passwordForm.ShowDialog(Me) <> DialogResult.OK Then
+        Exit Sub
+      End If
+    End Using
+
     Dim fileName As String = ResultCsvPath & "Results" & ".CSV"
 
     Try
@@ -933,6 +939,7 @@ Public Class Form_ResultList
     End Try
   End Sub
   Private Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+    If ResultDetail.CurrentRow Is Nothing OrElse ResultDetail.CurrentRow.IsNewRow Then Return
     Dim message As String = "削除します。" & vbCrLf & "よろしいでしょうか。"
 
     Dim resultS As DialogResult = MessageBox.Show(message, "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
@@ -957,8 +964,8 @@ Public Class Form_ResultList
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -994,6 +1001,24 @@ Public Class Form_ResultList
 
   Private Sub Form_ResultList_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
     Select Case e.KeyCode
+      Case Keys.Enter
+        If e.Modifiers <> Keys.None Then Return
+
+        ' 検索条件の入力欄では Enter キーで検索する。
+        Dim searchControls As Control() = {
+          DateTimeFrom, DateTimeTo,
+          FromItemCode_ComboBox, ToItemCode_ComboBox,
+          FromStaffCode_ComboBox, ToStaffCode_ComboBox,
+          Scale_ComboBox, lot1TextBox, lot2TextBox
+        }
+        If Not searchControls.Any(Function(control) control.ContainsFocus) Then Return
+
+        ' プルダウン表示中は選択確定の Enter キーを優先する。
+        Dim activeCombo As ComboBox = TryCast(ActiveControl, ComboBox)
+        If activeCombo IsNot Nothing AndAlso activeCombo.DroppedDown Then Return
+
+        e.SuppressKeyPress = True
+        SearchButton.PerformClick()
       Case Keys.F1
         SearchButton.PerformClick()
       Case Keys.F2
@@ -1042,5 +1067,8 @@ Public Class Form_ResultList
     Else
       cb.DropDownWidth = cb.Width
     End If
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

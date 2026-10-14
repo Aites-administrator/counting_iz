@@ -163,4 +163,7 @@ Public Class Form_Top
       MessageBox.Show("バックアップはキャンセルされました。", "キャンセル", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End If
   End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
+  End Sub
 End Class

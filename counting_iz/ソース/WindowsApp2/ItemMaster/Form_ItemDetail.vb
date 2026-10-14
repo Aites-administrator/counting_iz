@@ -46,6 +46,8 @@ Public Class Form_ItemDetail
     Me.KeyPreview = True
 
     FormBorderStyle = FormBorderStyle.FixedSingle
+    MarkRequiredLabels(Label23, Label22)
+    AlignDetailActionButtons(Me, OkButton, CloseButton)
 
     SetPackingComboBox()
     SetUnitComboBox()
@@ -75,8 +77,8 @@ Public Class Form_ItemDetail
       End If
     Catch ex As Exception
       ' エラーログを書き込んで例外をスロー
-      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
   End Sub
 
@@ -88,8 +90,8 @@ Public Class Form_ItemDetail
         SqlServer.GetResult(PackingData, GetSelectPackingMaster)
       End With
     Catch ex As Exception
-      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
 
     Return PackingData
@@ -174,11 +176,9 @@ Public Class Form_ItemDetail
   End Sub
 
   Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+    If Not CheckValue() Then Return
     Select Case InputMode
       Case 1
-        If CheckValue() = False Then
-          Exit Sub
-        End If
         '新規登録メソッド呼出し
         InsertItemMaster()
       Case 2
@@ -191,10 +191,16 @@ Public Class Form_ItemDetail
     Dim errorMessages As New List(Of String)
     Dim firstErrorControl As Control = Nothing
 
+    Dim callDigits As Integer = codeText.MaxLength
+    Dim configuredDigits As Integer
+    If Integer.TryParse(ReadSettingIniFile("ITEM_DIGITS", "VALUE"), configuredDigits) AndAlso configuredDigits >= 1 AndAlso configuredDigits <= 9 Then callDigits = configuredDigits
     If String.IsNullOrEmpty(codeText.Text) Then
       errorMessages.Add("呼出コードを入力してください。")
       If firstErrorControl Is Nothing Then firstErrorControl = codeText
-    ElseIf codeText.Text = "000000" Then
+    ElseIf Not IsDigitsOnly(codeText.Text) OrElse codeText.Text.Length > callDigits Then
+      errorMessages.Add("呼出コードは1～" & callDigits & "桁の数字で入力してください。")
+      If firstErrorControl Is Nothing Then firstErrorControl = codeText
+    ElseIf codeText.Text.All(Function(c) c = "0"c) Then
       errorMessages.Add("呼出コードに000000は登録できません。")
       If firstErrorControl Is Nothing Then firstErrorControl = codeText
     End If
@@ -227,20 +233,22 @@ Public Class Form_ItemDetail
     ' エラー表示とフォーカス
     If errorMessages.Count > 0 Then
       MessageBox.Show(String.Join(vbCrLf, errorMessages), "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-      If firstErrorControl IsNot Nothing Then firstErrorControl.Focus()
+      If firstErrorControl IsNot Nothing Then FocusInputError(firstErrorControl)
       Return False
     End If
 
     ' 重複チェック
+    If InputMode = 1 Then
     For Each row As DataGridViewRow In Form_ItemList.ItemDetail.Rows
       If codeText.Text.Equals(row.Cells(0).Value?.ToString()) Then
         MessageBox.Show("既に登録されている商品コードです。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        codeText.Focus()
+        Common.ClsFunction.FocusInputError(codeText)
         Return False
       End If
     Next
+    End If
 
-    Return True
+    Return ValidateNumericInputs()
   End Function
 
 
@@ -272,8 +280,8 @@ Public Class Form_ItemDetail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -358,9 +366,9 @@ Public Class Form_ItemDetail
     sql &= "     " & unitWeightInt & ","
     sql &= "     " & upperUnitWeightDecimal & ","
     sql &= "     " & lowerUnitWeightDecimal & ","
-    sql &= "     '" & unitWeightUnit & "',"
-    sql &= "     '" & upperUnitWeightUnit & "',"
-    sql &= "     '" & lowerUnitWeightUnit & "',"
+    sql &= "     '" & EscapeSqlLiteral(unitWeightUnit) & "',"
+    sql &= "     '" & EscapeSqlLiteral(upperUnitWeightUnit) & "',"
+    sql &= "     '" & EscapeSqlLiteral(lowerUnitWeightUnit) & "',"
     sql &= "     '" & packingCode & "',"
     sql &= "     " & packingDecimal & ","
     sql &= "     '" & packingUnit & "',"
@@ -416,8 +424,8 @@ Public Class Form_ItemDetail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -504,9 +512,9 @@ Public Class Form_ItemDetail
     sql &= "        unit_weight = " & unitWeightInt & ","
     sql &= "        upper_unit_weight = " & upperUnitWeightDecimal & ","
     sql &= "        lower_unit_weight = " & lowerUnitWeightDecimal & ","
-    sql &= "        unit_weight_unit = '" & unitWeightUnit & "',"
-    sql &= "        upper_unit_weight_unit = '" & upperUnitWeightUnit & "',"
-    sql &= "        lower_unit_weight_unit = '" & lowerUnitWeightUnit & "',"
+    sql &= "        unit_weight_unit = '" & EscapeSqlLiteral(unitWeightUnit) & "',"
+    sql &= "        upper_unit_weight_unit = '" & EscapeSqlLiteral(upperUnitWeightUnit) & "',"
+    sql &= "        lower_unit_weight_unit = '" & EscapeSqlLiteral(lowerUnitWeightUnit) & "',"
 
     sql &= "        update_date = '" & tmpdate.ToString("yyyy-MM-dd HH:mm:ss") & "'"
     sql &= " WHERE call_code = '" & callCode & "'"
@@ -674,8 +682,8 @@ Public Class Form_ItemDetail
     Try
       SqlServer.GetResult(freeData, GetSelectPackingDataQuery(selectedOption))
     Catch ex As Exception
-      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
 
     Return freeData
@@ -685,7 +693,7 @@ Public Class Form_ItemDetail
     Dim sql As String = String.Empty
     sql &= " SELECT PackingWeight,PackingWeightUnit "
     sql &= " FROM MST_Packing "
-    sql &= " WHERE PackingNo = '" & selectedOption & "'"
+    sql &= " WHERE PackingNo = '" & EscapeSqlLiteral(selectedOption) & "'"
     Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
   End Function
@@ -747,4 +755,21 @@ Public Class Form_ItemDetail
       e.Handled = True
     End If
   End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
+  End Sub
+  Private Function ValidateNumericInputs() As Boolean
+    Dim fields As TextBox() = {weightText, weightMaxText, weightMinText, safetyFactorText, targetQtyText,
+                              maxText, standardText, minText, subtotalTargetText, subtotalCountText}
+    For Each input As TextBox In fields
+      If String.IsNullOrWhiteSpace(input.Text) Then Continue For
+      Dim value As Decimal
+      If Not Decimal.TryParse(input.Text, value) OrElse value < 0D Then
+        ShowWarningMessage("数値項目には0以上の数値を入力してください。", Me)
+        FocusInputError(input)
+        Return False
+      End If
+    Next
+    Return True
+  End Function
 End Class

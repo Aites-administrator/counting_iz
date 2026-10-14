@@ -159,10 +159,13 @@ Public Class ClsComDatabase
 
     Private Sub ReleaseTrnRb()
         If _ObjTran IsNot Nothing Then
-            _ObjTran.Rollback()
-            _ObjTran.Dispose()
-            _ObjTran = Nothing
-            _SqlHistory = String.Empty
+            Try
+                _ObjTran.Rollback()
+            Finally
+                _ObjTran.Dispose()
+                _ObjTran = Nothing
+                _SqlHistory = String.Empty
+            End Try
         End If
     End Sub
 
@@ -171,10 +174,6 @@ Public Class ClsComDatabase
             _ObjTran.Commit()
             _ObjTran.Dispose()
             _ObjTran = Nothing
-            ' SQLSERVERのみログを残す
-            If (_Provider = TypProvider.sqlServer) Then
-                'Call WriteExecuteLog(_SqlHistory)
-            End If
             _SqlHistory = String.Empty
         End If
     End Sub
@@ -224,7 +223,7 @@ Public Class ClsComDatabase
                 _SqlHistory = String.Empty
             End If
         Catch ex As Exception
-            'Call ComWriteErrLog(ex)
+            Call ComWriteErrLog(NameOf(ClsComDatabase), NameOf(DbDisconnect), ex)
         End Try
     End Sub
 
@@ -234,10 +233,10 @@ Public Class ClsComDatabase
         '指定したSQL文が空白の場合、クエリーを実行しない
         If String.IsNullOrWhiteSpace(sql) Then
             Return dt
-            Exit Function
         End If
 
         Try
+            Call WriteExecuteLog(NameOf(ClsComDatabase), NameOf(GetResult), sql)
             _ObjCmd = DbConnection.CreateCommand
             With _ObjCmd
                 .CommandTimeout = _QueryTimeOut
@@ -246,12 +245,6 @@ Public Class ClsComDatabase
                     .Transaction = _ObjTran
                 End If
             End With
-
-            If (prmLog = False) Then
-                If (_Provider = TypProvider.sqlServer) Then
-                    'Call WriteExecuteLog(sql)
-                End If
-            End If
 
             '---
             _ObjDa = New OleDb.OleDbDataAdapter With {
@@ -268,8 +261,9 @@ Public Class ClsComDatabase
             Return dt
             '---
         Catch ex As Exception
-            Call ComWriteErrLog(ex)
-            Throw New Exception("SQL実行時エラー:" & sql)
+            Call ComWriteErrLog(NameOf(ClsComDatabase), NameOf(GetResult),
+                                New Exception("SQL: " & sql, ex))
+            Throw New Exception("SQL実行時エラー:" & sql, ex)
         Finally
             If _ObjDa IsNot Nothing Then
                 _ObjDa.Dispose()
@@ -287,7 +281,12 @@ Public Class ClsComDatabase
 
         Dim AffectedCount As Integer
 
+        If String.IsNullOrWhiteSpace(sql) Then
+            Throw New ArgumentException("実行するSQL文が指定されていません。", NameOf(sql))
+        End If
+
         Try
+            Call WriteExecuteLog(NameOf(ClsComDatabase), NameOf(Execute), sql)
             'トランザクション開始
             If _ObjTran Is Nothing Then _ObjTran = DbConnection.BeginTransaction()
 
@@ -307,13 +306,18 @@ Public Class ClsComDatabase
 
         Catch ex As Exception
 
-            'Call ComWriteErrLog(ex)   ' Error出力
+            Call ComWriteErrLog(NameOf(ClsComDatabase), NameOf(Execute),
+                                New Exception("SQL: " & sql, ex))
 
             If _TrnRunnig = False Then
-                ReleaseTrnRb()
+                Try
+                    ReleaseTrnRb()
+                Catch rollbackException As Exception
+                    Call ComWriteErrLog(NameOf(ClsComDatabase), NameOf(ReleaseTrnRb), rollbackException)
+                End Try
             End If
 
-            Throw New Exception("SQL実行時エラー:" & sql)
+            Throw New Exception("SQL実行時エラー:" & sql, ex)
         End Try
 
         Return AffectedCount
@@ -385,7 +389,7 @@ Public Class ClsComDatabase
     ' このコードは、破棄可能なパターンを正しく実装できるように Visual Basic によって追加されました。
     Public Sub Dispose() Implements IDisposable.Dispose
         Dispose(True)
-        DbConnection.Close()
+        GC.SuppressFinalize(Me)
     End Sub
 #End Region
 End Class

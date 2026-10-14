@@ -114,7 +114,7 @@ Partial Class Form_Top
         Me.MenuGroupBox.Controls.Add(Me.PictureBox_Log)
         Me.MenuGroupBox.Controls.Add(Me.PictureBox_AchievementMente)
         Me.MenuGroupBox.Controls.Add(Me.PictureBox_OutPut)
-        Me.MenuGroupBox.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.MenuGroupBox.Font = New System.Drawing.Font("Meiryo UI", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.MenuGroupBox.ForeColor = System.Drawing.Color.Black
         Me.MenuGroupBox.Location = New System.Drawing.Point(27, 98)
         Me.MenuGroupBox.Name = "MenuGroupBox"
@@ -127,7 +127,7 @@ Partial Class Form_Top
         '
         Me.LogButton.BackColor = System.Drawing.Color.White
         Me.LogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.LogButton.Font = New System.Drawing.Font("Segoe UI", 20.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LogButton.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LogButton.Location = New System.Drawing.Point(126, 415)
         Me.LogButton.Name = "LogButton"
         Me.LogButton.Size = New System.Drawing.Size(293, 70)
@@ -139,7 +139,7 @@ Partial Class Form_Top
         '
         Me.OutPutButton.BackColor = System.Drawing.Color.White
         Me.OutPutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.OutPutButton.Font = New System.Drawing.Font("Segoe UI", 20.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.OutPutButton.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.OutPutButton.Location = New System.Drawing.Point(126, 293)
         Me.OutPutButton.Name = "OutPutButton"
         Me.OutPutButton.Size = New System.Drawing.Size(293, 70)
@@ -151,7 +151,7 @@ Partial Class Form_Top
         '
         Me.ResultsButton.BackColor = System.Drawing.Color.White
         Me.ResultsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.ResultsButton.Font = New System.Drawing.Font("Segoe UI", 20.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ResultsButton.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ResultsButton.Location = New System.Drawing.Point(126, 172)
         Me.ResultsButton.Name = "ResultsButton"
         Me.ResultsButton.Size = New System.Drawing.Size(293, 70)
@@ -163,7 +163,7 @@ Partial Class Form_Top
         '
         Me.MasterMenteButton.BackColor = System.Drawing.Color.White
         Me.MasterMenteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.MasterMenteButton.Font = New System.Drawing.Font("Segoe UI", 20.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.MasterMenteButton.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.MasterMenteButton.Location = New System.Drawing.Point(126, 53)
         Me.MasterMenteButton.Name = "MasterMenteButton"
         Me.MasterMenteButton.Size = New System.Drawing.Size(293, 70)
@@ -185,7 +185,7 @@ Partial Class Form_Top
         '
         Me.CloseButton.BackColor = System.Drawing.Color.White
         Me.CloseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 20.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CloseButton.Location = New System.Drawing.Point(624, 513)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(293, 70)
@@ -207,7 +207,7 @@ Partial Class Form_Top
         '
         Me.Label1.AutoSize = True
         Me.Label1.BackColor = System.Drawing.Color.Gray
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Font = New System.Drawing.Font("Meiryo UI", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.White
         Me.Label1.Location = New System.Drawing.Point(29, 40)
         Me.Label1.Name = "Label1"
@@ -217,6 +217,7 @@ Partial Class Form_Top
         '
         'MenuStrip2
         '
+        Me.MenuStrip2.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
         Me.MenuStrip2.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.MenuStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Support_MenuItem, Me.RunSqlServerBat})
         Me.MenuStrip2.Location = New System.Drawing.Point(0, 0)
@@ -240,10 +241,10 @@ Partial Class Form_Top
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(355, 53)
+        Me.Label3.Font = New System.Drawing.Font("Meiryo UI", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Location = New System.Drawing.Point(405, 53)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(177, 32)
+        Me.Label3.Size = New System.Drawing.Size(95, 32)
         Me.Label3.TabIndex = 2
         Me.Label3.Text = "【カウンティング】"
         '
@@ -264,6 +265,8 @@ Partial Class Form_Top
         Me.Controls.Add(Me.MenuStrip2)
         Me.ForeColor = System.Drawing.SystemColors.ControlText
         Me.KeyPreview = True
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_Top"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "IZデジタルスムーズ.DX（カウンティング）"

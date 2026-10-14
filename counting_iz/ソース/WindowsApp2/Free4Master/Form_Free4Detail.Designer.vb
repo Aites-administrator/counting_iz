@@ -35,7 +35,7 @@ Partial Class Form_Free4Detail
         '
         'CodeText
         '
-        Me.CodeText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.CodeText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.CodeText.Location = New System.Drawing.Point(100, 20)
         Me.CodeText.MaxLength = 4
         Me.CodeText.Name = "CodeText"
@@ -56,7 +56,7 @@ Partial Class Form_Free4Detail
         '
         'NameText
         '
-        Me.NameText.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.NameText.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.NameText.Location = New System.Drawing.Point(100, 62)
         Me.NameText.MaxLength = 99
         Me.NameText.Name = "NameText"
@@ -66,7 +66,7 @@ Partial Class Form_Free4Detail
         'NameLabel
         '
         Me.NameLabel.AutoSize = True
-        Me.NameLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!)
+        Me.NameLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!)
         Me.NameLabel.Location = New System.Drawing.Point(6, 65)
         Me.NameLabel.Name = "NameLabel"
         Me.NameLabel.Size = New System.Drawing.Size(57, 30)
@@ -76,7 +76,7 @@ Partial Class Form_Free4Detail
         'CodeLabel
         '
         Me.CodeLabel.AutoSize = True
-        Me.CodeLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!)
+        Me.CodeLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!)
         Me.CodeLabel.Location = New System.Drawing.Point(6, 23)
         Me.CodeLabel.Name = "CodeLabel"
         Me.CodeLabel.Size = New System.Drawing.Size(62, 30)
@@ -85,7 +85,7 @@ Partial Class Form_Free4Detail
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.CloseButton.Location = New System.Drawing.Point(260, 198)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 50)
@@ -95,7 +95,7 @@ Partial Class Form_Free4Detail
         '
         'OkButton
         '
-        Me.OkButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.OkButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.OkButton.Location = New System.Drawing.Point(131, 198)
         Me.OkButton.Name = "OkButton"
         Me.OkButton.Size = New System.Drawing.Size(123, 50)
@@ -106,7 +106,7 @@ Partial Class Form_Free4Detail
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!)
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!)
         Me.TitleLabel.Location = New System.Drawing.Point(12, 9)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(174, 30)
@@ -122,6 +122,8 @@ Partial Class Form_Free4Detail
         Me.Controls.Add(Me.CloseButton)
         Me.Controls.Add(Me.OkButton)
         Me.Controls.Add(Me.TitleLabel)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_Free4Detail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Form1"

@@ -17,4 +17,7 @@
   Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
     Close()
   End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
+  End Sub
 End Class

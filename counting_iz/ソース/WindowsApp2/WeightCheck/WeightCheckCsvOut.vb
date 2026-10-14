@@ -64,8 +64,8 @@ Public Class WeightCheckCsvOut
       End If
     Catch ex As Exception
       ' エラーログを書き込んで例外をスロー
-      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
   End Sub
   Private Function GetDataItemCode() As DataTable
@@ -83,8 +83,8 @@ Public Class WeightCheckCsvOut
       Return tmpDt
     Catch ex As Exception
       ' エラーログを書き込んで例外をスロー
-      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       ' 一時的なデータテーブルを解放
       tmpDt.Dispose()
@@ -193,8 +193,8 @@ Public Class WeightCheckCsvOut
   '    End With
   '  Catch ex As Exception
   '    Call ComWriteErrLog([GetType]().Name,
-  '          Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-  '    Throw New Exception(ex.Message)
+  '          Reflection.MethodBase.GetCurrentMethod().Name, ex)
+  '    Throw
   '  Finally
   '    OutputDt.Dispose()
   '  End Try
@@ -428,5 +428,8 @@ Public Class WeightCheckCsvOut
       Case Keys.Escape
         Me.Close()
     End Select
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

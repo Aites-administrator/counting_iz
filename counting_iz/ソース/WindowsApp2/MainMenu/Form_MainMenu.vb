@@ -60,7 +60,11 @@ Public Class Form_MainMenu
     End Sub
 
     Private Sub MonthlyReportOutputButton_Click(sender As Object, e As EventArgs) Handles MonthlyReportOutputButton.Click
-        OpenForm("OTH02")
+        Using passwordForm As New Form_InputPassword()
+            passwordForm.TargetFormKey = "OTH02"
+            passwordForm.Text = "月報出力認証"
+            passwordForm.ShowDialog(Me)
+        End Using
     End Sub
 
     Private Sub PackingLabelPrintButton_Click(sender As Object, e As EventArgs) Handles PackingLabelPrintButton.Click
@@ -97,4 +101,7 @@ Public Class Form_MainMenu
     '    Return exeName
     'End Function
 
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
+  End Sub
 End Class

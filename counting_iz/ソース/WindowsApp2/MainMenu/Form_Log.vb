@@ -28,4 +28,7 @@ Public Class Form_Log
         Me.Close()
     End Select
   End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
+  End Sub
 End Class

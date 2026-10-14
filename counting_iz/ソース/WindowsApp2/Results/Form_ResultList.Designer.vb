@@ -56,8 +56,8 @@ Partial Class Form_ResultList
         '
         'CreateButton
         '
-        Me.CreateButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        Me.CreateButton.Location = New System.Drawing.Point(1095, 389)
+        Me.CreateButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
+        Me.CreateButton.Location = New System.Drawing.Point(1089, 389)
         Me.CreateButton.Name = "CreateButton"
         Me.CreateButton.Size = New System.Drawing.Size(123, 50)
         Me.CreateButton.TabIndex = 22
@@ -67,7 +67,7 @@ Partial Class Form_ResultList
         '
         'DateTimeTo
         '
-        Me.DateTimeTo.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.DateTimeTo.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.DateTimeTo.Location = New System.Drawing.Point(339, 47)
         Me.DateTimeTo.MaxLength = 10
         Me.DateTimeTo.Name = "DateTimeTo"
@@ -76,7 +76,7 @@ Partial Class Form_ResultList
         '
         'DateTimeFrom
         '
-        Me.DateTimeFrom.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.DateTimeFrom.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.DateTimeFrom.Location = New System.Drawing.Point(138, 47)
         Me.DateTimeFrom.MaxLength = 10
         Me.DateTimeFrom.Name = "DateTimeFrom"
@@ -86,7 +86,7 @@ Partial Class Form_ResultList
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("MS UI Gothic", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label2.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.Label2.Location = New System.Drawing.Point(302, 55)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(31, 21)
@@ -96,7 +96,7 @@ Partial Class Form_ResultList
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("MS UI Gothic", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label3.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.Label3.Location = New System.Drawing.Point(302, 96)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(31, 21)
@@ -106,7 +106,7 @@ Partial Class Form_ResultList
         'ToItemCode_ComboBox
         '
         Me.ToItemCode_ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ToItemCode_ComboBox.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.ToItemCode_ComboBox.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.ToItemCode_ComboBox.FormattingEnabled = True
         Me.ToItemCode_ComboBox.Location = New System.Drawing.Point(339, 87)
         Me.ToItemCode_ComboBox.Name = "ToItemCode_ComboBox"
@@ -116,7 +116,7 @@ Partial Class Form_ResultList
         'FromItemCode_ComboBox
         '
         Me.FromItemCode_ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.FromItemCode_ComboBox.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.FromItemCode_ComboBox.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.FromItemCode_ComboBox.FormattingEnabled = True
         Me.FromItemCode_ComboBox.Location = New System.Drawing.Point(138, 86)
         Me.FromItemCode_ComboBox.Name = "FromItemCode_ComboBox"
@@ -126,7 +126,7 @@ Partial Class Form_ResultList
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(16, 89)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(123, 30)
@@ -136,7 +136,7 @@ Partial Class Form_ResultList
         'Scale_ComboBox
         '
         Me.Scale_ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.Scale_ComboBox.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Scale_ComboBox.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.Scale_ComboBox.FormattingEnabled = True
         Me.Scale_ComboBox.Location = New System.Drawing.Point(605, 47)
         Me.Scale_ComboBox.Name = "Scale_ComboBox"
@@ -146,17 +146,17 @@ Partial Class Form_ResultList
         'ScaleLabel
         '
         Me.ScaleLabel.AutoSize = True
-        Me.ScaleLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.ScaleLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.ScaleLabel.Location = New System.Drawing.Point(520, 50)
         Me.ScaleLabel.Name = "ScaleLabel"
         Me.ScaleLabel.Size = New System.Drawing.Size(94, 30)
         Me.ScaleLabel.TabIndex = 5
-        Me.ScaleLabel.Text = "号　機："
+        Me.ScaleLabel.Text = "号機："
         '
         'PeriodLabel
         '
         Me.PeriodLabel.AutoSize = True
-        Me.PeriodLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.PeriodLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.PeriodLabel.Location = New System.Drawing.Point(16, 50)
         Me.PeriodLabel.Name = "PeriodLabel"
         Me.PeriodLabel.Size = New System.Drawing.Size(94, 30)
@@ -165,8 +165,8 @@ Partial Class Form_ResultList
         '
         'SearchButton
         '
-        Me.SearchButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        Me.SearchButton.Location = New System.Drawing.Point(1095, 165)
+        Me.SearchButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
+        Me.SearchButton.Location = New System.Drawing.Point(1089, 165)
         Me.SearchButton.Name = "SearchButton"
         Me.SearchButton.Size = New System.Drawing.Size(123, 50)
         Me.SearchButton.TabIndex = 19
@@ -176,7 +176,7 @@ Partial Class Form_ResultList
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.TitleLabel.Location = New System.Drawing.Point(12, 9)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(105, 30)
@@ -185,8 +185,8 @@ Partial Class Form_ResultList
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        Me.CloseButton.Location = New System.Drawing.Point(1095, 639)
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
+        Me.CloseButton.Location = New System.Drawing.Point(1089, 639)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 50)
         Me.CloseButton.TabIndex = 25
@@ -196,8 +196,8 @@ Partial Class Form_ResultList
         'DeleteButton
         '
         Me.DeleteButton.Enabled = False
-        Me.DeleteButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        Me.DeleteButton.Location = New System.Drawing.Point(1095, 501)
+        Me.DeleteButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
+        Me.DeleteButton.Location = New System.Drawing.Point(1089, 501)
         Me.DeleteButton.Name = "DeleteButton"
         Me.DeleteButton.Size = New System.Drawing.Size(123, 50)
         Me.DeleteButton.TabIndex = 24
@@ -207,8 +207,8 @@ Partial Class Form_ResultList
         'UpdateButton
         '
         Me.UpdateButton.Enabled = False
-        Me.UpdateButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        Me.UpdateButton.Location = New System.Drawing.Point(1095, 445)
+        Me.UpdateButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
+        Me.UpdateButton.Location = New System.Drawing.Point(1089, 445)
         Me.UpdateButton.Name = "UpdateButton"
         Me.UpdateButton.Size = New System.Drawing.Size(123, 50)
         Me.UpdateButton.TabIndex = 23
@@ -221,7 +221,7 @@ Partial Class Form_ResultList
         Me.ResultDetail.AllowUserToDeleteRows = False
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Meiryo UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
         DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
@@ -230,18 +230,18 @@ Partial Class Form_ResultList
         Me.ResultDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Meiryo UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.ResultDetail.DefaultCellStyle = DataGridViewCellStyle2
-        Me.ResultDetail.Location = New System.Drawing.Point(18, 165)
+        Me.ResultDetail.Location = New System.Drawing.Point(12, 165)
         Me.ResultDetail.Name = "ResultDetail"
         Me.ResultDetail.ReadOnly = True
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 12.0!)
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Meiryo UI", 12.0!)
         DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
         DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
@@ -254,8 +254,8 @@ Partial Class Form_ResultList
         '
         'CsvExportButton
         '
-        Me.CsvExportButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
-        Me.CsvExportButton.Location = New System.Drawing.Point(1095, 221)
+        Me.CsvExportButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
+        Me.CsvExportButton.Location = New System.Drawing.Point(1089, 221)
         Me.CsvExportButton.Name = "CsvExportButton"
         Me.CsvExportButton.Size = New System.Drawing.Size(123, 50)
         Me.CsvExportButton.TabIndex = 20
@@ -265,7 +265,7 @@ Partial Class Form_ResultList
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label6.Location = New System.Drawing.Point(520, 89)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(92, 25)
@@ -275,7 +275,7 @@ Partial Class Form_ResultList
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label7.Location = New System.Drawing.Point(520, 128)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(92, 25)
@@ -284,7 +284,7 @@ Partial Class Form_ResultList
         '
         'lot1TextBox
         '
-        Me.lot1TextBox.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.lot1TextBox.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.lot1TextBox.Location = New System.Drawing.Point(605, 86)
         Me.lot1TextBox.MaxLength = 20
         Me.lot1TextBox.Name = "lot1TextBox"
@@ -293,7 +293,7 @@ Partial Class Form_ResultList
         '
         'lot2TextBox
         '
-        Me.lot2TextBox.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.lot2TextBox.Font = New System.Drawing.Font("Meiryo UI", 14.25!)
         Me.lot2TextBox.Location = New System.Drawing.Point(605, 125)
         Me.lot2TextBox.MaxLength = 20
         Me.lot2TextBox.Name = "lot2TextBox"
@@ -303,7 +303,7 @@ Partial Class Form_ResultList
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Font = New System.Drawing.Font("MS UI Gothic", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label8.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.Label8.Location = New System.Drawing.Point(302, 135)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(31, 21)
@@ -313,7 +313,7 @@ Partial Class Form_ResultList
         'ToStaffCode_ComboBox
         '
         Me.ToStaffCode_ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ToStaffCode_ComboBox.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.ToStaffCode_ComboBox.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.ToStaffCode_ComboBox.FormattingEnabled = True
         Me.ToStaffCode_ComboBox.Location = New System.Drawing.Point(339, 126)
         Me.ToStaffCode_ComboBox.Name = "ToStaffCode_ComboBox"
@@ -323,7 +323,7 @@ Partial Class Form_ResultList
         'FromStaffCode_ComboBox
         '
         Me.FromStaffCode_ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.FromStaffCode_ComboBox.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.FromStaffCode_ComboBox.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.FromStaffCode_ComboBox.FormattingEnabled = True
         Me.FromStaffCode_ComboBox.Location = New System.Drawing.Point(138, 125)
         Me.FromStaffCode_ComboBox.Name = "FromStaffCode_ComboBox"
@@ -333,7 +333,7 @@ Partial Class Form_ResultList
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label9.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.Label9.Location = New System.Drawing.Point(16, 128)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(101, 30)
@@ -371,6 +371,8 @@ Partial Class Form_ResultList
         Me.Controls.Add(Me.SearchButton)
         Me.Controls.Add(Me.TitleLabel)
         Me.Controls.Add(Me.CreateButton)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_ResultList"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Form1"

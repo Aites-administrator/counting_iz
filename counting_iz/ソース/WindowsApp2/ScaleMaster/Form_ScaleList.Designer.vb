@@ -41,7 +41,7 @@ Partial Class Form_ScaleList
         Me.ScaleDetail.AllowUserToDeleteRows = False
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 12.0!)
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Meiryo UI", 12.0!)
         DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
         DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
@@ -50,7 +50,7 @@ Partial Class Form_ScaleList
         Me.ScaleDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 12.0!)
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Meiryo UI", 12.0!)
         DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
@@ -61,7 +61,7 @@ Partial Class Form_ScaleList
         Me.ScaleDetail.ReadOnly = True
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 12.0!)
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Meiryo UI", 12.0!)
         DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
         DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
@@ -74,7 +74,7 @@ Partial Class Form_ScaleList
         '
         'UpdateButton
         '
-        Me.UpdateButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.UpdateButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.UpdateButton.Location = New System.Drawing.Point(694, 107)
         Me.UpdateButton.Name = "UpdateButton"
         Me.UpdateButton.Size = New System.Drawing.Size(123, 50)
@@ -84,7 +84,7 @@ Partial Class Form_ScaleList
         '
         'CreateButton
         '
-        Me.CreateButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.CreateButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.CreateButton.Location = New System.Drawing.Point(694, 51)
         Me.CreateButton.Name = "CreateButton"
         Me.CreateButton.Size = New System.Drawing.Size(123, 50)
@@ -95,7 +95,7 @@ Partial Class Form_ScaleList
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TitleLabel.Location = New System.Drawing.Point(12, 9)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(172, 30)
@@ -104,7 +104,7 @@ Partial Class Form_ScaleList
         '
         'DeleteButton
         '
-        Me.DeleteButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.DeleteButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.DeleteButton.Location = New System.Drawing.Point(694, 163)
         Me.DeleteButton.Name = "DeleteButton"
         Me.DeleteButton.Size = New System.Drawing.Size(123, 50)
@@ -115,7 +115,7 @@ Partial Class Form_ScaleList
         'RowCount
         '
         Me.RowCount.AutoSize = True
-        Me.RowCount.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.RowCount.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RowCount.Location = New System.Drawing.Point(389, 280)
         Me.RowCount.Name = "RowCount"
         Me.RowCount.Size = New System.Drawing.Size(0, 25)
@@ -123,7 +123,7 @@ Partial Class Form_ScaleList
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.CloseButton.Location = New System.Drawing.Point(694, 359)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 50)
@@ -143,6 +143,8 @@ Partial Class Form_ScaleList
         Me.Controls.Add(Me.UpdateButton)
         Me.Controls.Add(Me.CreateButton)
         Me.Controls.Add(Me.TitleLabel)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_ScaleList"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "計量器マスタ一覧"

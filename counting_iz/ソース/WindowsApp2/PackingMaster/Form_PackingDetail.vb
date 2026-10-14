@@ -27,17 +27,17 @@ Public Class Form_PackingDetail
     Me.KeyPreview = True
 
     FormBorderStyle = FormBorderStyle.FixedSingle
+    MarkRequiredLabels(CodeLabel, NameLabel, WeightLabel, Label12)
+    AlignDetailActionButtons(Me, OkButton, CloseButton)
 
     SetUnitComboBox()
     SetInitialProperty()
 
   End Sub
   Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+    If Not CheckValue() Then Return
     Select Case InputMode
       Case 1
-        If CheckValue() = False Then
-          Exit Sub
-        End If
         '新規登録メソッド呼出し
         InsertPackingMaster()
       Case 2
@@ -83,19 +83,34 @@ Public Class Form_PackingDetail
     End If
   End Sub
   Private Sub WeightText_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles WeightText.Validating
-    Dim wkWeight As Double
-    If ActiveControl.Name <> "WeightText" And ActiveControl.Name <> "CloseButton" Then
+    If ActiveControl IsNot Nothing AndAlso ActiveControl.Name <> "WeightText" AndAlso ActiveControl.Name <> "CloseButton" Then
       If String.IsNullOrEmpty(WeightText.Text) = False Then
-
-        wkWeight = Double.Parse(WeightText.Text)
-
-        WeightText.Text = wkWeight.ToString("0.00")
+        Dim wkWeight As Decimal
+        If IsValidWeight(WeightText.Text, wkWeight) Then
+          WeightText.Text = wkWeight.ToString("0.00")
+        Else
+          MessageBox.Show("重量は0.00～9999.99の範囲で、小数点以下2桁まで入力してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+          Common.ClsFunction.FocusInputError(WeightText)
+          e.Cancel = True
+        End If
       End If
     End If
   End Sub
   Private Sub WeightText_KeyPress(sender As Object, e As KeyPressEventArgs) Handles WeightText.KeyPress
-    'キーが [0]～[9] または [BackSpace] 以外の場合イベントをキャンセル
-    If Not (("0"c <= e.KeyChar And e.KeyChar <= "9"c) Or e.KeyChar = ControlChars.Back Or e.KeyChar = ".") Then
+    If e.KeyChar = ControlChars.Back Then
+      Return
+    End If
+
+    If Not Char.IsDigit(e.KeyChar) AndAlso e.KeyChar <> "."c Then
+      e.Handled = True
+      Return
+    End If
+
+    Dim proposed As String = WeightText.Text.Remove(WeightText.SelectionStart, WeightText.SelectionLength).
+      Insert(WeightText.SelectionStart, e.KeyChar.ToString())
+    Dim parts() As String = proposed.Split("."c)
+    If proposed.StartsWith(".") OrElse parts.Length > 2 OrElse parts(0).Length > 4 OrElse
+       (parts.Length = 2 AndAlso parts(1).Length > 2) Then
       e.Handled = True
     End If
   End Sub
@@ -121,25 +136,57 @@ Public Class Form_PackingDetail
         NameText.Enabled = True
     End Select
   End Sub
-  Function CheckValue()
-    Dim CheckResult As Boolean = True
-    '必須項目チェック
-    If String.IsNullOrEmpty(CodeText.Text) = True Then
-      MessageBox.Show("コードを入力してください", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-      CheckResult = False
+  Private Function CheckValue() As Boolean
+    Dim errorMessages As New List(Of String)
+    Dim packingCode As Integer
+    Dim packingWeight As Decimal
+
+    If Not Integer.TryParse(CodeText.Text, packingCode) OrElse packingCode < 1 OrElse packingCode > 9999 Then
+      errorMessages.Add("風袋番号は1～9999の整数で入力してください。")
     End If
-    '重複チェック
-    If Form_PackingList.PackingDetail.Rows.Count > 0 Then
-      For i As Integer = 0 To Form_PackingList.PackingDetail.Rows.Count - 1
-        If CodeText.Text.Equals(Form_PackingList.PackingDetail.Rows(i).Cells(0).Value) Then
-          MessageBox.Show("既に登録されているコードです。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-          CheckResult = False
-          CodeText.Focus()
+
+    If String.IsNullOrWhiteSpace(NameText.Text) Then
+      errorMessages.Add("名称を入力してください。")
+    ElseIf NameText.Text.Length > 20 Then
+      errorMessages.Add("名称は20文字以内で入力してください。")
+    End If
+
+    If Not IsValidWeight(WeightText.Text, packingWeight) Then
+      errorMessages.Add("重量は0.00～9999.99の範囲で、小数点以下2桁まで入力してください。")
+    End If
+
+    Dim isUnchangedLegacyUnit As Boolean =
+      InputMode = 2 AndAlso Not String.IsNullOrWhiteSpace(weightUnitComboValue) AndAlso UnitComboBox.Text = weightUnitComboValue
+    If Not New String() {"mg", "g", "kg", "t"}.Contains(UnitComboBox.Text) AndAlso Not isUnchangedLegacyUnit Then
+      errorMessages.Add("単位はmg・g・kg・tから選択してください。")
+    End If
+
+    If InputMode = 1 AndAlso packingCode >= 1 AndAlso packingCode <= 9999 Then
+      For Each row As DataGridViewRow In Form_PackingList.PackingDetail.Rows
+        Dim registeredCode As Integer
+        If Integer.TryParse(Convert.ToString(row.Cells(0).Value), registeredCode) AndAlso registeredCode = packingCode Then
+          errorMessages.Add("指定した風袋番号は既に登録されています。")
           Exit For
         End If
       Next
     End If
-    Return CheckResult
+
+      If errorMessages.Count > 0 Then
+        MessageBox.Show(String.Join(vbCrLf, errorMessages), "エラー", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        Dim invalidCode As Integer
+        If Not Integer.TryParse(CodeText.Text, invalidCode) OrElse invalidCode < 1 OrElse invalidCode > 9999 Then
+          Common.ClsFunction.FocusInputError(CodeText)
+        ElseIf String.IsNullOrWhiteSpace(NameText.Text) OrElse NameText.Text.Length > 20 Then
+          Common.ClsFunction.FocusInputError(NameText)
+        ElseIf Not IsValidWeight(WeightText.Text, packingWeight) Then
+          Common.ClsFunction.FocusInputError(WeightText)
+        Else
+          Common.ClsFunction.FocusInputError(UnitComboBox)
+        End If
+        Return False
+    End If
+
+    Return True
   End Function
   Private Sub InsertPackingMaster()
     Dim sql As String = String.Empty
@@ -169,8 +216,8 @@ Public Class Form_PackingDetail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -188,10 +235,10 @@ Public Class Form_PackingDetail
     sql &= "     update_date"
     sql &= " )"
     sql &= " VALUES("
-    sql &= "     '" & CodeText.Text & "',"
-    sql &= "     '" & NameText.Text & "',"
-    sql &= "     '" & WeightText.Text & "',"
-    sql &= "     '" & upperUnitWeightUnit & "',"
+    sql &= "     '" & EscapeSqlLiteral(CodeText.Text) & "',"
+    sql &= "     '" & EscapeSqlLiteral(NameText.Text) & "',"
+    sql &= "     '" & EscapeSqlLiteral(WeightText.Text) & "',"
+    sql &= "     '" & EscapeSqlLiteral(upperUnitWeightUnit) & "',"
     sql &= "     '" & tmpdate & "',"
     sql &= "     '" & tmpdate & "'"
     sql &= " )"
@@ -228,8 +275,8 @@ Public Class Form_PackingDetail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -239,12 +286,12 @@ Public Class Form_PackingDetail
     Dim upperUnitWeightUnit As String = UnitComboBox.SelectedItem.ToString()
 
     sql &= " UPDATE MST_PACKING"
-    sql &= "    SET PackingNo = '" & CodeText.Text & "'"
-    sql &= "       ,PackingName = '" & NameText.Text & "'"
-    sql &= "       ,PackingWeight = '" & WeightText.Text & "'"
-    sql &= "       ,PackingWeightUnit = '" & upperUnitWeightUnit & "'"
+    sql &= "    SET PackingNo = '" & EscapeSqlLiteral(CodeText.Text) & "'"
+    sql &= "       ,PackingName = '" & EscapeSqlLiteral(NameText.Text) & "'"
+    sql &= "       ,PackingWeight = '" & EscapeSqlLiteral(WeightText.Text) & "'"
+    sql &= "       ,PackingWeightUnit = '" & EscapeSqlLiteral(upperUnitWeightUnit) & "'"
     sql &= "       ,update_date = '" & tmpdate & "'"
-    sql &= " WHERE PackingNo = '" & CodeText.Text & "' "
+    sql &= " WHERE PackingNo = '" & EscapeSqlLiteral(CodeText.Text) & "' "
     Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
   End Function
@@ -257,4 +304,13 @@ Public Class Form_PackingDetail
         Me.Close()
     End Select
   End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
+  End Sub
+  Private Function IsValidWeight(value As String, ByRef weight As Decimal) As Boolean
+    If Not System.Text.RegularExpressions.Regex.IsMatch(value, "^\d{1,4}(\.\d{1,2})?$") Then
+      Return False
+    End If
+    Return Decimal.TryParse(value, weight) AndAlso weight >= 0D AndAlso weight <= 9999.99D
+  End Function
 End Class

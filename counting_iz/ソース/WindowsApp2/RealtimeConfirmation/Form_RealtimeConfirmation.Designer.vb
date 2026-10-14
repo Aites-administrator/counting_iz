@@ -38,7 +38,7 @@ Partial Class Form_RealtimeConfirmation
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TitleLabel.Location = New System.Drawing.Point(12, 9)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(123, 30)
@@ -49,7 +49,7 @@ Partial Class Form_RealtimeConfirmation
         '
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
         DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
@@ -58,7 +58,7 @@ Partial Class Form_RealtimeConfirmation
         Me.ResultDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
@@ -74,7 +74,7 @@ Partial Class Form_RealtimeConfirmation
         '
         'SendButton
         '
-        Me.SendButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.SendButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.SendButton.Location = New System.Drawing.Point(695, 107)
         Me.SendButton.Name = "SendButton"
         Me.SendButton.Size = New System.Drawing.Size(123, 50)
@@ -84,7 +84,7 @@ Partial Class Form_RealtimeConfirmation
         '
         'ReceiveButton
         '
-        Me.ReceiveButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.ReceiveButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.ReceiveButton.Location = New System.Drawing.Point(695, 51)
         Me.ReceiveButton.Name = "ReceiveButton"
         Me.ReceiveButton.Size = New System.Drawing.Size(123, 50)
@@ -94,7 +94,7 @@ Partial Class Form_RealtimeConfirmation
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.CloseButton.Location = New System.Drawing.Point(695, 369)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 50)
@@ -104,7 +104,7 @@ Partial Class Form_RealtimeConfirmation
         '
         'USB_ReceiveButton
         '
-        Me.USB_ReceiveButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.USB_ReceiveButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.USB_ReceiveButton.Location = New System.Drawing.Point(697, 213)
         Me.USB_ReceiveButton.Name = "USB_ReceiveButton"
         Me.USB_ReceiveButton.Size = New System.Drawing.Size(123, 50)
@@ -114,7 +114,7 @@ Partial Class Form_RealtimeConfirmation
         '
         'USB_SendButton
         '
-        Me.USB_SendButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.USB_SendButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.USB_SendButton.Location = New System.Drawing.Point(697, 269)
         Me.USB_SendButton.Name = "USB_SendButton"
         Me.USB_SendButton.Size = New System.Drawing.Size(123, 50)
@@ -125,7 +125,7 @@ Partial Class Form_RealtimeConfirmation
         'chkSendFreeMaster
         '
         Me.chkSendFreeMaster.AutoSize = True
-        Me.chkSendFreeMaster.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkSendFreeMaster.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.chkSendFreeMaster.Location = New System.Drawing.Point(697, 161)
         Me.chkSendFreeMaster.Name = "chkSendFreeMaster"
         Me.chkSendFreeMaster.Size = New System.Drawing.Size(95, 25)
@@ -146,6 +146,8 @@ Partial Class Form_RealtimeConfirmation
         Me.Controls.Add(Me.ResultDetail)
         Me.Controls.Add(Me.SendButton)
         Me.Controls.Add(Me.TitleLabel)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_RealtimeConfirmation"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "計量器通信"

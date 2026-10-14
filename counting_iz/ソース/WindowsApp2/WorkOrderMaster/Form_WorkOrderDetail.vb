@@ -30,6 +30,8 @@ Public Class Form_WorkOrderDetail
     Dim updateTime As DateTime = System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location)
     Text = "作業指示マスタ詳細" & " ( " & updateTime & " ) "
     FormBorderStyle = FormBorderStyle.FixedSingle
+    MarkRequiredLabels(CodeLabel, NameLabel, Label1, Label2, Label3, Label4)
+    AlignDetailActionButtons(Me, OkButton, CloseButton)
 
     ' キーイベントをフォーム全体で受け取るようにする
     Me.KeyPreview = True
@@ -80,8 +82,8 @@ Public Class Form_WorkOrderDetail
       End If
     Catch ex As Exception
       ' エラーログを書き込んで例外をスロー
-      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      ComWriteErrLog(Me.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
   End Sub
 
@@ -93,8 +95,8 @@ Public Class Form_WorkOrderDetail
         SqlServer.GetResult(PackingData, GetSelectItemMaster)
       End With
     Catch ex As Exception
-      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     End Try
 
     Return PackingData
@@ -188,17 +190,17 @@ Public Class Form_WorkOrderDetail
 
       ' 最初のエラー項目にフォーカスを当てる
       If String.IsNullOrEmpty(WorkOrderIDText.Text) OrElse WorkOrderIDText.Text = "0" Then
-        WorkOrderIDText.Focus()
+        Common.ClsFunction.FocusInputError(WorkOrderIDText)
       ElseIf String.IsNullOrEmpty(DetailIDText.Text) Then
-        DetailIDText.Focus()
+        Common.ClsFunction.FocusInputError(DetailIDText)
       ElseIf String.IsNullOrWhiteSpace(WorkOrderNameText.Text) Then
-        WorkOrderNameText.Focus()
+        Common.ClsFunction.FocusInputError(WorkOrderNameText)
       ElseIf String.IsNullOrWhiteSpace(IsDetailSubtotalCombo.Text) Then
-        IsDetailSubtotalCombo.Focus()
+        Common.ClsFunction.FocusInputError(IsDetailSubtotalCombo)
       ElseIf String.IsNullOrWhiteSpace(ProductIDCombo.Text) Then
-        ProductIDCombo.Focus()
+        Common.ClsFunction.FocusInputError(ProductIDCombo)
       ElseIf String.IsNullOrWhiteSpace(OrderQuantityText.Text) Then
-        OrderQuantityText.Focus()
+        Common.ClsFunction.FocusInputError(OrderQuantityText)
       End If
 
       Return False
@@ -211,7 +213,7 @@ Public Class Form_WorkOrderDetail
                DetailIDText.Text.Equals(row.Cells(1).Value?.ToString()) Then
 
           MessageBox.Show("既に登録されている作業指示№と明細番号の組み合わせです。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-          WorkOrderIDText.Focus()
+          Common.ClsFunction.FocusInputError(WorkOrderIDText)
           Return False
         End If
       Next
@@ -247,8 +249,8 @@ Public Class Form_WorkOrderDetail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -322,8 +324,8 @@ Public Class Form_WorkOrderDetail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -393,5 +395,8 @@ Public Class Form_WorkOrderDetail
     If Not (("0"c <= e.KeyChar And e.KeyChar <= "9"c) Or e.KeyChar = ControlChars.Back) Then
       e.Handled = True
     End If
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

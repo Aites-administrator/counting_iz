@@ -236,7 +236,7 @@ Public Class Form_WorkOrderList
         SelectWorkOrderMaster()
 
       Catch ex As Exception
-        Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
+        Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
         MessageBox.Show("登録中に重大なエラーが発生しました：" & ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
       End Try
     End With
@@ -317,7 +317,7 @@ Public Class Form_WorkOrderList
       .EnableHeadersVisualStyles = False ' デフォルトの Windows スタイルを無効化
       .ColumnHeadersDefaultCellStyle.BackColor = Color.LightBlue ' ヘッダーの背景色
       .ColumnHeadersDefaultCellStyle.ForeColor = Color.Black ' ヘッダーの文字色
-      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo", 10, FontStyle.Bold) ' フォント変更
+      .ColumnHeadersDefaultCellStyle.Font = New Font("Meiryo UI", 10, FontStyle.Bold) ' フォント変更
       .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter ' ヘッダー中央寄せ
     End With
   End Sub
@@ -326,12 +326,14 @@ Public Class Form_WorkOrderList
     Form_WorkOrderDetail.ShowDialog()
   End Sub
   Private Sub UpdateButton_Click(sender As Object, e As EventArgs) Handles UpdateButton.Click
+    If WorkOrderDetail.CurrentRow Is Nothing OrElse WorkOrderDetail.CurrentRow.IsNewRow Then Return
     '詳細画面の項目値セット
     SetListData()
     Form_WorkOrderDetail.InputMode = 2
     Form_WorkOrderDetail.ShowDialog()
   End Sub
   Private Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+    If WorkOrderDetail.CurrentRow Is Nothing OrElse WorkOrderDetail.CurrentRow.IsNewRow Then Return
     DeleteWorkOrderMaster()
   End Sub
   Private Sub WorkOrderDetail_DoubleClick(sender As Object, e As EventArgs) Handles WorkOrderDetail.DoubleClick
@@ -370,14 +372,13 @@ Public Class Form_WorkOrderList
 
         WorkOrderDetail.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells)
         WorkOrderDetail.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
-        WorkOrderDetail.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        WorkOrderDetail.ColumnHeadersHeight = 20
+        WorkOrderDetail.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
 
       End With
     Catch ex As Exception
       Call ComWriteErrLog([GetType]().Name,
-                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-      Throw New Exception(ex.Message)
+                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+      Throw
     Finally
       tmpDt.Dispose()
     End Try
@@ -411,6 +412,7 @@ Public Class Form_WorkOrderList
   End Function
 
   Private Sub DeleteWorkOrderMaster()
+    If WorkOrderDetail.CurrentRow Is Nothing OrElse WorkOrderDetail.CurrentRow.IsNewRow Then Return
     Dim confirmation As DialogResult = MessageBox.Show("選択された行を削除します。よろしいですか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
     If confirmation <> DialogResult.Yes Then Exit Sub
 
@@ -438,7 +440,7 @@ Public Class Form_WorkOrderList
       RefreshText()
 
     Catch ex As Exception
-      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
+      Call ComWriteErrLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
       Throw
     End Try
   End Sub
@@ -517,8 +519,8 @@ Public Class Form_WorkOrderList
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
@@ -548,27 +550,67 @@ Public Class Form_WorkOrderList
     End Try
   End Sub
   Private Sub ExportPickingList()
-    'Dim xlApp As New Excel.Application
-    'Dim xlBook As Excel.Workbook = xlApp.Workbooks.Add()
-    'Dim xlSheet As Excel.Worksheet = CType(xlBook.Sheets(1), Excel.Worksheet)
+    Dim xlApp As Object = Nothing
+    Dim xlBook As Object = Nothing
+    Dim xlSheet As Object = Nothing
+    Dim dirPath As String = "C:\COUNTING_DX\PICKING_LIST"
+    Dim fileName As String = String.Format("ピッキングリスト_{0}.xlsx", Now.ToString("yyMMddHHmmss"))
+    Dim filePath As String = Path.Combine(dirPath, fileName)
+    Try
+      xlApp = CreateObject("Excel.Application")
+      xlBook = xlApp.Workbooks.Add()
+      xlSheet = xlBook.Sheets(1)
+      PopulatePickingList(xlSheet)
+      xlApp.ActiveWindow.DisplayGridlines = False
+      If Not Directory.Exists(dirPath) Then Directory.CreateDirectory(dirPath)
+      xlBook.SaveAs(filePath)
+    Finally
+      If xlBook IsNot Nothing Then
+        Try
+          xlBook.Close(False)
+        Catch ex As Exception
+          ComWriteErrLog([GetType]().Name, NameOf(ExportPickingList), ex)
+        End Try
+      End If
+      If xlApp IsNot Nothing Then
+        Try
+          xlApp.Quit()
+        Catch ex As Exception
+          ComWriteErrLog([GetType]().Name, NameOf(ExportPickingList), ex)
+        End Try
+      End If
+      If xlSheet IsNot Nothing Then Marshal.ReleaseComObject(xlSheet)
+      If xlBook IsNot Nothing Then Marshal.ReleaseComObject(xlBook)
+      If xlApp IsNot Nothing Then Marshal.ReleaseComObject(xlApp)
+    End Try
+    Process.Start("explorer.exe", "/select," & filePath)
+    ShowInformationMessage("ピッキングリストを出力しました。", Me)
+  End Sub
 
-    Dim xlApp As Object = CreateObject("Excel.Application")
-    Dim xlBook As Object = xlApp.Workbooks.Add()
-    Dim xlSheet As Object = xlBook.Sheets(1)
 
-    ' 出力時間（G2: ラベル、H2: 日時）
-    xlSheet.Range("G2").Value = "出力時間"
-    xlSheet.Range("H2").Value = Now.ToString("yyyy/MM/dd HH:mm")
-    With xlSheet.Range("G2:H2")
+
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
+  End Sub
+  Private Sub PopulatePickingList(xlSheet As Object)
+    ' 日時は結合セルに表示し、明細のチェック列幅を広げない。
+    xlSheet.Range("B2:C2").Merge()
+    xlSheet.Range("B2").Value = "出力時間"
+    xlSheet.Range("D2:F2").Merge()
+    xlSheet.Range("D2").NumberFormat = "@"
+    xlSheet.Range("D2").Value = Now.ToString("yyyy/MM/dd HH:mm")
+    With xlSheet.Range("B2:F2")
       .Font.Name = "メイリオ"
-      .Font.Size = 20
-      .Font.Bold = True
-      .HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter
+      .Font.Size = 14
+      .HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft
       .VerticalAlignment = Excel.XlVAlign.xlVAlignCenter
+      .RowHeight = 28
     End With
+    xlSheet.Columns("B:C").NumberFormat = "@"
+    xlSheet.Columns("E").NumberFormat = "@"
 
     ' タイトル（A3:H3）
-    With xlSheet.Range("A3:H3")
+    With xlSheet.Range("B3:H3")
       .Merge()
       .Value = "ピッキングリスト"
       .Font.Name = "メイリオ"
@@ -662,39 +704,30 @@ Public Class Form_WorkOrderList
     SetMinWidth("F", 26)
     SetMinWidth("G", 10)
     SetMinWidth("H", 10)
+    ' 長い名称で全体が極端に縮小されないよう、名称列は折り返して表示する。
+    xlSheet.Columns("D").ColumnWidth = Math.Min(44, CDbl(xlSheet.Columns("D").ColumnWidth))
+    xlSheet.Columns("F").ColumnWidth = Math.Min(44, CDbl(xlSheet.Columns("F").ColumnWidth))
+
+    ' バーコードは表示・印刷しない。既存のB～H列の対応は維持する。
+    xlSheet.Columns("A").Hidden = True
+    With xlSheet.Range("B6:H" & Math.Max(6, rowIndex - 1))
+      .WrapText = True
+      .Rows.AutoFit()
+    End With
+    For detailRow As Integer = 7 To rowIndex - 1
+      xlSheet.Rows(detailRow).RowHeight = Math.Max(80, CDbl(xlSheet.Rows(detailRow).RowHeight))
+    Next
+    xlSheet.Rows(2).RowHeight = 28
 
     ' 印刷設定
     With xlSheet.PageSetup
       .Orientation = Excel.XlPageOrientation.xlLandscape
-      .Zoom = 50
+      .Zoom = False
+      .FitToPagesWide = 1
+      .FitToPagesTall = False
+      .PrintArea = "$B$2:$H$" & Math.Max(6, rowIndex - 1)
+      .PrintTitleRows = "$6:$6"
     End With
 
-    ' グリッド線非表示
-    xlApp.ActiveWindow.DisplayGridlines = False
-
-    ' 保存パス作成（文字列補間ではなく Format 使用）
-    Dim dirPath As String = "C:\COUNTING_DX\PICKING_LIST"
-    If Not Directory.Exists(dirPath) Then Directory.CreateDirectory(dirPath)
-    Dim fileName As String = String.Format("ピッキングリスト_{0}.xlsx", Now.ToString("yyMMddHHmmss"))
-    Dim filePath As String = Path.Combine(dirPath, fileName)
-
-    ' 保存
-    xlBook.SaveAs(filePath)
-    xlBook.Close(False)
-    xlApp.Quit()
-
-    ' リソース解放
-    Marshal.ReleaseComObject(xlSheet)
-    Marshal.ReleaseComObject(xlBook)
-    Marshal.ReleaseComObject(xlApp)
-
-    ' フォルダを開く
-    Process.Start("explorer.exe", "/select," & filePath)
-
-    ' 出力完了メッセージ
-    MessageBox.Show("ピッキングリストを出力しました。", "出力完了", MessageBoxButtons.OK, MessageBoxIcon.Information)
   End Sub
-
-
-
 End Class

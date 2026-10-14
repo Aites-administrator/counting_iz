@@ -27,6 +27,8 @@ Public Class Form_Free3Detail
 
     ' キーイベントをフォーム全体で受け取るようにする
     Me.KeyPreview = True
+    MarkRequiredLabels(CodeLabel)
+    AlignDetailActionButtons(Me, OkButton, CloseButton)
 
     SetInitialProperty()
   End Sub
@@ -43,11 +45,10 @@ Public Class Form_Free3Detail
   End Sub
 
   Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+    If Not CheckValue() Then Exit Sub
+
     Select Case InputMode
       Case 1
-        If CheckValue() = False Then
-          Exit Sub
-        End If
         '新規登録メソッド呼出し
         InsertFree3Master()
       Case 2
@@ -57,36 +58,42 @@ Public Class Form_Free3Detail
   End Sub
   Function CheckValue() As Boolean
     Dim errorMessages As New List(Of String)
+    Dim code As String = CodeText.Text.Trim()
+    Dim name As String = NameText.Text.Trim()
 
-    ' 必須項目チェック
-    If String.IsNullOrEmpty(CodeText.Text) Then
+    If String.IsNullOrEmpty(code) Then
       errorMessages.Add("フリー3コードを入力してください。")
-      CodeText.Focus()
-    ElseIf CodeText.Text = "0000" Then
-      errorMessages.Add("フリー3コードに0000は登録できません。")
-      CodeText.Focus()
+    ElseIf Not IsDigitsOnly(code) OrElse code.Length > 4 Then
+      errorMessages.Add("フリー3コードは1～4桁の数字で入力してください。")
+    ElseIf code.All(Function(c) c = "0"c) Then
+      errorMessages.Add("フリー3コードに全て0は登録できません。")
+    End If
+
+    If name.Length > 100 Then
+      errorMessages.Add("フリー3名称は100文字以内で入力してください。")
     End If
 
     ' 必須項目のエラーがある場合、まとめてメッセージを表示
     If errorMessages.Count > 0 Then
       MessageBox.Show(String.Join(vbCrLf, errorMessages), "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
-      ' エラー項目にフォーカスを設定
-      If String.IsNullOrEmpty(CodeText.Text) Then
-        CodeText.Focus()
-      ElseIf String.IsNullOrEmpty(NameText.Text) Then
-        NameText.Focus()
+      If String.IsNullOrEmpty(code) OrElse Not IsDigitsOnly(code) OrElse code.Length > 4 OrElse code.All(Function(c) c = "0"c) Then
+        Common.ClsFunction.FocusInputError(CodeText)
+      Else
+        Common.ClsFunction.FocusInputError(NameText)
       End If
 
       Return False
     End If
 
-    ' 重複チェック
-    If Form_Free3List.Free3Detail.Rows.Count > 0 Then
+    CodeText.Text = code.PadLeft(4, "0"c)
+    NameText.Text = name
+
+    If InputMode = 1 AndAlso Form_Free3List.Free3Detail.Rows.Count > 0 Then
       For Each row As DataGridViewRow In Form_Free3List.Free3Detail.Rows
         If CodeText.Text.Equals(row.Cells(0).Value?.ToString()) Then
           MessageBox.Show("既に登録されているフリー3コードです。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
-          CodeText.Focus()
+          Common.ClsFunction.FocusInputError(CodeText)
           Return False
         End If
       Next
@@ -120,16 +127,16 @@ Public Class Form_Free3Detail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
 
   Private Function GetInsertSql() As String
     Dim sql As String = String.Empty
-    Dim CodeTxt As String = CodeText.Text
-    Dim NameTxt As String = NameText.Text
+    Dim CodeTxt As String = EscapeSqlLiteral(CodeText.Text)
+    Dim NameTxt As String = EscapeSqlLiteral(NameText.Text)
     Dim tmpdate As DateTime = CDate(ComGetProcTime())
 
     sql &= " INSERT INTO MST_Free3("
@@ -139,8 +146,8 @@ Public Class Form_Free3Detail
     sql &= "     update_date"
     sql &= " )"
     sql &= " VALUES("
-    sql &= "     '" & CodeTxt & "',"
-    sql &= "     '" & NameTxt & "',"
+    sql &= "     '" & EscapeSqlLiteral(CodeTxt) & "',"
+    sql &= "     '" & EscapeSqlLiteral(NameTxt) & "',"
     sql &= "     '" & tmpdate & "',"
     sql &= "     '" & tmpdate & "'"
     sql &= " )"
@@ -178,21 +185,21 @@ Public Class Form_Free3Detail
         End If
       Catch ex As Exception
         Call ComWriteErrLog([GetType]().Name,
-                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-        Throw New Exception(ex.Message)
+                      System.Reflection.MethodBase.GetCurrentMethod().Name, ex)
+        Throw
       End Try
     End With
   End Sub
   Private Function GetUpdateSql() As String
     Dim sql As String = String.Empty
-    Dim CodeTxt As String = CodeText.Text
-    Dim NameTxt As String = NameText.Text
+    Dim CodeTxt As String = EscapeSqlLiteral(CodeText.Text)
+    Dim NameTxt As String = EscapeSqlLiteral(NameText.Text)
     Dim tmpdate As DateTime = CDate(ComGetProcTime())
 
     sql &= " UPDATE MST_Free3 SET"
-    sql &= "     Free3_name = '" & NameTxt & "',"
+    sql &= "     Free3_name = '" & EscapeSqlLiteral(NameTxt) & "',"
     sql &= "     update_date = '" & tmpdate & "'"
-    sql &= " WHERE free3_number = '" & CodeTxt & "'"
+    sql &= " WHERE free3_number = '" & EscapeSqlLiteral(CodeTxt) & "'"
 
     Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
@@ -221,5 +228,8 @@ Public Class Form_Free3Detail
       Case Keys.Escape
         Me.Close()
     End Select
+  End Sub
+  Private Sub ApplyCommonLayout_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Common.ClsFunction.ApplyScreenLayout(Me)
   End Sub
 End Class

@@ -38,7 +38,7 @@ Partial Class Form_Information
         'Label_Title
         '
         Me.Label_Title.AutoSize = True
-        Me.Label_Title.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_Title.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label_Title.Location = New System.Drawing.Point(6, 9)
         Me.Label_Title.Name = "Label_Title"
         Me.Label_Title.Size = New System.Drawing.Size(231, 30)
@@ -53,7 +53,7 @@ Partial Class Form_Information
         Me.GroupBox_Support.Controls.Add(Me.Label_TenantName)
         Me.GroupBox_Support.Controls.Add(Me.Label_CompanyName)
         Me.GroupBox_Support.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.GroupBox_Support.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GroupBox_Support.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox_Support.Location = New System.Drawing.Point(18, 52)
         Me.GroupBox_Support.Name = "GroupBox_Support"
         Me.GroupBox_Support.Size = New System.Drawing.Size(331, 168)
@@ -117,7 +117,7 @@ Partial Class Form_Information
         'Label_Announcement
         '
         Me.Label_Announcement.AutoSize = True
-        Me.Label_Announcement.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label_Announcement.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label_Announcement.ForeColor = System.Drawing.SystemColors.ControlText
         Me.Label_Announcement.Location = New System.Drawing.Point(16, 233)
         Me.Label_Announcement.Name = "Label_Announcement"
@@ -127,7 +127,7 @@ Partial Class Form_Information
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CloseButton.Location = New System.Drawing.Point(372, 326)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 43)
@@ -145,6 +145,8 @@ Partial Class Form_Information
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.GroupBox_Support)
         Me.Controls.Add(Me.Label_Title)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_Information"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "サポート情報"

@@ -38,7 +38,7 @@ Partial Class Form_PackingDetail
         '
         'NameText
         '
-        Me.NameText.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.NameText.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.NameText.Location = New System.Drawing.Point(106, 94)
         Me.NameText.MaxLength = 20
         Me.NameText.Name = "NameText"
@@ -47,7 +47,7 @@ Partial Class Form_PackingDetail
         '
         'CodeText
         '
-        Me.CodeText.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CodeText.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CodeText.Location = New System.Drawing.Point(106, 55)
         Me.CodeText.Name = "CodeText"
         Me.CodeText.Size = New System.Drawing.Size(105, 33)
@@ -56,7 +56,7 @@ Partial Class Form_PackingDetail
         'NameLabel
         '
         Me.NameLabel.AutoSize = True
-        Me.NameLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.NameLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.NameLabel.Location = New System.Drawing.Point(12, 97)
         Me.NameLabel.Name = "NameLabel"
         Me.NameLabel.Size = New System.Drawing.Size(94, 30)
@@ -66,7 +66,7 @@ Partial Class Form_PackingDetail
         'CodeLabel
         '
         Me.CodeLabel.AutoSize = True
-        Me.CodeLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CodeLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CodeLabel.Location = New System.Drawing.Point(22, 58)
         Me.CodeLabel.Name = "CodeLabel"
         Me.CodeLabel.Size = New System.Drawing.Size(84, 30)
@@ -75,7 +75,7 @@ Partial Class Form_PackingDetail
         '
         'OkButton
         '
-        Me.OkButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.OkButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.OkButton.Location = New System.Drawing.Point(270, 263)
         Me.OkButton.Name = "OkButton"
         Me.OkButton.Size = New System.Drawing.Size(123, 50)
@@ -86,7 +86,7 @@ Partial Class Form_PackingDetail
         'TitleLabel
         '
         Me.TitleLabel.AutoSize = True
-        Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TitleLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TitleLabel.Location = New System.Drawing.Point(12, 9)
         Me.TitleLabel.Name = "TitleLabel"
         Me.TitleLabel.Size = New System.Drawing.Size(150, 30)
@@ -95,7 +95,7 @@ Partial Class Form_PackingDetail
         '
         'WeightText
         '
-        Me.WeightText.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.WeightText.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.WeightText.Location = New System.Drawing.Point(106, 133)
         Me.WeightText.MaxLength = 6
         Me.WeightText.Name = "WeightText"
@@ -105,7 +105,7 @@ Partial Class Form_PackingDetail
         'WeightLabel
         '
         Me.WeightLabel.AutoSize = True
-        Me.WeightLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.WeightLabel.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.WeightLabel.Location = New System.Drawing.Point(12, 136)
         Me.WeightLabel.Name = "WeightLabel"
         Me.WeightLabel.Size = New System.Drawing.Size(94, 30)
@@ -115,7 +115,7 @@ Partial Class Form_PackingDetail
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(217, 136)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(47, 30)
@@ -124,7 +124,7 @@ Partial Class Form_PackingDetail
         '
         'CloseButton
         '
-        Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.CloseButton.Font = New System.Drawing.Font("Meiryo UI", 9.75!)
         Me.CloseButton.Location = New System.Drawing.Point(399, 263)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(123, 50)
@@ -135,7 +135,7 @@ Partial Class Form_PackingDetail
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label12.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label12.Location = New System.Drawing.Point(12, 173)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(94, 30)
@@ -145,9 +145,9 @@ Partial Class Form_PackingDetail
         'UnitComboBox
         '
         Me.UnitComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.UnitComboBox.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.UnitComboBox.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.UnitComboBox.FormattingEnabled = True
-        Me.UnitComboBox.Location = New System.Drawing.Point(106, 174)
+        Me.UnitComboBox.Location = New System.Drawing.Point(106, 173)
         Me.UnitComboBox.Name = "UnitComboBox"
         Me.UnitComboBox.Size = New System.Drawing.Size(105, 33)
         Me.UnitComboBox.TabIndex = 12
@@ -169,6 +169,8 @@ Partial Class Form_PackingDetail
         Me.Controls.Add(Me.CodeLabel)
         Me.Controls.Add(Me.OkButton)
         Me.Controls.Add(Me.TitleLabel)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!)
+        Me.ControlBox = False
         Me.Name = "Form_PackingDetail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Form_PackingDetail"
