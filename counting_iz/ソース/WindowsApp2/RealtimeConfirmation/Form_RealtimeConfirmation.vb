@@ -68,7 +68,7 @@ Public Class Form_RealtimeConfirmation
     '選択モード設定(全カラム)
     ResultDetail.SelectionMode = DataGridViewSelectionMode.FullRowSelect
 
-    chkSendFreeMaster.Checked = False
+    chkSendFreeMaster.Checked = True
     '照会メソッド呼出し
     SelectFtpResult()
 
