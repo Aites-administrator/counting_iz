@@ -1,0 +1,17 @@
+# Visual Studio user state and generated build outputs
+**/.vs/
+**/[Bb]in/
+**/[Oo]bj/
+*.suo
+*.user
+
+# Local review, verification, and generated artifacts
+/.codex-review/
+/.codex-remote-attachments/
+/.codex-tmp/
+/.codex-work/
+/build-verify/
+/output/
+/outputs/
+/overview-work/
+/tmp/
